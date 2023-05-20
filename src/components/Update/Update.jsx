@@ -6,9 +6,9 @@ const Update = () => {
   return (
     <div className="Updates">
       {
-        UpdatesData.map((update) => {
+        UpdatesData.map((update,id) => {
               return( 
-                <div className="update">
+                <div className="update" key={id}>
                   <img src={update.img} alt=''/>
                   <div className="noti">
                     <div style={{marginBottom:'0.5rem'}}>

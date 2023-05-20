@@ -45,8 +45,8 @@ export default function BasicTable() {
           <TableRow>
             <TableCell>Product</TableCell>
             {
-              heads.map((head)=>(
-                <TableCell align="left">{Object.keys(head)[0]}</TableCell>
+              heads.map((head,id)=>(
+                <TableCell align="left" key={id}>{Object.keys(head)[0]}</TableCell>
               ))
             }
             <TableCell align="left">Order Status</TableCell>

@@ -3,6 +3,7 @@ import './RightSide.css'
 import Update from '../Update/Update'
 import CustomerReview from '../CustomerReview/CustomerReview'
 
+
 const RightSide = () => {
   return (
     <div className="RightSide">

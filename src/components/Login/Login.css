@@ -6,7 +6,7 @@
   height: auto;
   width: 20rem;
   top: 0;
- margin-bottom: 0%;
+  margin-bottom: 0%;
   left: 0;
   right: 0;
   margin: auto;
@@ -30,11 +30,11 @@
   margin-bottom: 1rem;
 }
 
-.formLogin{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+.formLogin {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .input-container {
@@ -50,10 +50,22 @@
   font-size: 18px;
 }
 
+.input-wrong {
+  font-size: 18px;
+  border-color: #ff0000;
+  outline: none;
+}
+
 .input:focus {
-    border-color: #0000ff;
-    outline: none;
-  }
+  border-color: #0000ff;
+  outline: none;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
 
 .label {
   font-weight: bold;
@@ -70,7 +82,8 @@
   margin-top: 0rem;
   margin-bottom: 2rem;
   font-weight: bold;
-  cursor: pointer;color: #f2f2f2;
+  cursor: pointer;
+  color: #f2f2f2;
   text-decoration: none;
 }
 
@@ -81,7 +94,7 @@
 
 .footer {
   width: 100% !important;
- 
+
   padding: 0.5px;
   background-color: #ffe6f4b8 !important;
   text-align: center;
@@ -91,39 +104,22 @@
   color: #000000b8;
   text-decoration: none;
   font-weight: bold;
-
 }
 
-.error-modal {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: auto;
-    height: 60px;
-    background-color: #fe2626bf;
-    padding: 10px;
-    color: white;
-    border-radius: 7px;
+@media screen and (max-width: 800px) {
+  .auth-form-container {
+    margin-top: 20% !important;
+    width: 90% !important;
+    height: auto !important;
+    border-radius: 6px !important;
   }
-  
+  .logo-container {
+    margin-top: 0.5rem !important;
+  }
 
-
-@media screen and (max-width: 800px ){
-
-    .auth-form-container{
-        margin-top: 20% !important;
-        width: 90% !important;
-        height: auto !important;
-        border-radius: 6px !important;
-    }
-    .logo-container{
-        margin-top: 0.5rem !important;
-    }
-
-    .image{
-        width: 35% !important;
-        height: auto !important;
-        margin-bottom: 0%;
-    }
+  .image {
+    width: 35% !important;
+    height: auto !important;
+    margin-bottom: 0%;
+  }
 }
-    

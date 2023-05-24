@@ -1,7 +1,7 @@
 .RightSide{
     display: flex;
     flex-direction: column;
-    justify-content:space-around;
+    justify-content:center;
 }
 
 @media screen and (max-width: 1200px){

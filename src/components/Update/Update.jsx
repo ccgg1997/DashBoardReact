@@ -1,6 +1,6 @@
 import React from 'react'
 import './Update.css'
-import { UpdatesData } from '../Data/Data'
+import { UpdatesData } from '../Api/Data'
 
 const Update = () => {
   return (

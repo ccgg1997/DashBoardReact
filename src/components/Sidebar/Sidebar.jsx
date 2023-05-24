@@ -1,38 +1,43 @@
-import React from 'react'
-import './Sidebar.css'
-import Logo from '../../imgs/logo.png'
+import React from "react";
+import "./Sidebar.css";
+import Logo from "../../imgs/logo.png";
+import { SidebarData } from "./SideBarData";
+import { UilSignOutAlt, UilBars } from "@iconscout/react-unicons";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
-import { SidebarData } from '../../components/Data/Data';
-import{UilSignOutAlt,UilBars} from '@iconscout/react-unicons'
-
-import { motion } from 'framer-motion';
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+  const handleSingnOut = () => {
+    localStorage.clear();
+    window.location.reload();
+  };
   const [selected, setSelected] = React.useState(0);
   const [expanded, setExpanded] = React.useState(true);
 
   const sidebarVariants = {
     true: {
-      left:'0'
+      left: "0",
     },
     false: {
-      left:'-60%'
-    }
-  }
+      left: "-60%",
+    },
+  };
 
   return (
     <>
-      <div className='bars' style={expanded ? { left: "60%" } : { left: "5%" }}
-      onClick={()=>setExpanded(!expanded)}
-      
+      <div
+        className="bars"
+        style={expanded ? { left: "60%" } : { left: "5%" }}
+        onClick={() => setExpanded(!expanded)}
       >
         <UilBars />
       </div>
-      <motion.div className="Sidebar"
-      variants={sidebarVariants}
-      animate={window.innerWidth <=768?`${expanded}`:""}
-      
-      
+      <motion.div
+        className="Sidebar"
+        variants={sidebarVariants}
+        animate={window.innerWidth <= 768 ? `${expanded}` : ""}
       >
         {/* logo */}
         <div className="logo">
@@ -48,14 +53,17 @@ const Sidebar = () => {
               <div
                 className={selected === index ? "menuItem active" : "menuItem"}
                 key={index}
-                onClick={() => setSelected(index)}
+                onClick={() => {
+                  setSelected(index)
+                  navigate(item.path)}
+                }
               >
                 <item.icon />
                 <span>{item.heading}</span>
               </div>
             );
           })}
-          <div className="menuItem">
+          <div className="menuItem" onClick={handleSingnOut}>
             <UilSignOutAlt />
           </div>
         </div>

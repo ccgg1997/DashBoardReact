@@ -1,49 +1,49 @@
 import { useState } from "react";
 import logo from "./imagenesLogin/logo";
-import axios from "axios";
 import "./Login.css";
 import ReactModal from "react-modal";
-import { useDispatch } from 'react-redux';
-import { setAuthData } from '../../features/auth/auth';
+import { useDispatch } from "react-redux";
+import { setAuthData } from "../../features/auth/auth";
+import { setInventario } from "../../features/inventario/inventario";
+import { signin,infoInventario,createCookie } from "../Api/apiAddress";
 ReactModal.setAppElement(document.getElementById("root"));
 
 export function Login(props) {
   const [cedula, setCedula] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [wrongCredentials, setWrongCredentials] = useState(false);
   const dispatch = useDispatch();
 
-  //hacer Login
   const handlelogin = async (e) => {
     e.preventDefault(); // Cancelar el envío del formulario
-
     try {
+      //definicion de variables
       setIsLoading(true);
-      // Configura los datos de autenticación (cedula y contraseña)
-      const data = { id: cedula, password: password };
-      // Realiza la petición POST a la API enviando los datos en el cuerpo
-      const response = await axios.post(
-        "http://localhost:5000/api/users/signin",
-        data
-      );
-      const token = response.data;
-
-      // Maneja la respuesta de la API con los datos del usuario
-      console.log(token);
-      setTimeout(() => {
+      
+      // Llama a la función signin de la API
+      const responseSignin = await signin(cedula, password); 
+      const token = responseSignin.token;
+      if (!token || token === "" || token === undefined) {
         setIsLoading(false);
-      }, 2000); // Espera 1 segundo antes de cambiar a false
-      dispatch(setAuthData({ token, usuario:cedula }));
+        throw new Error("Credenciales inválidas");
+      }
+
+      //conexion a la api para inventario
+      const responseInventario = await infoInventario(token);
+
+      //setiar la variable global del token e inventario
+      dispatch(setAuthData({ token, usuario: cedula , name: responseSignin.name, rol: responseSignin.roles,timeExp: responseSignin.time_Exp}));
+      dispatch(setInventario(responseInventario));
+
+      // Crea la cookie
+      createCookie("myCookie", JSON.stringify({ token, usuario: cedula , name: responseSignin.name, rol: responseSignin.roles,timeExp: responseSignin.time_Exp}));
+
     } catch (error) {
-      setShowErrorModal(true);
-      // Cierra el modal después de 2 segundos
-      setTimeout(() => {
-        setShowErrorModal(false);
-      }, 1000);
-      // Maneja el error de la petición
-      console.log(error.response.data);
+      setWrongCredentials(true);
       setIsLoading(false);
+      // Maneja el error de la petición
+      console.log(error);
     }
   };
 
@@ -62,7 +62,7 @@ export function Login(props) {
           <div className="input-container">
             <label className="label">Usuario:</label>
             <input
-              className="input"
+              className={`input ${wrongCredentials ? "input-wrong" : ""}`}
               value={cedula}
               type="text"
               onChange={(e) => setCedula(e.target.value)}
@@ -71,25 +71,19 @@ export function Login(props) {
             ></input>
             <label className="label">Contraseña:</label>
             <input
-              className="input"
+              className={`input ${wrongCredentials ? "input-wrong" : ""}`}
               type={"password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="**********"
               autoComplete="current-password"
             ></input>
+            {wrongCredentials && <span className="error-message">{"Credenciales no validas"}</span>}
           </div>
           <button className="btn-login">
             {isLoading ? "Cargando..." : "Log in"}
           </button>
         </form>
-        <ReactModal
-          className="error-modal"
-          isOpen={showErrorModal}
-          onRequestClose={() => setShowErrorModal(false)}
-        >
-          <h2>Credenciales inválidas</h2>
-        </ReactModal>
       </div>
       <footer className="footer">
         <p>&copy; 2023 Bolsas Romy. Todos los derechos reservados.</p>

@@ -1,7 +1,7 @@
 .MainDash{
     display: flex;
     flex-direction: column;
-    justify-content:space-around;
+    justify-content:first baseline;
 }
 
 @media screen and (max-width: 1200px){

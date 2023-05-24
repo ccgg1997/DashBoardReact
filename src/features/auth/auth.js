@@ -5,6 +5,9 @@ const initialState = {
   token: null,
   usuario: null,
   isAuthenticated: false,
+  name: null,
+  rol: null,
+  timeExp: null,
 };
 
 export const authSlice = createSlice({
@@ -15,11 +18,17 @@ export const authSlice = createSlice({
       state.token = action.payload.token;
       state.usuario = action.payload.usuario;
       state.isAuthenticated = true;
+      state.name = action.payload.name;
+      state.rol = action.payload.rol;
+      state.timeExp = action.payload.timeExp;
     },
     clearAuthData: (state) => {
         state.token = null;
         state.usuario = null;
         state.isAuthenticated = false;
+        state.name = null;
+        state.rol = null;
+        state.timeExp = null;
         }   
   },
 });

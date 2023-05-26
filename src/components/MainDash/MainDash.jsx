@@ -4,13 +4,18 @@ import Cards from "../Cards/Cards";
 import Table from "../Table/Table";
 import RightSide from "../RightSide/RightSide";
 import { useSelector } from "react-redux";
+import Update from "../Update/Update";
+import CustomerReview from "../CustomerReview/CustomerReview";
 
 const MainDash = () => {
   //OBTENER INVENTARIO DEL REDUCER
   const { inventario } = useSelector((state) => state.inventario);
-  const { isAuthenticated,token,name,usuario,timeExp,rol } = useSelector(state => state.auth);
-  
-  console.log(isAuthenticated,token,name,usuario,timeExp,rol,inventario);
+  const { isAuthenticated, token, name, usuario, timeExp, rol } = useSelector(
+    (state) => state.auth
+  );
+
+
+  console.log(isAuthenticated, token, name, usuario, timeExp, rol, inventario);
 
   //DEFINIR QUE DATOS DEL INVENTARIO QUIERO EN LA TABLA
   const nuevaLista = inventario.map((objeto) => {
@@ -18,22 +23,35 @@ const MainDash = () => {
       ProductId: objeto.productoId,
       BodegaId: objeto.bodegaId,
       Familia: objeto.familiaNombre,
-      Cantidad: objeto.cantidad
+      Cantidad: objeto.cantidad,
     };
   });
 
   //SACAR LOS HEADS DE LA LISTA INVENTARIO
-  const heads = nuevaLista.length > 0 ? Object.keys(nuevaLista[0]).map((head) => ({ [head]: head })) : [];
+  const heads =
+    nuevaLista.length > 0
+      ? Object.keys(nuevaLista[0]).map((head) => ({ [head]: head }))
+      : [];
 
   return (
     <>
-    <div className="MainDash">
-      <h1>Dashboard</h1>
-      <Cards />
-      
-      <Table data={nuevaLista} heads={heads} isInventario={true} limite={5000} title={"Recent Orders"} />
-    </div>
-    <RightSide />
+      <div className="MainDash">
+        <h1>Dashboard</h1>
+        <Cards />
+        <Table
+          data={nuevaLista}
+          heads={heads}
+          isInventario={true}
+          limite={5000}
+          title={"Recent Orders"}
+        />
+      </div>
+      <RightSide
+        updatesComponent={<Update />}
+        extraInfo={<CustomerReview />}
+        title1={"NOTICIAS"}
+        title2={"PRODUCCION"}
+      />
     </>
   );
 };

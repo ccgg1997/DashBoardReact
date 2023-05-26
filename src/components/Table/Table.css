@@ -34,7 +34,7 @@ font-weight: bold;
    
     .Table{
         width: 170%;
-        margin: 2rem;
+        margin: 0.5rem;
 
     }
 }
@@ -46,7 +46,20 @@ font-weight: bold;
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 23rem;
+        width: 36rem !important;
+        margin: 1rem;
+        
+    }
+}
+
+@media screen and (max-width:673px){
+   
+    .Table{
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 23rem !important;
         margin: 1rem;
         
     }

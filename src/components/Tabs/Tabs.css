@@ -1,0 +1,45 @@
+/* Tabs.css */
+
+.tabsContainer{
+    margin-top: 2rem !important;
+    margin-left: 1rem !important;
+    display: flex;
+    flex-direction: column;
+    overflow-x: scroll;
+    
+}
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #edb8b8 !important;
+    border-radius: 5px;
+    border: none;
+    transition: background-color 0.3s ease;
+    font-family: "Poppins", sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+    color: aliceblue;
+  }
+
+  .tab:hover {
+    background-color: #f84242 !important;
+  }
+
+  .tabactive {
+    flex: 1;
+    text-align: center;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    transition: background-color 0.3s ease;
+    font-family: "Poppins", sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+
+    background-color: #fb4859;
+    
+  }
+  

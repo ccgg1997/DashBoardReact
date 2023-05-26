@@ -5,7 +5,7 @@ import ReactModal from "react-modal";
 import { useDispatch } from "react-redux";
 import { setAuthData } from "../../features/auth/auth";
 import { setInventario } from "../../features/inventario/inventario";
-import { signin,infoInventario,createCookie } from "../Api/apiAddress";
+import { signin, infoInventario, createCookie } from "../Api/apiAddress";
 ReactModal.setAppElement(document.getElementById("root"));
 
 export function Login(props) {
@@ -20,9 +20,9 @@ export function Login(props) {
     try {
       //definicion de variables
       setIsLoading(true);
-      
+
       // Llama a la función signin de la API
-      const responseSignin = await signin(cedula, password); 
+      const responseSignin = await signin(cedula, password);
       const token = responseSignin.token;
       if (!token || token === "" || token === undefined) {
         setIsLoading(false);
@@ -33,12 +33,28 @@ export function Login(props) {
       const responseInventario = await infoInventario(token);
 
       //setiar la variable global del token e inventario
-      dispatch(setAuthData({ token, usuario: cedula , name: responseSignin.name, rol: responseSignin.roles,timeExp: responseSignin.time_Exp}));
+      dispatch(
+        setAuthData({
+          token,
+          usuario: cedula,
+          name: responseSignin.name,
+          rol: responseSignin.roles,
+          timeExp: responseSignin.time_Exp,
+        })
+      );
       dispatch(setInventario(responseInventario));
 
       // Crea la cookie
-      createCookie("myCookie", JSON.stringify({ token, usuario: cedula , name: responseSignin.name, rol: responseSignin.roles,timeExp: responseSignin.time_Exp}));
-
+      createCookie(
+        "myCookie",
+        JSON.stringify({
+          token,
+          usuario: cedula,
+          name: responseSignin.name,
+          rol: responseSignin.roles,
+          timeExp: responseSignin.time_Exp,
+        })
+      );
     } catch (error) {
       setWrongCredentials(true);
       setIsLoading(false);
@@ -78,7 +94,9 @@ export function Login(props) {
               placeholder="**********"
               autoComplete="current-password"
             ></input>
-            {wrongCredentials && <span className="error-message">{"Credenciales no validas"}</span>}
+            {wrongCredentials && (
+              <span className="error-message">{"Credenciales no validas"}</span>
+            )}
           </div>
           <button className="btn-login">
             {isLoading ? "Cargando..." : "Log in"}

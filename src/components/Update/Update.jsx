@@ -1,8 +1,9 @@
 import React from 'react'
 import './Update.css'
-import { UpdatesData } from '../Api/Data'
+import { DataNoticias } from './DataNoticias'
 
 const Update = () => {
+  const UpdatesData = DataNoticias
   return (
     <div className="Updates">
       {

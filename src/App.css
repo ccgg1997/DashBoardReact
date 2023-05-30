@@ -34,12 +34,12 @@
   background-color: var(--glass);
   overflow: hidden;
   grid-template-columns:11rem auto 25rem;
-  gap: 10px;
+  gap: 40px;
 }
 
 @media screen and (max-width: 1200px) {
   .AppGlass{
-    grid-template-columns: 10% 50% auto;
+    grid-template-columns: 10% 50% auto !important;
     overflow-y:scroll ;
   }
   
@@ -47,7 +47,7 @@
 
 @media screen and (max-width: 768px) {
   .AppGlass{
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
   .AppGlass::-webkit-scrollbar{
       display: none;

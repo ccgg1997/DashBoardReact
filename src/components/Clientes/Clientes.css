@@ -1,48 +1,48 @@
-.Product{
+.Clientes{
     display: flex;
     width: 80%;
     height: 100%;
     flex-direction: column;
-    
 }
 
 .title{
     margin-left: 1rem;
 }
 
-@media screen and (min-width: 1422px){
-    .Product{
-        width: 100%;
+@media screen and (min-width: 1438px){
+    .Clientes{
+        width: 100% !important;
     }
 }
 
+
 @media screen and (max-width: 1200px){
-    .Product{
+    .Clientes{
         width: 150%;
     }
 }
 
 @media screen and (max-width: 1000px){
-    .Product{
+    .Clientes{
         width: 150%;
     }
 }
 
 @media screen and (max-width: 770px){
-    .Product{
+    .Clientes{
         width: 55%;
     }
 }
 
 @media screen and (max-width: 613px){
-    .Product{
+    .Clientes{
         width: 31%;
     }
 }
 
 
 @media screen and (max-width: 263px){
-    .Product{
+    .Clientes{
         width: 25%;
     }
 }

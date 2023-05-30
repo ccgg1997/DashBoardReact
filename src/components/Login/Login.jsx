@@ -1,11 +1,12 @@
 import { useState } from "react";
-import logo from "./imagenesLogin/logo";
+import logo from "./imagenesLogin/logo.jpg";
 import "./Login.css";
 import ReactModal from "react-modal";
 import { useDispatch } from "react-redux";
 import { setAuthData } from "../../features/auth/auth";
 import { setInventario } from "../../features/inventario/inventario";
-import { signin, infoInventario, createCookie } from "../Api/apiAddress";
+import { setCliente } from "../../features/clientes/clientes";
+import { signin, infoInventario, createCookie,infoClientes } from "../Api/apiAddress";
 ReactModal.setAppElement(document.getElementById("root"));
 
 export function Login(props) {
@@ -29,8 +30,9 @@ export function Login(props) {
         throw new Error("Credenciales inválidas");
       }
 
-      //conexion a la api para inventario
+      //conexion a la api para inventario, clientes
       const responseInventario = await infoInventario(token);
+      const responseClientes = await infoClientes(token);
 
       //setiar la variable global del token e inventario
       dispatch(
@@ -42,7 +44,10 @@ export function Login(props) {
           timeExp: responseSignin.time_Exp,
         })
       );
+
+      //setiar la variable global del inventario
       dispatch(setInventario(responseInventario));
+      dispatch(setCliente(responseClientes));
 
       // Crea la cookie
       createCookie(

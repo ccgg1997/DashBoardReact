@@ -28,6 +28,23 @@ export const signin = async (cedula, password) => {
     }
   };
 
+  export const infoClientes = async (token) => {
+    const infoClientesAddress = apiAddress + "/negocio";
+    try {
+      console.log('estamos en cleinte');
+      const response= await axios.get(infoClientesAddress, {
+        headers: {
+          "x-access-token": token,
+        },  
+      });
+      return response.data;
+    }
+    catch (error) {
+      throw new Error("Error al obtener la información de los clientes:", error);
+    }
+  };
+    
+
   export const createCookie = (name, value, days=0.15) => {
     let expires = "";
     if (days) {
@@ -37,3 +54,22 @@ export const signin = async (cedula, password) => {
     }
     document.cookie = name + "=" + value + expires + "; path=/";
   };
+  
+
+export const crearCliente = async(data,token) => {
+  const crearClienteAddress = apiAddress + "/negocio";
+  try {
+    console.log(data, token,'en agregar front cleinte');
+    const response = await axios.post(crearClienteAddress, data, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error al crear el cliente");
+  }
+  
+}

@@ -6,7 +6,7 @@
 //faztcode
 //https://www.youtube.com/watch?v=w2rAP7d6ndg&ab_channel=FaztCode
 
-//authSlice
+//authSlicereducer
 //https://www.youtube.com/watch?v=F9HCKW8wjWQ&ab_channel=Heeman
 
 //reducers en espaniol

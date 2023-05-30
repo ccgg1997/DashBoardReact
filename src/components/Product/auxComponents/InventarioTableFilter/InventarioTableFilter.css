@@ -1,0 +1,22 @@
+.SelectContainer{
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content:left !important;
+    align-items: center !important;
+    margin-top: 1rem !important;
+    width: 100% !important;
+    height: 65px !important;
+    font-weight: bold;
+}
+
+.Select{
+    width: 200px !important;
+    height: 40px;
+    border-radius: 15px !important;
+}
+
+.SelectContainer p{
+    margin-right: 1rem !important;
+    font-size: 1rem !important;
+    font-weight: bold !important;
+}

@@ -1,11 +1,11 @@
 import React from "react";
 import "./MainDash.css";
-import Cards from "../Cards/Cards";
-import Table from "../Table/Table";
-import RightSide from "../RightSide/RightSide";
+import Cards from "./AuxMainDash/Cards/Cards";
+import Table from "../Basicos/Table/Table";
+import RightSide from "../Basicos/RightSide/RightSide";
 import { useSelector } from "react-redux";
-import Update from "../Update/Update";
-import CustomerReview from "../CustomerReview/CustomerReview";
+import Update from "./AuxMainDash/Update/Update";
+import CustomerReview from "./AuxMainDash/CustomerReview/CustomerReview";
 
 const MainDash = () => {
   //OBTENER INVENTARIO DEL REDUCER

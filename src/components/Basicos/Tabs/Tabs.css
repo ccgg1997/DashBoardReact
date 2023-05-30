@@ -1,0 +1,56 @@
+/* Tabs.css */
+
+.tabsContainer {
+  margin-left: 1rem !important;
+  display: flex !important;
+  flex-direction: column;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: #edb8b8 !important;
+  border-radius: 5px;
+  border: none;
+  transition: background-color 0.3s ease;
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  font-weight: bold;
+  color: aliceblue;
+}
+.tabContent {
+  display: flex !important;
+  flex-direction: column;
+  background-color: rgb(255, 255, 255);
+  padding: 20px;
+  border-radius: 0 15px 13px 13px;
+  box-shadow: 1px 8px 5px 0px rgba(0, 0, 0, 0.477);
+  max-height: 550px;
+  overflow-y: scroll;
+  scrollbar-width: thin; /* Para navegadores Firefox */
+  scrollbar-color: transparent transparent; 
+}
+.tabContent::-webkit-scrollbar {
+  width: 5px; /* Para navegadores Chrome, Safari y Opera */
+}
+
+.tab:hover {
+  background-color: #f84242 !important;
+}
+
+.tabactive {
+  flex: 1;
+  text-align: center;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: none;
+  transition: background-color 0.3s ease;
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  font-weight: bold;
+
+  background-color: #fb4859;
+}

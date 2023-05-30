@@ -22,7 +22,7 @@ export const SidebarData = [
   {
     icon: UilUsersAlt,
     heading: "Clientes",
-    path:"Customers"
+    path:"Clientes"
   },
   {
     icon: UilPackage,
@@ -32,7 +32,7 @@ export const SidebarData = [
   {
     icon: UilChartLine,
     heading: "Analytics",
-    path:"Products"
+    path:"Analytics"
   },
 ];
 

@@ -10,40 +10,59 @@
     margin-left: 1rem;
 }
 
-@media screen and (min-width: 1422px){
-    .Product{
-        width: 100%;
-    }
-}
-
-@media screen and (max-width: 1200px){
-    .Product{
-        width: 150%;
-    }
-}
-
-@media screen and (max-width: 1000px){
-    .Product{
-        width: 150%;
-    }
-}
-
-@media screen and (max-width: 770px){
-    .Product{
-        width: 55%;
-    }
-}
-
-@media screen and (max-width: 613px){
-    .Product{
-        width: 31%;
-    }
-}
-
-
-@media screen and (max-width: 263px){
+@media screen and (min-width: 263px){
     .Product{
         width: 25%;
     }
 }
+
+@media screen and (min-width: 443px){
+    .Product{
+        width: 35%;
+    }
+}
+
+
+@media screen and (min-width: 613px){
+    .Product{
+        width: 50%;
+    }
+}
+
+@media screen and (min-width: 770px){
+    .Product{
+        width: 140%;
+    }
+}
+
+@media screen and (min-width: 900px){
+    .Product{
+        width: 170%;
+    }
+}
+
+@media screen and (min-width: 1200px){
+    .Product{
+        width: 75%;
+    }
+}
+
+@media screen and (min-width: 1243px){
+    .Product{
+        width: 80%;
+    }
+}
+
+@media screen and (min-width: 1401px){
+    .Product{
+        width: 90%;
+    }
+}
+
+@media screen and (min-width: 1601px){
+    .Product{
+        width: 105%;
+    }
+}
+
 

@@ -2,7 +2,6 @@ import React from 'react'
 import './RightSide.css'
 
 
-
 const RightSide = ({ updatesComponent, extraInfo,title1,title2 }) => {
   return (
     <div className="RightSide">

@@ -6,7 +6,8 @@ import { useDispatch } from "react-redux";
 import { setAuthData } from "../../features/auth/auth";
 import { setInventario } from "../../features/inventario/inventario";
 import { setCliente } from "../../features/clientes/clientes";
-import { signin, infoInventario, createCookie,infoClientes } from "../Api/apiAddress";
+import { setPrecio } from "../../features/precios/precios";
+import { signin, infoInventario, createCookie,infoClientes, infoPrecios } from "../Api/apiAddress";
 ReactModal.setAppElement(document.getElementById("root"));
 
 export function Login(props) {
@@ -33,6 +34,8 @@ export function Login(props) {
       //conexion a la api para inventario, clientes
       const responseInventario = await infoInventario(token);
       const responseClientes = await infoClientes(token);
+      const responsePrecios = await infoPrecios(token);
+      console.log('precios de la api:',responsePrecios);
 
       //setiar la variable global del token e inventario
       dispatch(
@@ -48,6 +51,7 @@ export function Login(props) {
       //setiar la variable global del inventario
       dispatch(setInventario(responseInventario));
       dispatch(setCliente(responseClientes));
+      dispatch(setPrecio(responsePrecios));
 
       // Crea la cookie
       createCookie(

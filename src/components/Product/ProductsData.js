@@ -1,8 +1,9 @@
 import React from 'react'
 import {InventarioTableFilter} from './auxComponents/InventarioTableFilter/InventarioTableFilter'
+import {Precios} from './auxComponents/Precios/Precios'
 
 export  const TabsData = [
     { name: 'Inventario', component: <InventarioTableFilter/> },
-    { name: 'Producción ', component: <h1>Tab 2</h1> },
+    { name: 'Producción ', component: <Precios/> },
 ]
 

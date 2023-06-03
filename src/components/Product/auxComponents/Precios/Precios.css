@@ -1,0 +1,35 @@
+.Precios{
+    display: flex !important;
+    width: 100% !important;
+    height: 80%;
+    flex-direction: column;
+    margin-top: 2rem;
+    justify-content:first baseline;
+    overflow-x: scroll;
+}
+.contenedorOpcionesPrecios{
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content:first baseline;
+}
+.precioContainer{
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content:first baseline;
+} 
+
+
+.containerTablefilter{
+    display: flex;
+    flex-direction: column;
+    margin-right: 1rem;
+}
+
+@media screen and (max-width: 1200px){
+    .Precios{
+        width: 120% !important;
+    }
+}
+

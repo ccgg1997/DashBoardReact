@@ -7,6 +7,7 @@ import {
 import {crearCliente} from "../../../Api/apiAddress";
 import FormEliminar from "./FormEliminar/FormEliminar";
 import FormagregarCliente from "./FormagregarCliente/FormagregarCliente";
+import FormEditar from "./FormEditar/FormEditar";
 
 const parametros = [
     { field: 'id', label: 'Id', type: 'number' },
@@ -40,7 +41,7 @@ export const CardsData = [
       boxShadow: "1px 3px 9px #993366",
     },
     png: UilShop,
-    component: <FormagregarCliente parametros={parametros} crearCliente={crearCliente}  />,
+    component: <FormEditar />,
    
   },
   {
@@ -52,6 +53,7 @@ export const CardsData = [
     png: UilStoreSlash,
     component: <FormEliminar />,
   },
+  
 ];
 
 

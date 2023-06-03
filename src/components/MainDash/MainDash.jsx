@@ -52,6 +52,7 @@ const MainDash = () => {
         title1={"NOTICIAS"}
         title2={"PRODUCCION"}
       />
+    
     </>
   );
 };

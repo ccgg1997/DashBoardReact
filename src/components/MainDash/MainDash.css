@@ -1,20 +1,74 @@
+.mainDashContainer{
+    display: grid;
+    /* background-color: aquamarine; */
+    border-radius: 2rem;
+    background-color: var(--glass);
+    overflow-y: scroll;
+    grid-template-columns:70% auto ;
+    gap: 10px;
+    padding: 0.5rem;
+}
+
+.rightsidecontainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+    /* background-color: blue; */
+}
 .MainDash{
     display: flex;
     flex-direction: column;
-    margin-top: 2rem;
+    margin-top: 0.5rem;
+    margin-left: 2%;
     justify-content:first baseline;
+
+    /* background-color: sandybrown; */
 }
+
+.tablecontainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    /* background-color: red; */
+}
+
+.MainDash::-webkit-scrollbar {
+    width: 0.5em; /* Ancho de la barra de desplazamiento */
+  }
+
+.MainDash::-webkit-scrollbar-track {
+    background-color: transparent; /* Color de fondo de la barra de desplazamiento */
+  }
+
+
 
 @media screen and (max-width: 1200px){
     .MainDash{
         justify-content:flex-start;
         margin-top: 2rem;
     }
+    .tablecontainer{
+        overflow-x: scroll;
+        width: 140%;
+    }
+
+    
 }
 
 @media screen and (max-width: 768px){
     .MainDash{
         align-items: center;
+    }
+    .mainDashContainer{
+        grid-template-columns: 90% !important;
+    }
+    .tablecontainer{
+        width: 110% !important;
+        overflow-x: scroll;
     }
     
 }

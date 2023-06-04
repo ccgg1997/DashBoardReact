@@ -14,7 +14,6 @@ const MainDash = () => {
     (state) => state.auth
   );
 
-
   console.log(isAuthenticated, token, name, usuario, timeExp, rol, inventario);
 
   //DEFINIR QUE DATOS DEL INVENTARIO QUIERO EN LA TABLA
@@ -35,24 +34,29 @@ const MainDash = () => {
 
   return (
     <>
-      <div className="MainDash">
-        <h1>Dashboard</h1>
-        <Cards />
-        <Table
-          data={nuevaLista}
-          heads={heads}
-          isInventario={true}
-          limite={5000}
-          title={"Recent Orders"}
-        />
+      <div className="mainDashContainer">
+        <div className="MainDash">
+          <h1>Dashboard</h1>
+          <Cards />
+          <div className="tablecontainer">
+            <Table
+              data={nuevaLista}
+              heads={heads}
+              isInventario={true}
+              limite={5000}
+              title={"Recent Orders"}
+            />
+          </div>
+        </div>
+        <div className="rightsidecontainer">
+          <RightSide
+            updatesComponent={<Update />}
+            extraInfo={<CustomerReview />}
+            title1={"NOTICIAS"}
+            title2={"PRODUCCION"}
+          />
+        </div>
       </div>
-      <RightSide
-        updatesComponent={<Update />}
-        extraInfo={<CustomerReview />}
-        title1={"NOTICIAS"}
-        title2={"PRODUCCION"}
-      />
-    
     </>
   );
 };

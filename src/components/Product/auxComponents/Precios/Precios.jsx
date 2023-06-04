@@ -3,8 +3,8 @@ import "./Precios.css";
 import { useState } from "react";
 import TableFilter from "../../../Basicos/TableFilter/TableFilter";
 import { useSelector } from "react-redux";
-import RightSide from "../../../Basicos/RightSide/RightSide";
-import Update from "../../../MainDash/AuxMainDash/Update/Update";
+import { infoPreciosClienteEspecial } from "../../../Api/apiAddress";
+
 
 export const Precios = () => {
   //variables iniciales (clientes, precios, token)
@@ -13,11 +13,21 @@ export const Precios = () => {
   const { precio } = useSelector((state) => state.precios);
   const { token } = useSelector((state) => state.auth);
   const [selectedItem, setSelectedItem] = useState("");
+  const [preciosEspecial, setPreciosEspecial] = useState([]);
 
   //acciones de select
   const handleItemChange = (e) => {
     setSelectedItem(e.target.value);
   };
+
+  const handleSearchClick = async(e)=>{
+    e.preventDefault();
+    console.log("preciosEspecial:", [101]);
+    const preciosEspecial = await infoPreciosClienteEspecial(selectedItem,token);
+    console.log("preciosEspecial:", preciosEspecial,'precionormal:',precio);
+    setPreciosEspecial(preciosEspecial);
+    
+  }
 
   //valores del select
   const uniqueIds = [...new Set(clientes.map((cliente) => cliente.id))];
@@ -45,7 +55,7 @@ export const Precios = () => {
               </option>
             ))}
           </select>
-          <button>busca lista de precio especial</button>
+          <button className="button" onClick={handleSearchClick}>busca lista de precio especial</button>
         </div>
         <div className="precioContainer">
           <div className="containerTablefilter">
@@ -60,7 +70,7 @@ export const Precios = () => {
               <TableFilter
                 nombre={"PRECIOS ESPECIAL"}
                 nombreColumnas={columnas}
-                datosFilas={precio}
+                datosFilas={preciosEspecial}
               />
             </div>
           )}

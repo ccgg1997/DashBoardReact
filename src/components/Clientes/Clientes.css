@@ -1,49 +1,22 @@
 .Clientes{
     display: flex;
-    width: 80%;
+    width: 97%;
     height: 100%;
     flex-direction: column;
+    overflow-x: scroll;
 }
 
 .title{
     margin-left: 1rem;
 }
 
-@media screen and (min-width: 1438px){
-    .Clientes{
-        width: 100% !important;
-    }
-}
 
+.Clientes::-webkit-scrollbar {
+    width: 0.5em; /* Ancho de la barra de desplazamiento */
+  }
 
-@media screen and (max-width: 1200px){
-    .Clientes{
-        width: 150%;
-    }
-}
+.Clientes::-webkit-scrollbar-track {
+    background-color: transparent; /* Color de fondo de la barra de desplazamiento */
+  }
 
-@media screen and (max-width: 1000px){
-    .Clientes{
-        width: 150%;
-    }
-}
-
-@media screen and (max-width: 770px){
-    .Clientes{
-        width: 55%;
-    }
-}
-
-@media screen and (max-width: 613px){
-    .Clientes{
-        width: 31%;
-    }
-}
-
-
-@media screen and (max-width: 263px){
-    .Clientes{
-        width: 25%;
-    }
-}
 

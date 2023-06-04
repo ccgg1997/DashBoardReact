@@ -5,7 +5,7 @@ import { TabsData } from "./ProductsData";
 
 const Product = () => {
   return (
-    <>
+
       <div className="Product">
         <div className="title">
           <h1>Productos</h1>
@@ -13,7 +13,7 @@ const Product = () => {
         <Tabs tabs={TabsData} />
         
       </div>
-    </>
+
   );
 };
 

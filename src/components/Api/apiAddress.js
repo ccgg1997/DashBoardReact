@@ -13,6 +13,7 @@ export const signin = async (cedula, password) => {
   }
 };
 
+//--------------------INVENTARIOS--------------------
 export const infoInventario = async (token) => {
   const infoInventarioAddress = apiAddress + "/inventario";
   try {
@@ -27,6 +28,7 @@ export const infoInventario = async (token) => {
   }
 };
 
+//-----------------CLIENTES FUNCIONES-----------------
 export const infoClientes = async (token) => {
   const infoClientesAddress = apiAddress + "/negocio";
   try {
@@ -87,6 +89,7 @@ export const editarCliente = async (id, data, token) => {
   }
 };
 
+//----------------PRECIOS------------------
 export const infoPrecios = async (token) => {
   const infoPreciosAddress = apiAddress + "/listaprecios";
   try {
@@ -100,6 +103,24 @@ export const infoPrecios = async (token) => {
     throw new Error("Error al obtener la información de los precios");
   }
 };
+
+export const infoPreciosClienteEspecial = async (id, token) => {
+  const infoPreciosClienteEspecialAddress =
+    apiAddress + "/listaprecios/" + id;
+  try { 
+    const response = await axios.get(infoPreciosClienteEspecialAddress, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      "Error al obtener la información de los precios del cliente especial"
+    );  
+  }
+};
+
 
 export const createCookie = (name, value, days = 0.15) => {
   let expires = "";

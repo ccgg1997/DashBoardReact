@@ -12,11 +12,6 @@ import FormEditar from "./FormEditar/FormEditar";
 const parametros = [
     { field: 'id', label: 'Id', type: 'number' },
     { field: 'negocio', label: 'Negocio', type: 'text' },
-    /*{ field: 'duenio', label: 'Dueño', type: 'select', options: [
-      { label: 'Masculino', value: 'masculino' },
-      { label: 'Femenino', value: 'femenino' },
-      { label: 'Otro', value: 'otro' },
-    ] },*/
     { field: 'duenio', label: 'Dueño', type: 'text'},
     { field: 'direccion', label: 'Direccion', type: 'text'},
     { field: 'telefono', label: 'Telefono', type: 'number' },

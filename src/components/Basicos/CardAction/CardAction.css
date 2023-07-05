@@ -27,7 +27,7 @@
 }
 
 /*expandible card*/
-.ExpandedCard {
+.ExpandedCardAction {
   position: absolute;
   width: 60%;
   height: 70vh;
@@ -39,16 +39,18 @@
   align-items: center;
   justify-content:space-around;
   padding: 1rem;
+  top: 5rem; 
+  
 }
 
-.ExpandedCard > span:nth-of-type(1) {
+.ExpandedCardAction > span:nth-of-type(1) {
   font-size: 26px;
   font-weight: bold;
   color: white;
   text-shadow: 0px 0px 15px white;
 }
 
-.ExpandedCard > span:nth-of-type(2) {
+.ExpandedCardAction > span:nth-of-type(2) {
   color: rgb(223, 222, 222);
   font-size: 16px;
 }
@@ -61,7 +63,7 @@
 
 
 @media screen and (max-width: 1200px) {
-  .ExpandedCard {
+  .ExpandedCardAction {
     top: 2rem;
     height: 70vh;
     left: 6rem;
@@ -80,7 +82,7 @@
 }
 
 @media screen and (max-width: 760px) {
-  .ExpandedCard {
+  .ExpandedCardAction {
     top: 8rem;
     height: 50%;
     left: 15px;

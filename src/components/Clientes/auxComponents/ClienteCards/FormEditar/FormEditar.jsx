@@ -17,7 +17,7 @@ const FormEditar = () => {
   // Seleccionando y estableciendo el estado del elemento a editar
   const [selectedItem, setSelectedItem] = useState("");
   const [clienteSeleccionado, setClienteSeleccionado] = useState({});
-  const [keyClienteSeleccionado, setKeyClienteSeleccionado] = useState([]);
+  
   // Mostrar el modal de confirmación
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [clienteEditado, setClienteEditado] = useState(false);
@@ -30,8 +30,7 @@ const FormEditar = () => {
     );
     const { id, ultimoPedido, ultimaLlamada, ...rest } = selectedCliente || {};
     setClienteSeleccionado(rest);
-    const keys = Object.keys(selectedCliente ?? {});
-    setKeyClienteSeleccionado(keys && keys.length > 0 ? keys : "");
+    //const keys = Object.keys(selectedCliente ?? {});
     setClienteEditado(false);
   };
 
@@ -43,7 +42,6 @@ const FormEditar = () => {
   const handleConfirmationAccept = async () => {
     setShowConfirmation(false);
     try {
-      console.log('cliente seleccionado:',clienteSeleccionado, 'token:', token, 'selectedItem:', selectedItem);
       await editarCliente(selectedItem,clienteSeleccionado, token);
       const negociosActualizado = await infoClientes(token);
       dispatch(setCliente(negociosActualizado));

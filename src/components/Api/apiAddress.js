@@ -13,6 +13,50 @@ export const signin = async (cedula, password) => {
   }
 };
 
+//-----------------Produccion FUNCIONES-----------------
+export const infoProduccion = async (token) => {
+  const infoProduccionAddress = apiAddress + "/produccion";
+  try {
+    const response = await axios.get(infoProduccionAddress, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("Error al obtener la información de las ordenes de producción (funciones apiAdress.js):", error);
+  }
+};
+
+//-----------------Familia FUNCIONES-----------------
+export const infoFamilia = async (token) => {
+  const infoFamiliaAddress = apiAddress + "/familia";
+  try {
+    const response = await axios.get(infoFamiliaAddress, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("Error al obtener la información de las familias (funciones apiAdress.js):", error);
+  }
+};
+
+export const crearFamilia = async (data, token) => {
+  const crearFamiliaAddress = apiAddress + "/familia";
+  try {
+    const response = await axios.post(crearFamiliaAddress, data, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("Error al crear la familia");
+  }
+};
+
 //--------------------INVENTARIOS--------------------
 export const infoInventario = async (token) => {
   const infoInventarioAddress = apiAddress + "/inventario";
@@ -32,7 +76,6 @@ export const infoInventario = async (token) => {
 export const infoClientes = async (token) => {
   const infoClientesAddress = apiAddress + "/negocio";
   try {
-    console.log("estamos en cleinte");
     const response = await axios.get(infoClientesAddress, {
       headers: {
         "x-access-token": token,
@@ -89,6 +132,7 @@ export const editarCliente = async (id, data, token) => {
   }
 };
 
+
 //----------------PRECIOS------------------
 export const infoPrecios = async (token) => {
   const infoPreciosAddress = apiAddress + "/listaprecios";
@@ -119,6 +163,72 @@ export const infoPreciosClienteEspecial = async (id, token) => {
       "Error al obtener la información de los precios del cliente especial"
     );  
   }
+};
+
+
+//-----------------PRODUCTOS FUNCIONES-----------------
+export const cambiarPrecioClienteEspecial = async (token,product_id, data, ) => {
+  const cambiarPrecioClienteEspecialAddress =
+    apiAddress + "/products/precioEspecialProd/" + product_id;
+  try {
+    const response = await axios.put(
+      cambiarPrecioClienteEspecialAddress,
+      data,
+      {
+        headers: {
+          "x-access-token": token,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error("Error al cambiar el precio del cliente especial");
+  }
+};
+
+export const cambiarPrecioTodos = async (token,product_id, data) => {
+  const cambiarPrecioTodosAddress = apiAddress + "/products/updateAllPriceProductos/" + product_id;
+  try {
+    const response = await axios.put(cambiarPrecioTodosAddress, data, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    return response.data;
+  }
+  catch (error) {
+    throw new Error("Error al cambiar el precio de todos los productos");
+  }
+};
+
+export const createProduct = async (data, token) => {
+  const createProductAddress = apiAddress + "/products";
+  try {
+    const response = await axios.post(createProductAddress, data, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    console.log(response.data);
+    return 'check';
+  } catch (error) {
+    throw new Error("Error al crear el producto");
+  }
+};
+
+//-----------------PERSONAS --------------------------------------
+export const createPersona = async (data, token) => {
+  const createPersonaAddress = apiAddress + "/persona";
+  try {
+    const response = await axios.post(createPersonaAddress, data, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("Error al crear la persona");
+  } 
 };
 
 

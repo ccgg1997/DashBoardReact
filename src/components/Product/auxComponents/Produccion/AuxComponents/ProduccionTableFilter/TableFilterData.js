@@ -14,9 +14,9 @@ export const functionTableData = (() => {
     );
     if(listaFiltrada.length === 0) return { nombresKeys: [], nuevaLista: [] };
     const nuevaLista = listaFiltrada.map(
-      ({ tipo,bodegaId, familiaNombre, productoId, cantidad, estilos,nombreProducto }) => {
+      ({personaId,nombrePersona,familiaNombre, productoId, cantidad, estilos, cantidadRecibida, fechaInicial}) => {
         const estilosReducidos = estilos.reduce((acc, estilo) => {
-          acc[estilo.nombre.replace(/ /g, "")] = estilo.cantidad;
+          acc[estilo.nombre.replace(/ /g, "")] = (estilo.cantidad-estilo.cantidadRecibida);
           return acc;
         }, {});
 
@@ -24,12 +24,14 @@ export const functionTableData = (() => {
 
         return {
           id: uniqueId,
+          PersonaId: personaId,
+          Nombre: nombrePersona,
+          Fecha: fechaInicial,
+          CantidadInicial: cantidad,
+          cantidadRecibida: cantidadRecibida,
+          nombrePersona:nombrePersona,
           ProductId: productoId,
-          tipo:tipo,
-          BodegaId: bodegaId,
-          nombreProducto:nombreProducto,
           Familia: familiaNombre,
-          Cantidad: cantidad,
           ...estilosReducidos,
         };
       }
@@ -39,7 +41,7 @@ export const functionTableData = (() => {
       return {
         field: key,
         headerName: key.charAt(0).toUpperCase() + key.slice(1),
-        width: key === "id" ? 10 : 80,
+        width: key === "id" ? 15 : 3,
         type: typeof nuevaLista[0][key] === "number" ? "number" : undefined,
       };
     });

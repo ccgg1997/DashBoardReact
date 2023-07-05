@@ -1,19 +1,19 @@
 import React from "react";
-import "./InventarioTableFilter.css";
+import "./ProduccionTableFilter.css";
 import { useSelector } from "react-redux";
 import { familiasNombre, functionTableData } from "./TableFilterData";
-import TableFilter from "../../../Basicos/TableFilter/TableFilter";
+import TableFilter from "../../../../../Basicos/TableFilter/TableFilter";
 import { useState } from "react";
 
-export const InventarioTableFilter = () => {
+export const ProduccionTableFilter = () => {
   const {familia}= useSelector((state) => state.familia);
   const [selectedOption, setSelectedOption] = useState("");
-  const { inventario } = useSelector((state) => state.inventario);
+  const {produccion} = useSelector((state) => state.produccion);
   const { nombresKeys, nuevaLista } = functionTableData(
-    inventario,
+    produccion,
     selectedOption
   );
-  const familiaName = familiasNombre(familia)
+  const familiaName = familiasNombre(familia);
   const handleSelect = (selectedValue) => {
     setSelectedOption(selectedValue);
   };
@@ -25,7 +25,7 @@ export const InventarioTableFilter = () => {
         <Select options={familiaName} onSelect={handleSelect} />
       </div>
       <TableFilter
-        nombre={"INVENTARIO"}
+        nombre={"PRODUCCIÓN"}
         nombreColumnas={nombresKeys}
         datosFilas={nuevaLista}
       />
@@ -57,6 +57,4 @@ const Select = ({ options, onSelect }) => {
   );
 };
 
-
-
-export default InventarioTableFilter;
+export default ProduccionTableFilter;

@@ -46,7 +46,7 @@ function ExpandedCard({ param, setExpanded }) {
   const{ component} = param;
   return (
     <motion.div
-      className="ExpandedCard"
+      className="ExpandedCardAction"
       style={{
         background: param.color.backGround,
         boxShadow: param.color.boxShadow,

@@ -10,11 +10,6 @@ import CustomerReview from "./AuxMainDash/CustomerReview/CustomerReview";
 const MainDash = () => {
   //OBTENER INVENTARIO DEL REDUCER
   const { inventario } = useSelector((state) => state.inventario);
-  const { isAuthenticated, token, name, usuario, timeExp, rol } = useSelector(
-    (state) => state.auth
-  );
-
-  console.log(isAuthenticated, token, name, usuario, timeExp, rol, inventario);
 
   //DEFINIR QUE DATOS DEL INVENTARIO QUIERO EN LA TABLA
   const nuevaLista = inventario.map((objeto) => {
@@ -53,7 +48,7 @@ const MainDash = () => {
             updatesComponent={<Update />}
             extraInfo={<CustomerReview />}
             title1={"NOTICIAS"}
-            title2={"PRODUCCION"}
+            title2={"PRODUCCIÓN"}
           />
         </div>
       </div>

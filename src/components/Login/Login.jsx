@@ -7,7 +7,9 @@ import { setAuthData } from "../../features/auth/auth";
 import { setInventario } from "../../features/inventario/inventario";
 import { setCliente } from "../../features/clientes/clientes";
 import { setPrecio } from "../../features/precios/precios";
-import { signin, infoInventario, createCookie,infoClientes, infoPrecios } from "../Api/apiAddress";
+import { setProduccion } from "../../features/ordenesproduccion/ordenesproduccion";
+import{setFamilia} from "../../features/familias/familia";
+import { signin, infoInventario, createCookie,infoClientes, infoPrecios,infoFamilia, infoProduccion } from "../Api/apiAddress";
 ReactModal.setAppElement(document.getElementById("root"));
 
 export function Login(props) {
@@ -35,7 +37,8 @@ export function Login(props) {
       const responseInventario = await infoInventario(token);
       const responseClientes = await infoClientes(token);
       const responsePrecios = await infoPrecios(token);
-      console.log('precios de la api:',responsePrecios);
+      const responseFamilia = await infoFamilia(token);
+      const responseProduccion = await infoProduccion(token);
 
       //setiar la variable global del token e inventario
       dispatch(
@@ -52,6 +55,8 @@ export function Login(props) {
       dispatch(setInventario(responseInventario));
       dispatch(setCliente(responseClientes));
       dispatch(setPrecio(responsePrecios));
+      dispatch(setFamilia(responseFamilia));
+      dispatch(setProduccion(responseProduccion));
 
       // Crea la cookie
       createCookie(

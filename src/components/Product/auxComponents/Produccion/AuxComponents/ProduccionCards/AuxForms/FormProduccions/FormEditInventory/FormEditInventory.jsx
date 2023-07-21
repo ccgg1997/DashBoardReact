@@ -17,6 +17,7 @@ const FormEditInventory = () => {
   const [bodegaSelected, setBodegaSelected] = useState("");
   const [inventoryData, setInventoryData] = useState([]);
   const [inventoryDataModified, setInventoryDataModified] = useState([]);
+  const [tipo, setTipo] = useState("");
 
   //Filtrando el inventario por producto y bodega seleccionados
   const ProductSelectedFilter = inventario.filter(

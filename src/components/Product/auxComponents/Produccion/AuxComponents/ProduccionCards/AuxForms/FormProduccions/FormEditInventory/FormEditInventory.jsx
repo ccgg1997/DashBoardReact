@@ -17,7 +17,7 @@ const FormEditInventory = () => {
   const [bodegaSelected, setBodegaSelected] = useState("");
   const [inventoryData, setInventoryData] = useState([]);
   const [inventoryDataModified, setInventoryDataModified] = useState([]);
-  const [tipo, setTipo] = useState("");
+  const [tipo, setTipo] = useState("hola");
 
   //Filtrando el inventario por producto y bodega seleccionados
   const ProductSelectedFilter = inventario.filter(
@@ -27,70 +27,74 @@ const FormEditInventory = () => {
     ...new Set(ProductSelectedFilter.map((inven) => inven.bodegaId)),
   ];
 
+  
   //Funciones para seleccionar producto y bodega
-  const FunctionproductSelected = (event) => {
-    const selectedProduct = event.target.value;
-    setProductSelected(selectedProduct);
-  };
+  
   const FunctionbodegaSelected = (event) => {
     const selectedBodega = event.target.value;
     setBodegaSelected(selectedBodega);
-     
+    
     const inventoryDataSelected = ProductSelectedFilter.filter(
       (inventario) =>
-        inventario.bodegaId === selectedBodega &&
-        inventario.productoId === productSelected
-    ).map(({ familiaNombre, estilos, tipo }) => ({
-      familiaNombre,
-      estilos: estilos.map((estilo) => ({
-        ...estilo,
-        cantidad: 0,
-        key: estilo.nombre + estilo.codigo, // Agregamos una key única
-      })),
-      tipo,
-    }));
-
-    setInventoryData(inventoryDataSelected);
-    setInventoryDataModified(inventoryDataSelected);
-  };
-
-  useEffect(() => {
-    const inventoryDataSelected = ProductSelectedFilter.filter((inventario) => {
-      return (
-        inventario.bodegaId === bodegaSelected &&
-        inventario.productoId === productSelected
-      );
-    }).map(({ familiaNombre, estilos, tipo }) => ({
-      familiaNombre,
-      estilos,
-      tipo,
-    }));
-
-    setInventoryData(inventoryDataSelected);
-
-    const inventoryDataModified = inventoryDataSelected.map(({ estilos }) => {
-      const modifiedEstilos = estilos.map((estilo) => ({
-        ...estilo,
-        cantidad: 0,
-        key: estilo.nombre + estilo.codigo, // Agregamos una key única
+      inventario.bodegaId === selectedBodega &&
+      inventario.productoId === productSelected
+      ).map(({ familiaNombre, estilos, tipo }) => ({
+        familiaNombre,
+        estilos: estilos.map((estilo) => ({
+          ...estilo,
+          cantidad: 0,
+          key: estilo.nombre + estilo.codigo, // Agregamos una key única
+        })),
+        tipo,
       }));
-      return { estilos: modifiedEstilos };
-    });
-    setInventoryDataModified(inventoryDataModified);
-  }, [bodegaSelected, productSelected]);
+      
+      setInventoryData(inventoryDataSelected);
+      setInventoryDataModified(inventoryDataSelected);
+    };
+    
+    useEffect(() => {
+      const inventoryDataSelected = ProductSelectedFilter.filter((inventario) => {
+        return (
+          inventario.bodegaId === bodegaSelected &&
+          inventario.productoId === productSelected
+          );
+        }).map(({ familiaNombre, estilos, tipo }) => ({
+          familiaNombre,
+          estilos,
+          tipo,
+        }));
+        
+        setInventoryData(inventoryDataSelected);
+        
+        const inventoryDataModified = inventoryDataSelected.map(({ estilos }) => {
+          const modifiedEstilos = estilos.map((estilo) => ({
+            ...estilo,
+            cantidad: 0,
+            key: estilo.nombre + estilo.codigo, // Agregamos una key única
+          }));
+          return { estilos: modifiedEstilos };
+        });
+        setInventoryDataModified(inventoryDataModified);
+      }, [bodegaSelected, productSelected]);
+      
+      const handleChangeCantidad = (index, subIndex, cantidad) => {
+        const updatedEstilos = [...inventoryDataModified];
+        updatedEstilos[index].estilos[subIndex].cantidad = cantidad;
+        setInventoryDataModified(updatedEstilos);
+      };
 
-  const handleChangeCantidad = (index, subIndex, cantidad) => {
-    const updatedEstilos = [...inventoryDataModified];
-    updatedEstilos[index].estilos[subIndex].cantidad = cantidad;
-    setInventoryDataModified(updatedEstilos);
-  };
 
-  return (
+      //Funcion para crear el movimiento de inventario
+      const createMovInventario = () => {
+        console.log("inventoryDataModified: ", inventoryDataModified, "tipo: ", tipo, "bodegaSelected: ", bodegaSelected, "productSelected: ", productSelected);
+      };
+      
+      return (
     <div className="FormEditInventory">
       <div className="SelectContainerEditInventory">
         <div className="InputGroup">
           <label>Producto:</label>
-          <select onChange={FunctionproductSelected}>
+          <select onChange={(event)=>{setProductSelected(event.target.value)}}>
             <option value="">Selecciona un valor</option>
             {uniqueProduct.map((product, index) => (
               <option key={index} value={product}>
@@ -112,13 +116,13 @@ const FormEditInventory = () => {
         </div>
         <div className="InputGroup">
           <label> Tipo:</label>
-          <select onChange={FunctionbodegaSelected}>
+          <select onChange={(event) => {setTipo(event.target.value)}}>
             <option value="">Selecciona un valor</option>
             <option value="ENTRADA">ENTRADA</option>
             <option value="SALIDA">SALIDA</option>
           </select>
         </div>
-        <button>Modificar</button>
+        <button onClick={() => {createMovInventario()}} >Modificar</button>
       </div>
       <div className="ColumnContainer">
         <div className="dataRead">

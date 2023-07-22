@@ -57,4 +57,4 @@ const Select = ({ options, onSelect }) => {
   );
 };
 
-export default Select;
+export default ProduccionTableFilter;

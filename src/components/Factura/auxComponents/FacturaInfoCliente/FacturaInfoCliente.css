@@ -15,6 +15,7 @@
 .FacturaInfo__info__barrio,
 .FacturaInfo__info__fecha {
   flex-basis: 50%;
+  margin-bottom: 8px;
 }
 
 .FacturaInfo__info__fecha{
@@ -28,4 +29,13 @@
     height: 40px;
     border-radius: 50px;
 }
-  
+
+.FacturaInfo__info__boton {
+  height: 60%;
+  background-color: #99ff33 !important;
+  color: black;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-left: 5px;
+}

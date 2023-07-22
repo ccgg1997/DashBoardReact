@@ -8,7 +8,7 @@ const FacturaInfo = () => {
 
   const { cliente } = clientes;
 
-  const uniqueIds = [...new Set(cliente.map((cliente) => cliente.id))];
+  const uniqueNames = [...new Set(cliente.map((item) => item.negocio))];
 
   const [selectedItem, setSelectedItem] = useState("");
 
@@ -38,7 +38,7 @@ const FacturaInfo = () => {
             Cliente:
             <select value={selectedItem} onChange={handleItemChange}>
               <option>Selecciona un cliente</option>
-              {uniqueIds.map((item) => (
+              {uniqueNames.map((item) => (
                 <option key={item} value={item}>
                   {item}
                 </option>

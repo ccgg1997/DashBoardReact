@@ -72,6 +72,20 @@ export const infoInventario = async (token) => {
   }
 };
 
+export const movInventario = async (data, token) => {
+  const movInventarioAddress = apiAddress + "/inventario";
+  try {
+    const response = await axios.put(movInventarioAddress, data, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("Error al crear el movimiento");
+  }
+}
+
 //-----------------CLIENTES FUNCIONES-----------------
 export const infoClientes = async (token) => {
   const infoClientesAddress = apiAddress + "/negocio";
@@ -241,3 +255,8 @@ export const createCookie = (name, value, days = 0.15) => {
   }
   document.cookie = name + "=" + value + expires + "; path=/";
 };
+
+// -----------------------------------PRODUCCION/INVENTARIO-----------------------------------
+
+
+

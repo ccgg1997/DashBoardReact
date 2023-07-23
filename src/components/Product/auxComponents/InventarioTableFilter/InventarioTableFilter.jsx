@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { familiasNombre, functionTableData } from "./TableFilterData";
 import TableFilter from "../../../Basicos/TableFilter/TableFilter";
 import { useState } from "react";
-// import ProduccionCards from './AuxComponents/ProduccionCards/ProduccionCards'
+import ProduccionCards from './AuxComponents/ProduccionCards/ProduccionCards'
 
 export const InventarioTableFilter = () => {
   const {familia}= useSelector((state) => state.familia);
@@ -20,7 +20,7 @@ export const InventarioTableFilter = () => {
   };
   return (
     <>
-      {/* <ProduccionCards/> */}
+      <ProduccionCards/>
       <div className="SelectContainer">
         <p>Selecciona Familia:</p>
         <Select options={familiaName} onSelect={handleSelect} />

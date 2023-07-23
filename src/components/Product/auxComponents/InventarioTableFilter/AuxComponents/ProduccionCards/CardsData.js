@@ -5,7 +5,7 @@ import {
   UilFileMedical ,
 } from "@iconscout/react-unicons";
 import FormPPF from "./AuxForms/FormProduccions/FormPPF/FormPPF";
-import FormEditInventory from "./AuxForms/FormProduccions/FormEditInventory/FormEditInventory";
+import FormEditInventory from "./AuxForms/FormProduccions/FormEditInventory/Fei";
 
 export const CardsData = [
  

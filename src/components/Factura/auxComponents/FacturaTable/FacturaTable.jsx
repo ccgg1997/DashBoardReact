@@ -9,16 +9,13 @@ import Paper from "@mui/material/Paper";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-function createData(cantidad, codigo,nombre,  precio) {
-  return { cantidad, codigo,nombre, precio };
-}
 
 export default function BasicTable() {
-  
   const [newRow, setNewRow] = useState({
     product_id: "",
     nombre: "",
-    precio: ""
+    precio: "",
+    cantidad: 1,
   });
 
   const [rows, setRows] = useState([]);
@@ -31,84 +28,90 @@ export default function BasicTable() {
 
   const [selected, setSelected] = useState("");
 
+  const handleClick = () => {
+    if (newRow.product_id === "") {
+      alert("Selecciona un producto");
+      return;
+    }else{
+      setRows([...rows, newRow]);
+    }
+  };
+
+
+  
+  const deleteRow = (index) => {
+    const newRows = [...rows];
+    newRows.splice(index, 1);
+    setRows(newRows);
+  }
+
   useEffect(() => {
     // Busca el objeto producto correspondiente al valor seleccionado
     const selectedProducto = precio.find(
       (item) => item.product_id === selected
     );
+    if (!selectedProducto) return;
+    const cantidad = 1;
     // Asigna el objeto cliente seleccionado a NewRow
-    setNewRow(selectedProducto);
-    alert(JSON.stringify(rows))
+    setNewRow({
+      product_id: selectedProducto.product_id,
+      nombre: selectedProducto.nombre,
+      precio: selectedProducto.precio,
+      cantidad: cantidad,
+      total: cantidad * selectedProducto.precio,
+    });
   }, [selected]);
 
+
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell align="center">Código</TableCell>
-            <TableCell align="center">Cantidad</TableCell>
-            <TableCell align="center">Descripción</TableCell>
-            <TableCell align="center">Precio Unitario</TableCell>
-            <TableCell align="center">Total</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row, index) => (
-            <TableRow key={index}>
-              <TableCell align="center">{row.codigo}</TableCell>
-              <TableCell align="center">{row.cantidad}</TableCell>
-              <TableCell align="center">{row.nombre}</TableCell>
-              <TableCell align="center">{row.precio}</TableCell>
-              <TableCell align="center">{row.total}</TableCell>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">Código</TableCell>
+              <TableCell align="center">Cantidad</TableCell>
+              <TableCell align="center">Descripción</TableCell>
+              <TableCell align="center">Precio Unitario</TableCell>
+              <TableCell align="center">Total</TableCell>
             </TableRow>
-          ))}
-          <TableRow>
-            <TableCell align="center">
-              <select
-                value={selected}
-                onChange={(e) => setSelected(e.target.value)}
-              >
-                <option>Selecciona un producto</option>
-                {uniqueCodes.map((item) => (
-                  <option key={item} value={item}>
-                    {item}
-                  </option>
-                ))}
-              </select>
-            </TableCell>
-            <TableCell align="center">
-              Nombre: {newRow ? newRow.nombre : ""}
-            </TableCell>
-            <TableCell align="center">
-              Precio: {newRow ? newRow.precio : ""}
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-      <button
-        onClick={() => {
-          // Agregar la nueva fila editada al estado rows
-          setRows((prevRows) => [
-            ...prevRows,
-            createData(
-              newRow.cantidad,
-              newRow.product_id,
-              newRow.nombre,
-              newRow.precio
-            ),
-          ]);
-          // Restablecer el estado newRow para permitir la edición de una nueva fila
-          setNewRow({
-            cantidad: "",
-            codigo: "",
-            nombre: "",
-            precio: ""
-          });
-        }}
-      >
-        Agregar Producto
-      </button>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {rows.map((row, index) => (
+              <TableRow key={index}>
+                <TableCell align="center">{row.product_id}</TableCell>
+                <TableCell align="center">{row.cantidad}</TableCell>
+                <TableCell align="center">{row.nombre}</TableCell>
+                <TableCell align="center">{row.precio}</TableCell>
+                <TableCell align="center">{row.total}</TableCell>
+                <button onClick={() => deleteRow(index)}>Eliminar</button>
+              </TableRow>
+            ))}
+            <TableRow>
+              <TableCell align="center">
+                <select
+                  value={selected}
+                  onChange={(e) => setSelected(e.target.value)}
+                >
+                  <option>Selecciona un producto</option>
+                  {uniqueCodes.map((item) => (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
+              </TableCell>
+              <TableCell align="center">
+                Nombre: {newRow ? newRow.nombre : ""}
+              </TableCell>
+              <TableCell align="center">
+                Precio: {newRow ? newRow.precio : ""}
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+        <button onClick={handleClick}>Agregar</button>
+      </TableContainer>
+
   );
 }
+

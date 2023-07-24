@@ -3,8 +3,10 @@ import "./FacturaInfoCliente.css";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import BasicTable from "../FacturaTable/FacturaTable";
+import { infoPreciosClienteEspecial } from "../../../Api/apiAddress";
 const FacturaInfo = () => {
   const clientes = useSelector((state) => state.clientes);
+  const token = useSelector((state) => state.auth.token);
 
   const { cliente } = clientes;
 
@@ -13,6 +15,15 @@ const FacturaInfo = () => {
 
   const [selectedItem, setSelectedItem] = useState("");
 
+    // Estado para almacenar la lista de productos
+    const [producto, setProductos] = useState([]);
+    const [preciosEspeciales, setPreciosEspeciales] = useState([]); 
+
+    // Función para actualizar el estado de productos
+    const handleProductosChange = (newProductos) => {
+      setProductos(newProductos);
+    };
+
   const fechaActual = new Date().toLocaleDateString("es-ES", {
     weekday: "long",
     year: "numeric",
@@ -20,12 +31,29 @@ const FacturaInfo = () => {
     day: "numeric",
   });
 
-  useEffect(() => {
+    useEffect(() => {
+    if (selected === "") {
+      return;
+    }
     // Busca el objeto cliente correspondiente al valor seleccionado
     const selectedCliente = cliente.find((item) => item.negocio === selected);
     // Asigna el objeto cliente seleccionado a selectedItem
     setSelectedItem(selectedCliente);
-  }, [selected]);
+
+    // Busca los precios especiales del cliente seleccionado
+    const fetchPreciosEspeciales = async () => {
+      try {
+        const preciosEspecialesData = await infoPreciosClienteEspecial(selectedCliente.id, token);
+        setPreciosEspeciales(preciosEspecialesData);
+      } catch (error) {
+        console.error("Error al obtener los precios especiales:", error);
+      }
+    };
+    console.log(preciosEspeciales);
+
+    fetchPreciosEspeciales();
+  }, [selected, cliente, token]);
+
 
   return (
     <div
@@ -74,10 +102,11 @@ const FacturaInfo = () => {
         )}
       </div>
       <div className="FacturaInfo__table">
-        <BasicTable />
+        <BasicTable onProductosChange={handleProductosChange} />
       </div>
     </div>
   );
 };
+
 
 export default FacturaInfo;

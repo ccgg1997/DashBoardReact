@@ -17,7 +17,9 @@ import {
   DialogTitle,
 } from "@mui/material";
 
+// Componente principal que representa la tabla de productos
 export default function BasicTable({ onProductosChange, preciosEspeciales, isSelected }) {
+  // Estado local para el nuevo producto que se va a agregar
   const [newRow, setNewRow] = useState({
     product_id: "",
     nombre: "",
@@ -25,12 +27,15 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
     cantidad: 1,
   });
 
+  // Estado local para mostrar notificaciones
   const [mensajeNotificacion, setMensajeNotificacion] = useState("");
   const [tipoNotificacion, setTipoNotificacion] = useState("");
   const [mostrarNotificacion, setMostrarNotificacion] = useState(false);
 
+  // Estado local para controlar la apertura del modal
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Función para mostrar notificaciones
   const setMensaje = (mensaje, tipo) => {
     setMensajeNotificacion(mensaje);
     setTipoNotificacion(tipo);
@@ -38,13 +43,21 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
     return true;
   };
 
+  // Estado local para mantener la lista de productos en la tabla
   const [rows, setRows] = useState([]);
+
+  // Obtiene los productos del estado global de Redux
   const productos = useSelector((state) => state.precios);
   const { precio } = productos;
+
+  // Obtiene los códigos únicos de productos
   const uniqueCodes = [...new Set(precio.map((item) => item.product_id))];
+
+  // Estado local para mantener el producto seleccionado en el selector
   const [selected, setSelected] = useState("");
   const [prod, setProd] = useState("");
 
+  // Maneja el clic en el botón "Agregar" para agregar un nuevo producto a la tabla
   const handleClick = () => {
     setRows([]);
     if (newRow.product_id === "") {
@@ -63,6 +76,7 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
     }
   };
 
+  // Limpia la tabla y la lista de productos seleccionados cuando se cambia el cliente seleccionado
   useEffect (() => {
     if(isSelected === "Selecciona un cliente" ){
       return;
@@ -71,15 +85,18 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
     onProductosChange([]);
   },[isSelected])
 
+  // Maneja la selección de un producto y muestra la ventana modal con detalles
   const selectedProd = (row) => {
     setProd(row);
     handleOpen();
   };
 
+  // Abre la ventana modal
   const handleOpen = () => {
     setIsModalOpen(true);
   };
 
+  // Elimina un producto de la tabla y actualiza la lista de productos seleccionados
   const deleteRow = (index) => {
     const newRows = [...rows];
     newRows.splice(index, 1);
@@ -87,6 +104,7 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
     onProductosChange(newRows);
   };
 
+  // Actualiza la información del nuevo producto cuando se selecciona un producto en el selector
   useEffect(() => {
     if(!preciosEspeciales){
       alert("No hay precios especiales")
@@ -108,16 +126,19 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
     });
   }, [selected]);
 
+  // Oculta la notificación después de que se muestra
   useEffect(() => {
     if (mostrarNotificacion) {
       setMostrarNotificacion(false);
     }
   }, [mostrarNotificacion]);
 
+  // Renderiza la tabla de productos
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
+          {/* Cabecera de la tabla */}
           <TableRow>
             <TableCell align="center">Código</TableCell>
             <TableCell align="center">Cantidad</TableCell>
@@ -128,6 +149,7 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
           </TableRow>
         </TableHead>
         <TableBody>
+          {/* Filas de la tabla */}
           {rows.map((row, index) => (
             <TableRow key={index}>
               <TableCell align="center">{row.product_id}</TableCell>
@@ -144,6 +166,7 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
               </TableCell>
             </TableRow>
           ))}
+          {/* Fila para seleccionar un nuevo producto */}
           <TableRow>
             <TableCell align="center">
               <select
@@ -167,12 +190,15 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
           </TableRow>
         </TableBody>
       </Table>
+      {/* Botón para agregar un nuevo producto */}
       <button onClick={handleClick}>Agregar</button>
+      {/* Componente Notificacion para mostrar mensajes */}
       <Notificacion
         mensaje={mensajeNotificacion}
         tipoNotificacion={tipoNotificacion}
         mostrarNotificacion={mostrarNotificacion}
       />
+      {/* Componente DistribucionProducto para mostrar la ventana modal */}
       <DistribucionProducto
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -182,6 +208,7 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
   );
 }
 
+// Componente de ventana modal para mostrar detalles del producto seleccionado
 const DistribucionProducto = ({ isOpen, onClose, data }) => {
   return (
     <div>
@@ -189,6 +216,7 @@ const DistribucionProducto = ({ isOpen, onClose, data }) => {
         <DialogTitle>{"Distribución de productos"}</DialogTitle>
         <DialogContent>
           <DialogContentText>
+            {/* Detalles del producto */}
             <div>
               <p>Producto: {data.nombre}</p>
               <p>Precio: {data.precio}</p>
@@ -197,6 +225,7 @@ const DistribucionProducto = ({ isOpen, onClose, data }) => {
             </div>
           </DialogContentText>
         </DialogContent>
+        {/* Botón para cerrar la ventana modal */}
         <DialogActions>
           <button onClick={onClose}>Cerrar</button>
         </DialogActions>

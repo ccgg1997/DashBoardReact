@@ -65,7 +65,6 @@ const FacturaInfo = () => {
 
   const handleCliente = async (e) => {
     const selec = e.target.value;
-    console.log("selec", selec);
     if (selec === "Selecciona un cliente") {
       setSelectedCliente(selec);
       setIsOpen(false);
@@ -76,7 +75,6 @@ const FacturaInfo = () => {
     // Find the selected client object
     const selectedCliente = cliente.find((item) => item.negocio === selec);
     setSelectedItem(selectedCliente);
-    console.log("selectedCliente", selectedCliente);
     
     // Fetch prices for the selected client
     fetchPreciosEspeciales(selectedCliente.id, token);

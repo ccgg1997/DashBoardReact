@@ -85,7 +85,7 @@ const FormEditInventory = () => {
   };
   
   //Funcion para crear el movimiento de inventario
-    const createMovInventario = async () => {
+  const createMovInventario = async () => {
       try {
         //detectar si esta vacia la data y si los estilos estan en 0
         if (

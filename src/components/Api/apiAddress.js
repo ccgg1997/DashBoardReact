@@ -181,6 +181,20 @@ export const infoPreciosClienteEspecial = async (id, token) => {
 
 
 //-----------------PRODUCTOS FUNCIONES-----------------
+export const infoProductos = async (token) => {
+  const infoProductosAddress = apiAddress + "/products";
+  try {
+    const response = await axios.get(infoProductosAddress, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("Error al obtener la información de los productos");
+  }
+};
+
 export const cambiarPrecioClienteEspecial = async (token,product_id, data, ) => {
   const cambiarPrecioClienteEspecialAddress =
     apiAddress + "/products/precioEspecialProd/" + product_id;
@@ -256,6 +270,21 @@ export const createCookie = (name, value, days = 0.15) => {
   document.cookie = name + "=" + value + expires + "; path=/";
 };
 
+
+//-------------------bodegas-------------------------
+export const infoBodegas = async (token) => {
+  const infoBodegasAddress = apiAddress + "/bodega";
+  try {
+    const response = await axios.get(infoBodegasAddress, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("Error al obtener la información de las bodegas");
+  }
+};
 // -----------------------------------PRODUCCION/INVENTARIO-----------------------------------
 
 

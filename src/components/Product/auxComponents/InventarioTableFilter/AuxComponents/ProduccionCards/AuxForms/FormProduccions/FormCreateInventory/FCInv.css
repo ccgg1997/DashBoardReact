@@ -1,0 +1,34 @@
+.FCreateInv {
+  display: flex;
+  background-color: aliceblue;
+  width: 90%;
+  height: 75%;
+  flex-direction: column !important;
+  padding: 25px;
+  border-radius: 15px;
+}
+
+.InputGroupCreateInv {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  background-color: #cacaca46;
+  border-radius: 15px;
+  padding: 20px;
+  justify-content: space-between;
+}
+
+.InputGroupValues{
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 5px;
+  gap: 15px;
+  background-color: #cacaca46;
+  border-radius: 15px;
+  padding: 20px;
+  justify-content: space-between;
+}
+
+.contenedorSelect select {
+  height: 35px;
+}

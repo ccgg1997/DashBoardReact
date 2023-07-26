@@ -6,6 +6,7 @@ import {
 } from "@iconscout/react-unicons";
 import FormPPF from "./AuxForms/FormProduccions/FormPPF/FormPPF";
 import FormEditInventory from "./AuxForms/FormProduccions/FormEditInventory/Fei";
+import FCreateInv from "./AuxForms/FormProduccions/FormCreateInventory/FCInv";
 
 export const CardsData = [
  
@@ -35,7 +36,7 @@ export const CardsData = [
       boxShadow: "1px 1px 2px #330066",
     },
     png: UilFileMedical ,
-    component: <h1>hola, bienvenidos a mi pestana2</h1>,
+    component: <FCreateInv/>,
   },
   
 ];

@@ -5,6 +5,8 @@ import clientesReducer from "../features/clientes/clientes";
 import preciosReducer from "../features/precios/precios";
 import familiaReducer from "../features/familias/familia";
 import produccionReducer from "../features/ordenesproduccion/ordenesproduccion";
+import bodegaReducer from "../features/bodega/bodega";
+import productoReducer from "../features/productos/producto";
 
 
 export const store = configureStore({
@@ -15,6 +17,8 @@ export const store = configureStore({
     precios: preciosReducer,
     familia: familiaReducer,
     produccion: produccionReducer,
+    bodega: bodegaReducer,
+    producto: productoReducer,
 
   },
   

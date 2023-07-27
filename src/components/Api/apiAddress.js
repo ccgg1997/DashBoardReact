@@ -86,6 +86,20 @@ export const movInventario = async (data, token) => {
   }
 }
 
+
+export const crearInventario = async (data, token) => {
+  const crearInventarioAddress = apiAddress + "/inventario";
+  try {
+    const response = await axios.post(crearInventarioAddress, data, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 //-----------------CLIENTES FUNCIONES-----------------
 export const infoClientes = async (token) => {
   const infoClientesAddress = apiAddress + "/negocio";

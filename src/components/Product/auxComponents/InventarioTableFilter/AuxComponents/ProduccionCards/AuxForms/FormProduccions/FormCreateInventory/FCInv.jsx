@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import Notificacion from "../../../../../../../../Basicos/Notificacion/Notificacion";
 import { setInventario } from "../../../../../../../../../features/inventario/inventario";
 import {
-  movInventario,
+  crearInventario,
   infoInventario,
 } from "../../../../../../../../Api/apiAddress";
 
@@ -19,6 +19,10 @@ const FCreateInv = () => {
   const [productoSelected, setProductoSelected] = useState("0");
   const [nuevoInventario, setNuevoInventario] = useState(false);
   const [inventoryDataModified, setInventoryDataModified] = useState([]);
+  const [familiaNombre, setFamiliaNombre] = useState("");
+  const [tipoProducto, setTipoProducto] = useState("");
+  const [cantidad, setCantidad] = useState(0);
+  const [nombreProductSelected, setNombreProductSelected] = useState("");
 
   //datos del estado global
   const dispatch = useDispatch();
@@ -26,28 +30,84 @@ const FCreateInv = () => {
   const { bodega } = useSelector((state) => state.bodega);
   const { inventario } = useSelector((state) => state.inventario);
   const { producto } = useSelector((state) => state.producto);
+  const { familia } = useSelector((state) => state.familia);
   const idsProducto = producto.map((producto) => producto.producto_id);
   const nombresBodega = bodega.map((bodega) => bodega.bodegaId);
 
-
-  const handleChangeCantidad = (index, subIndex, cantidad) => {
-    const updatedEstilos = [...inventoryDataModified];
-    updatedEstilos[index].estilos[subIndex].cantidad = cantidad;
-    setInventoryDataModified(updatedEstilos);
+  const objetCrearInventario = {
+    inventarioId: bodegaSelected + "-" + productoSelected,
+    bodegaId: bodegaSelected,
+    productoId: productoSelected,
+    nombreProducto:nombreProductSelected,
+    tipo: tipoProducto,
+    cantidad: cantidad,
+    familiaNombre: familiaNombre,
+    estilos: inventoryDataModified,
   };
-  
+
+  const handleChangeCantidad = (index, cantidad) => {
+    const newInventoryDataModified = [...inventoryDataModified];
+    newInventoryDataModified[index].cantidad = Number(cantidad);
+    setInventoryDataModified(newInventoryDataModified);
+    const newtotal= newInventoryDataModified.reduce((total, item) => total + item.cantidad, 0);
+    setCantidad(newtotal);
+  };
 
   //funcion para validar los datos del inventario
   const validarInventario = () => {
-    const inventarioSeleccionado = bodegaSelected+"-"+productoSelected
-    const inventarioEncontrado = inventario.find((inventario) => inventario.inventarioId === inventarioSeleccionado);
+
+    //validar campos llenos
+    if (bodegaSelected === "0" || productoSelected === "0") {
+      setMensaje("selecciona un producto y una bodega", "error");
+      return false;
+    }
+    //validar que el inventario no exista
+    const inventarioSeleccionado = bodegaSelected + "-" + productoSelected;
+    const inventarioEncontrado = inventario.find(
+      (inventario) => inventario.inventarioId === inventarioSeleccionado
+    );
     if (inventarioEncontrado) {
       setMensaje("El inventario ya existe", "error");
       return false;
     }
+
+    //buscar familia y producto
     setNuevoInventario(true);
-    console.log("encontrado:77 "+inventarioEncontrado);
-    console.log("validando inventario77"+inventarioSeleccionado);
+    const productoSelectedObject = producto.find(
+      (producto) => producto.producto_id === productoSelected
+    );
+    const familia_product = productoSelectedObject.familia_id;
+
+    //setiar los datos de familia y producto
+    setFamiliaNombre(familia_product);
+    setTipoProducto(productoSelectedObject.tipo);
+    setNombreProductSelected(productoSelectedObject.nombre);
+    const items_familia = familia.find(
+      (familia) => familia.nombre === familia_product
+    );
+
+    //setiar los datos de estilos
+    const estilos = items_familia.estilos;
+    const estilosInventario = estilos.map((estilo) => ({
+      ...estilo,
+      cantidad: 0,
+    }));
+
+    //setiar los datos de inventario
+    setInventoryDataModified(estilosInventario);
+  };
+
+  //funcion para crear el inventario
+  const crearInventarioApi = async() => {
+    console.log(objetCrearInventario);
+    crearInventario(objetCrearInventario, token);
+    setMensaje("Inventario creado correctamente", "success");
+    setBodegaSelected("0");
+    setProductoSelected("0");
+    setNuevoInventario(false);
+    const responseInventario = await infoInventario(token);
+    dispatch(setInventario(responseInventario));
+    
 
   };
 
@@ -64,12 +124,7 @@ const FCreateInv = () => {
     setMostrarNotificacion(true);
     return true;
   };
-  const limpiar = () => {
-    setProductSelected("");
-    setMensajeNotificacion("");
-    setTipoNotificacion("");
-    return true;
-  };
+  
 
   return (
     <div className="FCreateInv">
@@ -77,21 +132,53 @@ const FCreateInv = () => {
         <GenericSelect
           id="Producto"
           value={productoSelected}
-          onChange={(event) =>  {setNuevoInventario(false);setProductoSelected(event.target.value)}}
+          onChange={(event) => {
+            setNuevoInventario(false);
+            setProductoSelected(event.target.value);
+          }}
           options={idsProducto}
         />
         <GenericSelect
-          id="Bodega"
+          id="Bodega "
           value={bodegaSelected}
-          onChange={(event) => {setNuevoInventario(false);
-            setBodegaSelected(event.target.value)}}
+          onChange={(event) => {
+            setNuevoInventario(false);
+            setBodegaSelected(event.target.value);
+          }}
           options={nombresBodega}
         />
-        <button onClick={validarInventario}>Ingresar cantidad</button>
+        {!nuevoInventario && (
+          <button className="botonCreateInv" onClick={validarInventario}>
+            Ingresar cantidad
+          </button>
+        )}
+        {nuevoInventario && (
+          <button className="botonCreateInv" onClick={crearInventarioApi}>
+            Crear Inventario
+          </button>
+        )}
       </div>
-      {nuevoInventario && <div className="InputGroupValues">
-
-      </div>}
+      {nuevoInventario && (
+        <div className="InputGroupValues">
+          <div className="createInventoryModificationData">
+            <div className="createInventoryDataM">
+              <h3>Cantid. Crear</h3>
+              {inventoryDataModified.map((estilo, index) => (
+                <div key={index}>
+                  <label>{estilo.nombre}</label>
+                  <input
+                    type="number"
+                    value={estilo.cantidad}
+                    onChange={(e) =>
+                      handleChangeCantidad(index, e.target.value)
+                    }
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
       <Notificacion
         mensaje={mensajeNotificacion}
         tipoNotificacion={tipoNotificacion}

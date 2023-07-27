@@ -25,6 +25,8 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
     nombre: "",
     precio: "",
     cantidad: 1,
+    familia_id: "",
+    estilos:[]
   });
 
   // Estado local para mostrar notificaciones
@@ -46,9 +48,20 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
   // Estado local para mantener la lista de productos en la tabla
   const [rows, setRows] = useState([]);
 
+  //estado local para guardar los estilos de la categoria del producto seleccionado
+  const [style, setStyle] = useState([]);
+
   // Obtiene los productos del estado global de Redux
   const productos = useSelector((state) => state.precios);
   const { precio } = productos;
+
+  // Obtiene los productos del estado global de Redux con la categoria
+  const productosCategoria = useSelector((state) => state.producto);
+  const { producto } = productosCategoria;
+
+  // Obtiene las familias del estado global de Redux
+  const {familia} = useSelector((state) => state.familia);
+ 
 
   // Obtiene los códigos únicos de productos
   const uniqueCodes = [...new Set(precio.map((item) => item.product_id))];
@@ -56,6 +69,20 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
   // Estado local para mantener el producto seleccionado en el selector
   const [selected, setSelected] = useState("");
   const [prod, setProd] = useState("");
+
+  const obtenerStyle = (id) => {
+    const producto = productosCategoria.producto.find(
+      (item) => item.producto_id === id
+    );
+    if (!producto) return;
+    const idFamilia = producto.familia_id;
+    const familiaData = familia.find((item) => item.nombre === idFamilia);
+    const estilos = familiaData.estilos;
+    const estilosCantidad = estilos.map((item) => { return { ...item, cantidad: 0 } });
+    if (!familiaData) return;
+    setStyle(estilosCantidad);
+
+  };
 
   // Maneja el clic en el botón "Agregar" para agregar un nuevo producto a la tabla
   const handleClick = () => {
@@ -71,6 +98,7 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
         product_id: "",
         nombre: "",
         precio: "",
+        estilos:[],
         cantidad: 1,
       });
     }
@@ -110,21 +138,25 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
       alert("No hay precios especiales")
       return;
     }
+ 
     // Busca el objeto producto correspondiente al valor seleccionado
     const selectedProducto = preciosEspeciales.find(
       (item) => item.product_id === selected
     );
     if (!selectedProducto) return;
     const cantidad = 1;
+    obtenerStyle(selectedProducto.product_id);
+
     // Asigna el objeto cliente seleccionado a NewRow
     setNewRow({
       product_id: selectedProducto.product_id,
       nombre: selectedProducto.nombre,
       precio: selectedProducto.precio,
       cantidad: cantidad,
+      estilos: style,
       total: cantidad * selectedProducto.precio,
     });
-  }, [selected]);
+  }, [selected, preciosEspeciales, style]);
 
   // Oculta la notificación después de que se muestra
   useEffect(() => {
@@ -210,6 +242,12 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
 
 // Componente de ventana modal para mostrar detalles del producto seleccionado
 const DistribucionProducto = ({ isOpen, onClose, data }) => {
+  const [cantidad, setCantidad] = useState(0);
+
+  const handleChange = (e) => {
+    setCantidad(e.target.value);
+  };
+
   return (
     <div>
       <Dialog open={isOpen} onClose={onClose}>
@@ -218,10 +256,22 @@ const DistribucionProducto = ({ isOpen, onClose, data }) => {
           <DialogContentText>
             {/* Detalles del producto */}
             <div>
-              <p>Producto: {data.nombre}</p>
+              <p>Código: {data.product_id}</p>
+              <p>Nombre: {data.nombre}</p>
               <p>Precio: {data.precio}</p>
               <p>Cantidad: {data.cantidad}</p>
-              <p>Total: {data.total}</p>
+              {data.estilos && data.estilos.map((item) => (
+                <p key={item.estilo_id}>
+                  {item.nombre}
+                  <input
+                    type="number"
+                    onChange={handleChange}
+                    value={data.cantidad}
+                  />
+                </p>
+              ))}
+
+
             </div>
           </DialogContentText>
         </DialogContent>

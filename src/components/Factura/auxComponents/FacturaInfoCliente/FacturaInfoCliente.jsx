@@ -65,6 +65,7 @@ const FacturaInfo = () => {
       total += item.precio * item.cantidad;
     });
     setTotal(total);
+    console.log(producto);
   }, [producto]);
 
   // Function to handle product changes

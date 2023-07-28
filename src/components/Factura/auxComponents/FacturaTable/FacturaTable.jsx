@@ -8,27 +8,27 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import "./FacturaTable.css";
 import Notificacion from "../../../Basicos/Notificacion/Notificacion";
 import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
 } from "@mui/material";
 
 // Componente principal que representa la tabla de productos
 export default function BasicTable({ onProductosChange, preciosEspeciales, isSelected }) {
-  // Estado local para el nuevo producto que se va a agregar
-  const [newRow, setNewRow] = useState({
-    product_id: "",
-    nombre: "",
-    precio: "",
-    cantidad: 0,
-    familia_id: "",
-    estilos:[]
-  });
+  
+  // Estado local para mantener la lista de productos en la tabla
+  const [products, setProducts] = useState([]);
 
+  //estado local para guardar los estilos de la categoria del producto seleccionado
+  const [style, setStyle] = useState([]);
+  
+  // Estado local para mantener el producto seleccionado en el selector
+  const [selectedProduct, setSelectedProduct] = useState("");
+  const [productLine, setProductLine] = useState("");
   // Estado local para mostrar notificaciones
   const [mensajeNotificacion, setMensajeNotificacion] = useState("");
   const [tipoNotificacion, setTipoNotificacion] = useState("");
@@ -45,12 +45,6 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
     return true;
   };
 
-  // Estado local para mantener la lista de productos en la tabla
-  const [rows, setRows] = useState([]);
-
-  //estado local para guardar los estilos de la categoria del producto seleccionado
-  const [style, setStyle] = useState([]);
-
   // Obtiene los productos del estado global de Redux
   const productos = useSelector((state) => state.precios);
   const { precio } = productos;
@@ -65,9 +59,6 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
   // Obtiene los códigos únicos de productos
   const uniqueCodes = [...new Set(precio.map((item) => item.product_id))];
 
-  // Estado local para mantener el producto seleccionado en el selector
-  const [selected, setSelected] = useState("");
-  const [prod, setProd] = useState("");
 
   const obtenerStyle = (id) => {
     const producto = productosCategoria.producto.find(
@@ -86,36 +77,53 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
 
   // Maneja el clic en el botón "Agregar" para agregar un nuevo producto a la tabla
   const handleClick = () => {
-    setRows([]);
-    if (newRow.product_id === "") {
+    
+    // Valida que se haya seleccionado un producto
+    if (!selectedProduct) {
       setMensaje("Selecciona un producto", "error");
       return;
-    } else {
-      setRows([...rows, newRow]);
-      setSelected("");
-      onProductosChange([...rows, newRow]);
-      setNewRow({
-        product_id: "",
-        nombre: "",
-        precio: "",
-        estilos:[],
-        cantidad: 1,
-      });
     }
+    
+    // Valida que no se haya seleccionado un producto ya agregado
+    if (products.find((item) => item.product_id === productLine.product_id)) {
+      setMensaje("El producto ya está agregado", "error");
+      return;
+    }
+    //buscamos en los productos el id del producto seleccionado
+    const producto = precio.find(
+      (item) => item.product_id === selectedProduct
+    );
+    if (!producto) return;
+
+    const newProduct = {
+      product_id: producto.product_id,
+      nombre: producto.nombre,
+      precio: producto.precio,
+      cantidad: 0,
+      estilos: style,
+      total: 0,
+    }
+
+    setProductLine(newProduct);
+    setProducts([...products, newProduct]);
+    onProductosChange([...products, newProduct]);
+    setMensaje("Producto agregado", "success");
+    setSelectedProduct("");
+    
   };
 
   // Limpia la tabla y la lista de productos seleccionados cuando se cambia el cliente seleccionado
   useEffect (() => {
     if(isSelected === "Selecciona un cliente" ){
       return;
-    } 
-    setRows([]);
+    }
+    setProducts([]);
     onProductosChange([]);
-  },[isSelected])
+  }, [isSelected]);
 
   // Maneja la selección de un producto y muestra la ventana modal con detalles
   const selectedProd = (row) => {
-    setProd(row);
+    setSelectedProduct(row);
     handleOpen();
   };
 
@@ -126,10 +134,10 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
 
   // Elimina un producto de la tabla y actualiza la lista de productos seleccionados
   const deleteRow = (index) => {
-    const newRows = [...rows];
-    newRows.splice(index, 1);
-    setRows(newRows);
-    onProductosChange(newRows);
+    const newProducts = [...products];
+    newProducts.splice(index, 1);
+    setProducts(newProducts);
+    onProductosChange(newProducts);
   };
 
   // Actualiza la información del nuevo producto cuando se selecciona un producto en el selector
@@ -141,43 +149,49 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
  
     // Busca el objeto producto correspondiente al valor seleccionado
     const selectedProducto = preciosEspeciales.find(
-      (item) => item.product_id === selected
+      (item) => item.product_id === selectedProduct
     );
     if (!selectedProducto) return;
     let cantidad = 0;
     obtenerStyle(selectedProducto.product_id);
 
     // Asigna el objeto cliente seleccionado a NewRow
-    setNewRow({
+    const newRow = {
       product_id: selectedProducto.product_id,
       nombre: selectedProducto.nombre,
       precio: selectedProducto.precio,
       cantidad: cantidad,
       estilos: style,
-      total: cantidad * selectedProducto.precio,
-    });
-  }, [selected, preciosEspeciales, style]);
+      total: 0,
+    };
+    setProductLine(newRow);
+  }, [selectedProduct]);
 
-  const modificaCantidad = (id,cantidad) => {;
-    console.log(id,cantidad);
-    const newStyle = style.map((item) => {
+
+  //busca el producto y modifica la cantidad y el total
+  const updateProduct = (id, cantidad) => {
+
+    const updateStyle = productLine.estilos.map((item) => {
       if (item.nombre === id) {
-        return { ...item, cantidad: cantidad };
-      } else {
-        return item;
-      }
-    });
-    setStyle(newStyle);
-    const total = newStyle.reduce((acc, item) => acc + item.cantidad, 0);
-    setProd ({...prod, cantidad: total, estilos: newStyle, total: total * prod.precio});
-    setNewRow ({...newRow, cantidad: total, estilos: newStyle, total: total * prod.precio});
-    setRows (rows.map((item) => {
-      if(item.product_id === prod.product_id){
-        return {...item, cantidad: total, estilos: newStyle, total: total * prod.precio};
+        return { ...item, cantidad: Number(cantidad) };
       }
       return item;
-    }));
+    }
+    );
+    const copyProductLine = { ...productLine };
+    copyProductLine.estilos = updateStyle;
+    copyProductLine.cantidad = updateStyle.reduce((total, item) => total + item.cantidad, 0);
+    copyProductLine.total = copyProductLine.cantidad * copyProductLine.precio;
+    setProductLine(copyProductLine);
+    const copyProducts = [...products];
+    const index = copyProducts.findIndex((item) => item.product_id === copyProductLine.product_id);
+    copyProducts[index] = copyProductLine;
+    setProducts(copyProducts);
+    onProductosChange(copyProducts);
+
+
   };
+
   
   const handleClose = () => {
     setIsModalOpen(false);
@@ -206,7 +220,7 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
         </TableHead>
         <TableBody>
           {/* Filas de la tabla */}
-          {rows.map((row, index) => (
+          {products.map((row, index) => (
             <TableRow key={index}>
               <TableCell align="center">{row.product_id}</TableCell>
               <TableCell align="center">{row.cantidad}</TableCell>
@@ -226,8 +240,8 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
           <TableRow>
             <TableCell align="center">
               <select
-                onChange={(e) => setSelected(e.target.value)}
-                value={selected}
+                onChange={(e) => setSelectedProduct(e.target.value)}
+                value={selectedProduct}
               >
                 <option value={""}>Selecciona un producto</option>
                 {uniqueCodes.map((item) => (
@@ -238,10 +252,10 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
               </select>
             </TableCell>
             <TableCell align="center">
-              Nombre: {newRow ? newRow.nombre : ""}
+              Nombre: {productLine ? productLine.nombre : ""}
             </TableCell>
             <TableCell align="center">
-              Precio: {newRow ? newRow.precio : ""}
+              Precio: {productLine ? productLine.precio : ""}
             </TableCell>
           </TableRow>
         </TableBody>
@@ -258,40 +272,38 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
       <DistribucionProducto
         isOpen={isModalOpen}
         onClose={handleClose}
-        data={prod}
-        modificaCantidad={modificaCantidad}
+        data={productLine}
+        updateProduct={updateProduct}
       />
     </TableContainer>
   );
+  
 }
 
 // Componente de ventana modal para mostrar detalles del producto seleccionado
-const DistribucionProducto = ({ isOpen, onClose, data, modificaCantidad }) => {
-
+const DistribucionProducto = ({ isOpen, onClose, data, updateProduct }) => {
   return (
-    <div>
+    <div >
       <Dialog open={isOpen} onClose={onClose}>
         <DialogTitle>{"Distribución de productos"}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            {/* Detalles del producto */}
-            <div>
-              <p>Código: {data.product_id}</p>
-              <p>Nombre: {data.nombre}</p>
-              <p>Precio: {data.precio}</p>
-              <p>Cantidad: {data.cantidad}</p>
-              {data.estilos && data.estilos.map((item) => (
-                <p key={item.estilo_id}>
-                  <label>{item.nombre}</label>
-                  <input
-                    type="number"
-                    value={item.cantidad}
-                    onChange={(e) => modificaCantidad(item.nombre, parseInt(e.target.value))}
-                  />
-                </p>
-              ))}
-            </div>
-          </DialogContentText>
+          {/* Detalles del producto */}
+          <div className="estilos_producto" >
+            <p>Código: {data.product_id}</p>
+            <p>Nombre: {data.nombre}</p>
+            <p>Precio: {data.precio}</p>
+            <p>Cantidad: {data.cantidad}</p>
+            {data.estilos && data.estilos.map((item) => (
+              <div key={item.nombre}>
+                <label>{item.nombre}</label>
+                <input
+                  type="number"
+                  value={item.cantidad}
+                  onChange={(e) => updateProduct(item.nombre, e.target.value)}
+                />
+              </div>
+            ))}
+          </div>
         </DialogContent>
         {/* Botón para cerrar la ventana modal */}
         <DialogActions>

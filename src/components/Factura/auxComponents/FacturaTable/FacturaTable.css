@@ -1,0 +1,15 @@
+.estilos_producto >div {
+  margin-bottom: 15px;
+  font-family: "Roboto", sans-serif;
+
+}
+
+.estilos_producto >p{
+    font-size: 1.2rem;
+    font-weight: 1;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 15px;
+    margin-top: 15px;
+
+}

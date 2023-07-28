@@ -24,7 +24,7 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
     product_id: "",
     nombre: "",
     precio: "",
-    cantidad: 1,
+    cantidad: 0,
     familia_id: "",
     estilos:[]
   });
@@ -57,7 +57,6 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
 
   // Obtiene los productos del estado global de Redux con la categoria
   const productosCategoria = useSelector((state) => state.producto);
-  const { producto } = productosCategoria;
 
   // Obtiene las familias del estado global de Redux
   const {familia} = useSelector((state) => state.familia);
@@ -77,6 +76,7 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
     if (!producto) return;
     const idFamilia = producto.familia_id;
     const familiaData = familia.find((item) => item.nombre === idFamilia);
+    if(!familiaData) return;
     const estilos = familiaData.estilos;
     const estilosCantidad = estilos.map((item) => { return { ...item, cantidad: 0 } });
     if (!familiaData) return;
@@ -109,7 +109,7 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
     if(isSelected === "Selecciona un cliente" ){
       return;
     } 
-      setRows([]);
+    setRows([]);
     onProductosChange([]);
   },[isSelected])
 
@@ -144,7 +144,7 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
       (item) => item.product_id === selected
     );
     if (!selectedProducto) return;
-    const cantidad = 1;
+    let cantidad = 0;
     obtenerStyle(selectedProducto.product_id);
 
     // Asigna el objeto cliente seleccionado a NewRow
@@ -158,6 +158,30 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
     });
   }, [selected, preciosEspeciales, style]);
 
+  const modificaCantidad = (id,cantidad) => {;
+    console.log(id,cantidad);
+    const newStyle = style.map((item) => {
+      if (item.nombre === id) {
+        return { ...item, cantidad: cantidad };
+      } else {
+        return item;
+      }
+    });
+    setStyle(newStyle);
+    const total = newStyle.reduce((acc, item) => acc + item.cantidad, 0);
+    setProd ({...prod, cantidad: total, estilos: newStyle, total: total * prod.precio});
+    setNewRow ({...newRow, cantidad: total, estilos: newStyle, total: total * prod.precio});
+    setRows (rows.map((item) => {
+      if(item.product_id === prod.product_id){
+        return {...item, cantidad: total, estilos: newStyle, total: total * prod.precio};
+      }
+      return item;
+    }));
+  };
+  
+  const handleClose = () => {
+    setIsModalOpen(false);
+  };
   // Oculta la notificación después de que se muestra
   useEffect(() => {
     if (mostrarNotificacion) {
@@ -233,20 +257,16 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
       {/* Componente DistribucionProducto para mostrar la ventana modal */}
       <DistribucionProducto
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleClose}
         data={prod}
+        modificaCantidad={modificaCantidad}
       />
     </TableContainer>
   );
 }
 
 // Componente de ventana modal para mostrar detalles del producto seleccionado
-const DistribucionProducto = ({ isOpen, onClose, data }) => {
-  const [cantidad, setCantidad] = useState(0);
-
-  const handleChange = (e) => {
-    setCantidad(e.target.value);
-  };
+const DistribucionProducto = ({ isOpen, onClose, data, modificaCantidad }) => {
 
   return (
     <div>
@@ -262,16 +282,14 @@ const DistribucionProducto = ({ isOpen, onClose, data }) => {
               <p>Cantidad: {data.cantidad}</p>
               {data.estilos && data.estilos.map((item) => (
                 <p key={item.estilo_id}>
-                  {item.nombre}
+                  <label>{item.nombre}</label>
                   <input
                     type="number"
-                    onChange={handleChange}
-                    value={data.cantidad}
+                    value={item.cantidad}
+                    onChange={(e) => modificaCantidad(item.nombre, parseInt(e.target.value))}
                   />
                 </p>
               ))}
-
-
             </div>
           </DialogContentText>
         </DialogContent>

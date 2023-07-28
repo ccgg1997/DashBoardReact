@@ -10,14 +10,15 @@ const FacturaInfo = () => {
   const [producto, setProductos] = useState([]);
   const [preciosEspeciales, setPreciosEspeciales] = useState([]);
   const [total, setTotal] = useState(0);
+  const [factura, setFactura] = useState({});//objeto factura con los datos de la factura
 
   // Redux state
   const clientes = useSelector((state) => state.clientes);
   const token = useSelector((state) => state.auth.token);
   const { cliente } = clientes;
-
+  
   const [isOpen, setIsOpen] = useState(false);
-
+  
   // Date formatting
   const fechaActual = new Date().toLocaleDateString("es-ES", {
     weekday: "long",
@@ -25,6 +26,37 @@ const FacturaInfo = () => {
     month: "long",
     day: "numeric",
   });
+
+  const estilosMayoresACero = () => {
+  const estilosMayoresA0 = producto.map((item) => {
+    const estilosProd = item.estilos.filter((estilo) => estilo.cantidad > 0);
+    return {
+      ...item,
+      estilos: estilosProd
+    }
+  });
+  return estilosMayoresA0;
+  }
+
+
+  // Unique business names for dropdown
+  const uniqueNames = [...new Set(cliente.map((item) => item.negocio))];
+  const [selectedCliente, setSelectedCliente] = useState("");
+  const [selectedItem, setSelectedItem] = useState(null);
+  
+  //objeto factura con los datos de la factura
+  const crearFactura = () => {
+    if(!selectedItem) return;
+
+    const productosActualizados = estilosMayoresACero();
+    setProductos(productosActualizados);
+    setFactura({
+      negocioId: selectedItem.id,
+      total: total,
+      productos: producto
+    });
+  
+  }
 
   // Calculate the total price
   const updateTotal = useCallback(() => {
@@ -36,19 +68,14 @@ const FacturaInfo = () => {
   }, [producto]);
 
   // Function to handle product changes
-  const handleProductosChange = useCallback(
-    (newProductos) => {
-      setProductos(newProductos);
-      // Dado que `setProductos` es asíncrono, podemos llamar a `updateTotal` en un callback
-      // para asegurarnos de que use el estado actualizado.
-    },
-    []
-  );
+  const handleProductosChange = (productos) => {
+    setProductos(productos);
+  };
 
-  // Unique business names for dropdown
-  const uniqueNames = [...new Set(cliente.map((item) => item.negocio))];
-  const [selectedCliente, setSelectedCliente] = useState("");
-  const [selectedItem, setSelectedItem] = useState(null);
+  useEffect(() => {
+    updateTotal();
+  }, [producto, updateTotal]);
+
 
   // Fetch prices for selected client
   const fetchPreciosEspeciales = async (selectedCliente, token) => {

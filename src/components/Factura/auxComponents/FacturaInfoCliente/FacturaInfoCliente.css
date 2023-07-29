@@ -1,5 +1,7 @@
 .FacturaInfo__title{
     text-align: center;
+    display: flex;
+    justify-content: center;
 }
 
 .FacturaInfo__info {
@@ -16,6 +18,11 @@
 .FacturaInfo__info__fecha {
   flex-basis: 50%;
   margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  
+
 }
 
 .FacturaInfo__info__fecha{
@@ -38,4 +45,26 @@
   border-radius: 10px;
   cursor: pointer;
   margin-left: 5px;
+}
+
+/* Estilos del botón flotante */
+.boton-flotante {
+  position: fixed;
+  bottom: 30px;
+  right: 60px;
+  z-index: 100;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 17px;
+  border: none;
+  box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+/* Estilo al pasar el ratón por encima */
+.boton-flotante:hover {
+  background-color: #0056b3;
 }

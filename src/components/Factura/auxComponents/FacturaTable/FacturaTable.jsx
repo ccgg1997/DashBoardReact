@@ -1,3 +1,4 @@
+// Importación de las librerías y componentes necesarios
 import * as React from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -19,16 +20,16 @@ import {
 
 // Componente principal que representa la tabla de productos
 export default function BasicTable({ onProductosChange, preciosEspeciales, isSelected }) {
-  
   // Estado local para mantener la lista de productos en la tabla
   const [products, setProducts] = useState([]);
 
-  //estado local para guardar los estilos de la categoria del producto seleccionado
+  // Estado local para guardar los estilos de la categoría del producto seleccionado
   const [style, setStyle] = useState([]);
-  
+
   // Estado local para mantener el producto seleccionado en el selector
   const [selectedProduct, setSelectedProduct] = useState("");
   const [productLine, setProductLine] = useState("");
+
   // Estado local para mostrar notificaciones
   const [mensajeNotificacion, setMensajeNotificacion] = useState("");
   const [tipoNotificacion, setTipoNotificacion] = useState("");
@@ -49,17 +50,16 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
   const productos = useSelector((state) => state.precios);
   const { precio } = productos;
 
-  // Obtiene los productos del estado global de Redux con la categoria
+  // Obtiene los productos del estado global de Redux con la categoría
   const productosCategoria = useSelector((state) => state.producto);
 
   // Obtiene las familias del estado global de Redux
-  const {familia} = useSelector((state) => state.familia);
- 
+  const { familia } = useSelector((state) => state.familia);
 
   // Obtiene los códigos únicos de productos
   const uniqueCodes = [...new Set(precio.map((item) => item.product_id))];
 
-
+  // Función para obtener los estilos de un producto
   const obtenerStyle = (id) => {
     const producto = productosCategoria.producto.find(
       (item) => item.producto_id === id
@@ -67,34 +67,34 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
     if (!producto) return;
     const idFamilia = producto.familia_id;
     const familiaData = familia.find((item) => item.nombre === idFamilia);
-    if(!familiaData) return;
+    if (!familiaData) return;
     const estilos = familiaData.estilos;
     const estilosCantidad = estilos.map((item) => { return { ...item, cantidad: 0 } });
     if (!familiaData) return;
     setStyle(estilosCantidad);
-
   };
 
-  // Maneja el clic en el botón "Agregar" para agregar un nuevo producto a la tabla
+  // Maneja el click en el botón "Agregar" para agregar un nuevo producto a la tabla
   const handleClick = () => {
-    
     // Valida que se haya seleccionado un producto
     if (!selectedProduct) {
       setMensaje("Selecciona un producto", "error");
       return;
     }
-    
+
     // Valida que no se haya seleccionado un producto ya agregado
     if (products.find((item) => item.product_id === productLine.product_id)) {
       setMensaje("El producto ya está agregado", "error");
       return;
     }
-    //buscamos en los productos el id del producto seleccionado
+
+    // Busca en los productos el id del producto seleccionado
     const producto = precio.find(
       (item) => item.product_id === selectedProduct
     );
     if (!producto) return;
 
+    // Crea el nuevo objeto de producto a agregar en la tabla
     const newProduct = {
       product_id: producto.product_id,
       nombre: producto.nombre,
@@ -104,17 +104,17 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
       total: 0,
     }
 
+    // Actualiza el estado local de la tabla y llama a la función para notificar el éxito
     setProductLine(newProduct);
     setProducts([...products, newProduct]);
     onProductosChange([...products, newProduct]);
     setMensaje("Producto agregado", "success");
     setSelectedProduct("");
-    
   };
 
   // Limpia la tabla y la lista de productos seleccionados cuando se cambia el cliente seleccionado
-  useEffect (() => {
-    if(isSelected === "Selecciona un cliente" ){
+  useEffect(() => {
+    if (isSelected === "Selecciona un cliente") {
       return;
     }
     setProducts([]);
@@ -123,7 +123,7 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
 
   // Maneja la selección de un producto y muestra la ventana modal con detalles
   const selectedProd = (row) => {
-    setSelectedProduct(row);
+    setProductLine(row);
     handleOpen();
   };
 
@@ -142,15 +142,20 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
 
   // Actualiza la información del nuevo producto cuando se selecciona un producto en el selector
   useEffect(() => {
-    if(!preciosEspeciales){
+    if (!preciosEspeciales) {
       alert("No hay precios especiales")
       return;
     }
- 
+
     // Busca el objeto producto correspondiente al valor seleccionado
     const selectedProducto = preciosEspeciales.find(
       (item) => item.product_id === selectedProduct
     );
+
+    if(selectedProduct === ""){
+     return;
+    }
+
     if (!selectedProducto) return;
     let cantidad = 0;
     obtenerStyle(selectedProducto.product_id);
@@ -167,35 +172,33 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
     setProductLine(newRow);
   }, [selectedProduct]);
 
-
-  //busca el producto y modifica la cantidad y el total
+  // Busca el producto y modifica la cantidad y el total
   const updateProduct = (id, cantidad) => {
-
     const updateStyle = productLine.estilos.map((item) => {
       if (item.nombre === id) {
         return { ...item, cantidad: Number(cantidad) };
       }
       return item;
-    }
-    );
+    });
+
     const copyProductLine = { ...productLine };
     copyProductLine.estilos = updateStyle;
     copyProductLine.cantidad = updateStyle.reduce((total, item) => total + item.cantidad, 0);
     copyProductLine.total = copyProductLine.cantidad * copyProductLine.precio;
     setProductLine(copyProductLine);
+
     const copyProducts = [...products];
     const index = copyProducts.findIndex((item) => item.product_id === copyProductLine.product_id);
     copyProducts[index] = copyProductLine;
     setProducts(copyProducts);
     onProductosChange(copyProducts);
-
-
   };
 
-  
+  // Cierra la ventana modal
   const handleClose = () => {
     setIsModalOpen(false);
   };
+
   // Oculta la notificación después de que se muestra
   useEffect(() => {
     if (mostrarNotificacion) {
@@ -277,11 +280,17 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
       />
     </TableContainer>
   );
-  
 }
 
 // Componente de ventana modal para mostrar detalles del producto seleccionado
 const DistribucionProducto = ({ isOpen, onClose, data, updateProduct }) => {
+
+  const handleQuantityChange = (nombre, cantidad) => {
+    const nonNegativeCantidad = Math.max(0, cantidad);
+    updateProduct(nombre, nonNegativeCantidad);
+  };
+
+
   return (
     <div >
       <Dialog open={isOpen} onClose={onClose}>
@@ -299,7 +308,7 @@ const DistribucionProducto = ({ isOpen, onClose, data, updateProduct }) => {
                 <input
                   type="number"
                   value={item.cantidad}
-                  onChange={(e) => updateProduct(item.nombre, e.target.value)}
+                  onChange={(e) => handleQuantityChange(item.nombre, e.target.value)}
                 />
               </div>
             ))}

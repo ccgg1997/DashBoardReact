@@ -14,7 +14,7 @@ export const functionTableData = (() => {
     );
     if(listaFiltrada.length === 0) return { nombresKeys: [], nuevaLista: [] };
     const nuevaLista = listaFiltrada.map(
-      ({personaId,nombrePersona,familiaNombre, productoId, cantidad, estilos, cantidadRecibida, fechaInicial}) => {
+      ({personaId,produccionId,nombrePersona,familiaNombre, productoId, cantidad, estilos, cantidadRecibida, fechaInicial}) => {
         const estilosReducidos = estilos.reduce((acc, estilo) => {
           acc[estilo.nombre.replace(/ /g, "")] = (estilo.cantidad-estilo.cantidadRecibida);
           return acc;
@@ -24,14 +24,14 @@ export const functionTableData = (() => {
 
         return {
           id: uniqueId,
+          produccionId: produccionId,
+          FechaEntrega: fechaInicial,
           PersonaId: personaId,
-          Nombre: nombrePersona,
-          Fecha: fechaInicial,
-          CantidadInicial: cantidad,
-          cantidadRecibida: cantidadRecibida,
-          nombrePersona:nombrePersona,
+          NombrePersona:nombrePersona,
+          "M. RECIBIDO": cantidad,
+          "M. Entregado": cantidadRecibida,
           ProductId: productoId,
-          Familia: familiaNombre,
+          FamiliaProducto: familiaNombre,
           ...estilosReducidos,
         };
       }

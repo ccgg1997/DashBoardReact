@@ -1,43 +1,44 @@
 import React, { useState, useEffect } from "react";
-import "./FCInv.css";
+import "./FCPro.css";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import Notificacion from "../../../../../../../../Basicos/Notificacion/Notificacion";
-import { setInventario } from "../../../../../../../../../features/inventario/inventario";
+import { setProduccion } from "../../../../../../../../../features/ordenesproduccion/ordenesproduccion";
 import {
-  crearInventario,
-  infoInventario,
+  crearProduccion, infoProduccion,
 } from "../../../../../../../../Api/apiAddress";
 
-const FCreateInv = () => {
+const FCreatePro = () => {
+
   //estados del componente
-  const [productSelected, setProductSelected] = useState("");
   const [mostrarNotificacion, setMostrarNotificacion] = useState(false);
   const [tipoNotificacion, setTipoNotificacion] = useState("");
   const [mensajeNotificacion, setMensajeNotificacion] = useState("");
-  const [bodegaSelected, setBodegaSelected] = useState("0");
-  const [productoSelected, setProductoSelected] = useState("0");
   const [nuevoInventario, setNuevoInventario] = useState(false);
   const [inventoryDataModified, setInventoryDataModified] = useState([]);
   const [familiaNombre, setFamiliaNombre] = useState("");
+  const [personaNameSelected, setPersonaNameSelected] = useState("0");
+  const [idPersona, setIdPersona] = useState("0");
   const [tipoProducto, setTipoProducto] = useState("");
-  const [cantidad, setCantidad] = useState(0);
+  const [productoSelected, setProductoSelected] = useState("0");
   const [nombreProductSelected, setNombreProductSelected] = useState("");
+  const [cantidad, setCantidad] = useState(0);
 
   //datos del estado global
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
-  const { bodega } = useSelector((state) => state.bodega);
-  const { inventario } = useSelector((state) => state.inventario);
+  const { persona } = useSelector((state) => state.persona);
   const { producto } = useSelector((state) => state.producto);
   const { familia } = useSelector((state) => state.familia);
   const idsProducto = producto.map((producto) => producto.producto_id);
-  const nombresBodega = bodega.map((bodega) => bodega.bodegaId);
+  const nombresPersona = persona.map((persona) => persona.nombre);
 
-  const objetCrearInventario = {
-    inventarioId: bodegaSelected + "-" + productoSelected,
-    bodegaId: bodegaSelected,
+
+  const objetCrearProduccion = {
+  
     productoId: productoSelected,
+    personaId:idPersona,
+    nombrePersona:personaNameSelected,
     nombreProducto:nombreProductSelected,
     tipo: tipoProducto,
     cantidad: cantidad,
@@ -57,28 +58,28 @@ const FCreateInv = () => {
   const validarInventario = () => {
 
     //validar campos llenos
-    if (bodegaSelected === "0" || productoSelected === "0") {
-      setMensaje("selecciona un producto y una bodega", "error");
-      return false;
-    }
-    //validar que el inventario no exista
-    const inventarioSeleccionado = bodegaSelected + "-" + productoSelected;
-    const inventarioEncontrado = inventario.find(
-      (inventario) => inventario.inventarioId === inventarioSeleccionado
-    );
-    if (inventarioEncontrado) {
-      setMensaje("El inventario ya existe", "error");
+    if (personaNameSelected === "0" || productoSelected === "0") {
+      setMensaje("selecciona un producto y una persona", "error");
       return false;
     }
 
     //buscar familia y producto
     setNuevoInventario(true);
+  
+
     const productoSelectedObject = producto.find(
       (producto) => producto.producto_id === productoSelected
     );
+    const personaSelectedObject = persona.find(
+      (persona) => persona.nombre === personaNameSelected
+    );
+
+    
+  
     const familia_product = productoSelectedObject.familia_id;
 
-    //setiar los datos de familia y producto
+    //setiar los datos de familia,persona y producto
+    setIdPersona(personaSelectedObject.personaId);
     setFamiliaNombre(familia_product);
     setTipoProducto(productoSelectedObject.tipo);
     setNombreProductSelected(productoSelectedObject.nombre);
@@ -99,14 +100,18 @@ const FCreateInv = () => {
 
   //funcion para crear el inventario
   const crearInventarioApi = async() => {
-    console.log(objetCrearInventario);
-    await crearInventario(objetCrearInventario, token);
+    console.log(objetCrearProduccion);
+    if(cantidad===0){
+      setMensaje("No se puede crear una produccion con 0 unidades", "error");
+      return false;
+    }
+    await crearProduccion(objetCrearProduccion, token);
     setMensaje("Inventario creado correctamente", "success");
-    setBodegaSelected("0");
+    setPersonaNameSelected("");
     setProductoSelected("0");
     setNuevoInventario(false);
-    const responseInventario = await infoInventario(token);
-    dispatch(setInventario(responseInventario));
+    const responseInventario = await infoProduccion(token);
+    dispatch(setProduccion(responseInventario));
     
 
   };
@@ -127,7 +132,7 @@ const FCreateInv = () => {
   
 
   return (
-    <div className="FCreateInv">
+    <div className="FCreatePro">
       <div className="InputGroupCreateInv">
         <GenericSelect
           id="Producto"
@@ -135,26 +140,27 @@ const FCreateInv = () => {
           onChange={(event) => {
             setNuevoInventario(false);
             setProductoSelected(event.target.value);
+            setPersonaNameSelected("0");
           }}
           options={idsProducto}
         />
         <GenericSelect
-          id="Bodega "
-          value={bodegaSelected}
+          id="Persona "
+          value={personaNameSelected}
           onChange={(event) => {
             setNuevoInventario(false);
-            setBodegaSelected(event.target.value);
+            setPersonaNameSelected(event.target.value);
           }}
-          options={nombresBodega}
+          options={nombresPersona}
         />
         {!nuevoInventario && (
-          <button className="botonCreateInv" onClick={validarInventario}>
+          <button className="botonCreateProd" onClick={validarInventario}>
             Ingresar cantidad
           </button>
         )}
         {nuevoInventario && (
-          <button className="botonCreateInv" onClick={crearInventarioApi}>
-            Crear Inventario
+          <button className="botonCreateProd" onClick={crearInventarioApi}>
+            Crear Produccion
           </button>
         )}
       </div>
@@ -206,4 +212,4 @@ const GenericSelect = ({ id, value, onChange, options }) => {
   );
 };
 
-export default FCreateInv;
+export default FCreatePro;

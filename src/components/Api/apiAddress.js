@@ -28,6 +28,21 @@ export const infoProduccion = async (token) => {
   }
 };
 
+export const crearProduccion = async (data, token) => {
+  const crearProduccionAddress = apiAddress + "/produccion";
+  try {
+    const response = await axios.post(crearProduccionAddress, data, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("Error al crear la orden de producción");
+  }
+};
+
+
 //-----------------Familia FUNCIONES-----------------
 export const infoFamilia = async (token) => {
   const infoFamiliaAddress = apiAddress + "/familia";
@@ -271,6 +286,20 @@ export const createPersona = async (data, token) => {
   } catch (error) {
     throw new Error("Error al crear la persona");
   } 
+};
+
+export const infoPersonas = async (token) => {
+  const infoPersonasAddress = apiAddress + "/persona";
+  try {
+    const response = await axios.get(infoPersonasAddress, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("Error al obtener la información de las personas");
+  }
 };
 
 

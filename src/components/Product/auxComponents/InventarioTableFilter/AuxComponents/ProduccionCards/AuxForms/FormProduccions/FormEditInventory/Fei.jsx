@@ -78,6 +78,7 @@ const FormEditInventory = () => {
     setInventoryData(inventoryDataSelected);
     setInventoryDataModified(inventoryDataSelected);
   };
+  
   const handleChangeCantidad = (index, subIndex, cantidad) => {
     const updatedEstilos = [...inventoryDataModified];
     updatedEstilos[index].estilos[subIndex].cantidad = cantidad;
@@ -251,7 +252,7 @@ const FormEditInventory = () => {
           <div className="InventoryDataM">
             <h3>Cantid. Modificar</h3>
             {inventoryDataModified.map((item, index) => (
-              <div key={`${index}${item}`}>
+              <div key={item.estilos[0].key}>
                 {/* <h3>{item.familiaNombre}</h3> */}
                 {item.estilos.map((estilo, subIndex) => (
                   <div key={estilo.key}>

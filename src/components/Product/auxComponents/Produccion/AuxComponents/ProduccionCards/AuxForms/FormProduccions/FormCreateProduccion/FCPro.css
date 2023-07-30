@@ -1,0 +1,71 @@
+.FCreatePro {
+  display: flex;
+  background-color: aliceblue;
+  width: 90%;
+  height: 75%;
+  flex-direction: column !important;
+  padding: 25px;
+  border-radius: 15px;
+}
+
+.InputGroupCreateInv {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  background-color: #cacaca46;
+  border-radius: 15px;
+  padding: 20px;
+  justify-content: space-between;
+}
+
+.InputGroupValues{
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 5px;
+  gap: 15px;
+  background-color: #cacaca46;
+  border-radius: 15px;
+  padding: 20px;
+  justify-content: space-between;
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
+
+.botonCreateProd{
+  background-color: rgb(65, 80, 241) !important;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.contenedorSelect select {
+  height: 35px;
+}
+
+.createInventoryModificationData {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.createInventoryDataM{
+  padding: 20px;
+  border-radius: 15px;
+  background-color: #ffffff;
+}
+
+.boton-flotante {
+  /* Estilos para el botón flotante */
+  margin-left: auto; /* Mueve el botón a la esquina derecha */
+  padding: 10px;
+  background-color: #f00;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+}
+
+.InputGroupValues::-webkit-scrollbar {
+  width: 0.001em; /* Ancho de la barra de desplazamiento */
+  background-color: #f5f5f5; /* Color de fondo de la barra de desplazamiento */
+}

@@ -11,7 +11,8 @@ import { setProduccion } from "../../features/ordenesproduccion/ordenesproduccio
 import{setFamilia} from "../../features/familias/familia";
 import { setBodega } from "../../features/bodega/bodega";
 import{setProducto} from "../../features/productos/producto";
-import { signin, infoInventario, createCookie,infoClientes, infoPrecios,infoFamilia, infoProduccion,infoBodegas,infoProductos } from "../Api/apiAddress";
+import{setPersona} from "../../features/persona/persona";
+import { signin, infoInventario, createCookie,infoClientes, infoPrecios,infoFamilia, infoProduccion,infoBodegas,infoProductos, infoPersonas } from "../Api/apiAddress";
 ReactModal.setAppElement(document.getElementById("root"));
 
 export function Login(props) {
@@ -43,6 +44,7 @@ export function Login(props) {
       const responseProduccion = await infoProduccion(token);
       const responseBodegas = await infoBodegas(token);
       const responseProductos = await infoProductos(token);
+      const responsePersonas = await infoPersonas(token);
       console.log(responseProductos);
       //setiar la variable global del token e inventario
       dispatch(
@@ -63,6 +65,7 @@ export function Login(props) {
       dispatch(setProduccion(responseProduccion));
       dispatch(setBodega(responseBodegas));
       dispatch(setProducto(responseProductos));
+      dispatch(setPersona(responsePersonas));
 
       // Crea la cookie
       createCookie(

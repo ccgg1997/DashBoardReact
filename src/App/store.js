@@ -7,6 +7,7 @@ import familiaReducer from "../features/familias/familia";
 import produccionReducer from "../features/ordenesproduccion/ordenesproduccion";
 import bodegaReducer from "../features/bodega/bodega";
 import productoReducer from "../features/productos/producto";
+import personaReducer from "../features/persona/persona";
 
 
 export const store = configureStore({
@@ -19,6 +20,7 @@ export const store = configureStore({
     produccion: produccionReducer,
     bodega: bodegaReducer,
     producto: productoReducer,
+    persona: personaReducer,
 
   },
   

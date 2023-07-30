@@ -328,6 +328,25 @@ export const infoBodegas = async (token) => {
     throw new Error("Error al obtener la información de las bodegas");
   }
 };
+
+//------------------------------------FACTURA VENTA------------------------------------
+
+export const createFactura = async (data, token) => {
+  const createFacturaAddress = apiAddress + "/factura";
+  try {
+    const response = await axios.post(createFacturaAddress, data, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error al crear la factura");
+  }
+};
+
 // -----------------------------------PRODUCCION/INVENTARIO-----------------------------------
 
 

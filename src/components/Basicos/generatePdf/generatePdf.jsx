@@ -1,4 +1,3 @@
-import React from "react";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 import imagen from "../../../imgs/logo.png";
@@ -19,8 +18,6 @@ const generarPDF = (factura) => {
   img.src = imagen;
 
   const dibujarTablaProductos = (x, y, data) => {
-    console.log("x", x);
-    console.log("y", y);
     const tableWidth = doc.internal.pageSize.width / 2 - 10;
     doc.autoTable({
       head: [["Producto", "Cantidad", "Precio", "Subtotal"]],
@@ -42,7 +39,7 @@ const generarPDF = (factura) => {
 
     //subtitulo de la factura
     doc.setFontSize(16);
-    doc.text("Factura", x + 70, y + 20, null, null, "center");
+    doc.text("Factura " + factura.id, x + 70, y + 20, null, null, "center");
 
     // Información personal
     doc.setFontSize(12);
@@ -61,23 +58,27 @@ const generarPDF = (factura) => {
     const col1 = fields.slice(0, 4);
     const col2 = fields.slice(4, 7);
 
+
     // Dibujamos la primera columna
     col1.forEach((field, index) => {
-      doc.text(`${field.label}: ${field.value}`, x, y + 50 + index * 10);
+      const textoOrganizado = dividirPalabras(field.value);
+      doc.text(`${field.label}: ${textoOrganizado}`, x + 10, y + 50 + index * 10);
+
     });
 
     // Dibujamos la segunda columna
     col2.forEach((field, index) => {
-      doc.text(`${field.label}: ${field.value}`, x + 57, y + 50 + index * 10);
+      const textoOrganizado = dividirPalabras(field.value);
+      doc.text(`${field.label}: ${textoOrganizado}`, x + 65, y + 50 + index * 10);
     });
 
     // Tabla de productos
     const productos = factura.productos;
     const data = productos.map((producto) => [
-      producto.nombre,
+      producto.productoNombre,
       producto.cantidad,
       producto.precio,
-      producto.total,
+      agregarPuntos(producto.total),
     ]);
 
     dibujarTablaProductos(x, y + 90, data);
@@ -91,6 +92,26 @@ const generarPDF = (factura) => {
 
   // Guardar el PDF
   doc.save("factura.pdf");
+};
+
+//funcion auxiliar para dividir las palabras
+const dividirPalabras = (palabra) => {
+  if(typeof palabra === "number") return agregarPuntos(palabra);
+
+  if (typeof palabra !== "string") return;
+
+  const palabras = palabra.split(" ");
+  for(let i = 0; i < palabras.length; i++){
+    if(palabras[i].length > 16 ){
+      palabras[i] = palabras[i].substring(0, 10) + "-\n" + palabras[i].substring(10);
+    }
+  }
+  return palabras.join(" ");
+}
+
+//funcion para agregar puntos a los numeros
+const agregarPuntos = (numero) => {
+  return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
 export default generarPDF;

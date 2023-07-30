@@ -24,7 +24,7 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
   const [products, setProducts] = useState([]);
 
   // Estado local para guardar los estilos de la categoría del producto seleccionado
-  const [style, setStyle] = useState([]);
+  const [nombreFamilia, setNombreFamilia] = useState("");
 
   // Estado local para mantener el producto seleccionado en el selector
   const [selectedProduct, setSelectedProduct] = useState("");
@@ -53,6 +53,7 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
   // Obtiene los productos del estado global de Redux con la categoría
   const productosCategoria = useSelector((state) => state.producto);
 
+
   // Obtiene las familias del estado global de Redux
   const { familia } = useSelector((state) => state.familia);
 
@@ -64,14 +65,13 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
     const producto = productosCategoria.producto.find(
       (item) => item.producto_id === id
     );
-    if (!producto) return;
+    if (!producto) return [];
     const idFamilia = producto.familia_id;
     const familiaData = familia.find((item) => item.nombre === idFamilia);
-    if (!familiaData) return;
+    if (!familiaData) return [];
     const estilos = familiaData.estilos;
-    const estilosCantidad = estilos.map((item) => { return { ...item, cantidad: 0 } });
-    if (!familiaData) return;
-    setStyle(estilosCantidad);
+    setNombreFamilia(familiaData.nombre);
+    return estilos.map((item) => { return { ...item, cantidad: 0 } });
   };
 
   // Maneja el click en el botón "Agregar" para agregar un nuevo producto a la tabla
@@ -83,31 +83,14 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
     }
 
     // Valida que no se haya seleccionado un producto ya agregado
-    if (products.find((item) => item.product_id === productLine.product_id)) {
+    if (products.find((item) => item.productoId === productLine.productoId)) {
       setMensaje("El producto ya está agregado", "error");
       return;
     }
 
-    // Busca en los productos el id del producto seleccionado
-    const producto = precio.find(
-      (item) => item.product_id === selectedProduct
-    );
-    if (!producto) return;
-
-    // Crea el nuevo objeto de producto a agregar en la tabla
-    const newProduct = {
-      product_id: producto.product_id,
-      nombre: producto.nombre,
-      precio: producto.precio,
-      cantidad: 0,
-      estilos: style,
-      total: 0,
-    }
-
     // Actualiza el estado local de la tabla y llama a la función para notificar el éxito
-    setProductLine(newProduct);
-    setProducts([...products, newProduct]);
-    onProductosChange([...products, newProduct]);
+    setProducts([...products, productLine]);
+    onProductosChange([...products, productLine]);
     setMensaje("Producto agregado", "success");
     setSelectedProduct("");
   };
@@ -152,25 +135,37 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
       (item) => item.product_id === selectedProduct
     );
 
-    if(selectedProduct === ""){
-     return;
+    if (selectedProduct === "") {
+      return;
     }
 
     if (!selectedProducto) return;
     let cantidad = 0;
-    obtenerStyle(selectedProducto.product_id);
+    const estilos = obtenerStyle(selectedProducto.product_id);
 
     // Asigna el objeto cliente seleccionado a NewRow
     const newRow = {
-      product_id: selectedProducto.product_id,
-      nombre: selectedProducto.nombre,
-      precio: selectedProducto.precio,
+      productoId: selectedProducto.product_id,
+      productoNombre: selectedProducto.nombre,
+      familia: nombreFamilia,
       cantidad: cantidad,
-      estilos: style,
+      precio: agregarPuntos(selectedProducto.precio),
+      estilos: estilos,
       total: 0,
     };
     setProductLine(newRow);
-  }, [selectedProduct]);
+  }, [selectedProduct, nombreFamilia, preciosEspeciales, productosCategoria]);
+
+  // Actualiza los estilos cuando el nombre de la familia cambia
+  useEffect(() => {
+    if (nombreFamilia && productLine.estilos.length === 0) {
+      const estilos = obtenerStyle(productLine.productoId);
+      setProductLine((prevProductLine) => ({
+        ...prevProductLine,
+        estilos: estilos,
+      }));
+    }
+  }, [nombreFamilia, productLine]);
 
   // Busca el producto y modifica la cantidad y el total
   const updateProduct = (id, cantidad) => {
@@ -184,11 +179,11 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
     const copyProductLine = { ...productLine };
     copyProductLine.estilos = updateStyle;
     copyProductLine.cantidad = updateStyle.reduce((total, item) => total + item.cantidad, 0);
-    copyProductLine.total = copyProductLine.cantidad * copyProductLine.precio;
+    copyProductLine.total = agregarPuntos(copyProductLine.cantidad * copyProductLine.precio);
     setProductLine(copyProductLine);
 
     const copyProducts = [...products];
-    const index = copyProducts.findIndex((item) => item.product_id === copyProductLine.product_id);
+    const index = copyProducts.findIndex((item) => item.productoId === copyProductLine.productoId);
     copyProducts[index] = copyProductLine;
     setProducts(copyProducts);
     onProductosChange(copyProducts);
@@ -205,6 +200,7 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
       setMostrarNotificacion(false);
     }
   }, [mostrarNotificacion]);
+
 
   // Renderiza la tabla de productos
   return (
@@ -225,13 +221,13 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
           {/* Filas de la tabla */}
           {products.map((row, index) => (
             <TableRow key={index}>
-              <TableCell align="center">{row.product_id}</TableCell>
+              <TableCell align="center">{row.productoId}</TableCell>
               <TableCell align="center">{row.cantidad}</TableCell>
               <TableCell align="center">
                 {" "}
                 <button onClick={() => selectedProd(row)}>+</button>
               </TableCell>
-              <TableCell align="center">{row.nombre}</TableCell>
+              <TableCell align="center">{row.productoNombre}</TableCell>
               <TableCell align="center">{row.precio}</TableCell>
               <TableCell align="center">{row.total}</TableCell>
               <TableCell align="center">
@@ -255,7 +251,7 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
               </select>
             </TableCell>
             <TableCell align="center">
-              Nombre: {productLine ? productLine.nombre : ""}
+              Nombre: {productLine ? productLine.productoNombre : ""}
             </TableCell>
             <TableCell align="center">
               Precio: {productLine ? productLine.precio : ""}
@@ -290,7 +286,6 @@ const DistribucionProducto = ({ isOpen, onClose, data, updateProduct }) => {
     updateProduct(nombre, nonNegativeCantidad);
   };
 
-
   return (
     <div >
       <Dialog open={isOpen} onClose={onClose}>
@@ -298,10 +293,10 @@ const DistribucionProducto = ({ isOpen, onClose, data, updateProduct }) => {
         <DialogContent>
           {/* Detalles del producto */}
           <div className="estilos_producto" >
-            <p>Código: {data.product_id}</p>
-            <p>Nombre: {data.nombre}</p>
+            <p>Código: {data.productoId}</p>
+            <p>Nombre: {data.productoNombre}</p>
             <p>Precio: {data.precio}</p>
-            <p>Cantidad: {data.cantidad}</p>
+            <p>Cantidad: {agregarPuntos(data.cantidad)}</p>
             {data.estilos && data.estilos.map((item) => (
               <div key={item.nombre}>
                 <label>{item.nombre}</label>
@@ -321,4 +316,10 @@ const DistribucionProducto = ({ isOpen, onClose, data, updateProduct }) => {
       </Dialog>
     </div>
   );
+};
+
+// Función para agregar puntos a los números 
+const agregarPuntos = (numero) => {
+  numero = parseInt(numero);
+  return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };

@@ -48,7 +48,6 @@ export const functionTableData = (() => {
     const result = { nombresKeys, nuevaLista };
     cache.set(cacheKey, result);
 
-    console.log("retornando lista filtrada filtradita:", nuevaLista);
     return result;
   };
 

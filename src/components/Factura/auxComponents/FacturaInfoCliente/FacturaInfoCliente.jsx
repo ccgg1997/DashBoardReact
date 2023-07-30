@@ -6,6 +6,7 @@ import BasicTable from "../FacturaTable/FacturaTable";
 import { useCallback } from "react";
 import Notificacion from "../../../Basicos/Notificacion/Notificacion";
 import generarPDF from "../../../Basicos/generatePdf/generatePdf";
+import { createFactura } from "../../../Api/apiAddress";
 
 const FacturaInfo = () => {
   // State variables
@@ -67,7 +68,7 @@ const FacturaInfo = () => {
   const [selectedItem, setSelectedItem] = useState(null);
 
   //objeto factura con los datos de la factura
-  const crearFactura = () => {
+  const crearFactura = async() => {
     if (!selectedItem) return;
     if (!verificarTotal(producto)) {
       setMensaje("Hay producto/s sin cantidad, verifica por favor", "error");
@@ -77,7 +78,9 @@ const FacturaInfo = () => {
     // Remove products with 0 quantity
     const productosActualizados = estilosMayoresACero();
     setProductos(productosActualizados);
+    let idFactura = 0;
     const factura = {
+      id: idFactura,
       negocioId: selectedItem.id,
       cliente: selectedItem.negocio,
       duenio: selectedItem.duenio,
@@ -89,16 +92,22 @@ const FacturaInfo = () => {
     };
 
     const facturaDB = {
-      productoId : selectedItem.id,
+      negocioId: selectedItem.id,
       total: total,
       productos: productosActualizados,
     }
 
     setFacturaToDB(facturaDB);
-    
-
-    setFacturaToPDF(factura);
-    setMensaje("Factura creada con éxito", "exito");
+    const resul = await createFactura(facturaDB, token);
+    if(resul.error){
+      setMensaje(resul, "error");
+      return;
+    }else{ 
+      const copyFactura = {...factura,id: resul.id};
+      idFactura = resul.id;
+      setMensaje("Factura creada con éxito", "exito");
+      setFacturaToPDF(copyFactura);
+    }
   };
 
   // cuando el estado facturaToPDF se actualice correctamente.

@@ -39,7 +39,7 @@
     height: 35px;
   }
 
-  .ColumnContainer {
+  .ColumnContainer2 {
     display: flex;
     flex-direction: row !important;
     justify-content: center;
@@ -48,7 +48,6 @@
     min-width: 0;
     width: 100%;
     height: 100%;
-    overflow-x: scroll;
     overflow-y: scroll;
   }
 
@@ -73,16 +72,16 @@
     background-color: #ffffff;
   }
 
-  .ColumnContainer::-webkit-scrollbar {
+  .ColumnContainer2::-webkit-scrollbar {
     width: 0.001em; /* Ancho de la barra de desplazamiento */
     background-color: #f5f5f5; /* Color de fondo de la barra de desplazamiento */
   }
   
-  .ColumnContainer::-webkit-scrollbar-thumb {
+  .ColumnContainer2::-webkit-scrollbar-thumb {
     background-color: #888; /* Color del pulgar de la barra de desplazamiento */
     border-radius: 0.1px; /* Borde redondeado del pulgar de la barra de desplazamiento */
   }
   
-  .ColumnContainer::-webkit-scrollbar-thumb:hover {
+  .ColumnContainer2::-webkit-scrollbar-thumb:hover {
     background-color: #555; /* Color del pulgar de la barra de desplazamiento al pasar el mouse sobre él */
   }

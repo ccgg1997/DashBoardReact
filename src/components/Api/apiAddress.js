@@ -29,7 +29,7 @@ export const infoProduccion = async (token) => {
 };
 
 export const crearProduccion = async (data, token) => {
-  const crearProduccionAddress = apiAddress + "/produccion";
+  const crearProduccionAddress = apiAddress + "/produccion/recibirMaterial";
   try {
     const response = await axios.post(crearProduccionAddress, data, {
       headers: {

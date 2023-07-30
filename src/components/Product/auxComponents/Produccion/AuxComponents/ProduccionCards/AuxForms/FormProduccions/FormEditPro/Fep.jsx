@@ -4,9 +4,11 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import Notificacion from "../../../../../../../../Basicos/Notificacion/Notificacion";
 import { setInventario } from "../../../../../../../../../features/inventario/inventario";
+import { setProduccion } from "../../../../../../../../../features/ordenesproduccion/ordenesproduccion";
+
 import {
-  movInventario,
-  infoInventario,
+
+  infoInventario,infoProduccion,crearProduccion
 } from "../../../../../../../../Api/apiAddress";
 
 const FormEditPro = () => {
@@ -14,6 +16,7 @@ const FormEditPro = () => {
   const [mostrarNotificacion, setMostrarNotificacion] = useState(false);
   const [tipoNotificacion, setTipoNotificacion] = useState("");
   const [mensajeNotificacion, setMensajeNotificacion] = useState("");
+  const dispatch = useDispatch();
 
   //estados del componente global
   const { token } = useSelector((state) => state.auth);
@@ -56,14 +59,42 @@ const FormEditPro = () => {
   };
 
   const handleChangeCantidad = (index, cantidad) => {
+    if(cantidad>(inventoryDataActualRead[index].cantidad-inventoryDataActualRead[index].cantidadRecibida)){
+      setMensaje("La cantidad no puede ser mayor a la cantidad de la produccion", "error");
+      return true;
+    }
     const updatedEstilos = [...inventoryDataModified];
     updatedEstilos[index].cantidad= cantidad;
     setInventoryDataModified(updatedEstilos);
-    console.log("cambio de cantidad", updatedEstilos,"");
   };
 
-  const accionRecibirMaterial = () => {
-    console.log("mostrar info produccion", produccionObject);
+  const accionRecibirMaterial = async() => {
+    const total = inventoryDataModified.reduce( (acc, item) => acc + item.cantidad, 0);
+    if (total === 0) {
+      setMensaje("Ingrese al menos una cantidad", "error");
+      return true;
+    }
+    try {
+    await crearProduccion(produccionObject, token);
+    const inventario = await infoInventario(token);
+    const produccion = await infoProduccion(token);
+    dispatch(setInventario(inventario));
+    dispatch(setProduccion(produccion));
+    setMensaje("Se ha recibido el material", "success");
+    setMostrarDetalleProduccion(false);
+    setProduccionSelected("0");
+    setProductoSelected("0");
+    setTamanioSelected("0");
+    setInventoryDataModified([]);
+    setInventoryDataActualRead([]);
+    setProductsList([]);
+  
+    return true;
+   } catch (error) {
+    setMensaje("Error al recibir el material"+error, "error");
+    return true;
+   }
+    
   };
 
 
@@ -85,18 +116,7 @@ const FormEditPro = () => {
         setNombrePersona(nombrePersonaaux);
         setInventoryDataActualRead(produccionObject.estilos);
         setInventoryDataModified(estilosAux);
-  
         setProductsList(family_products);
-        console.log(
-          "lista de productos",
-          family_products,
-          "familia",
-          familiaProductoSelected,
-          "produccion",
-          produccionObject,
-          "nombre persona777",
-          nombrePersonaaux
-        );
       }
     }
   }, [produccionSelected, produccion, producto]);
@@ -158,16 +178,16 @@ const FormEditPro = () => {
         </button>)}
         
       </div>
-      <div className="ColumnContainer">
+      <div className="ColumnContainer2">
         {mostrarDetalleProduccion && (
           <div className="dataRead">
             <div className="createInventoryModificationData">
               <div className="createInventoryDataM">
-                <h3> {nombrePersona} </h3>
+                <h4> {nombrePersona + " tiene:"} </h4>
                 {inventoryDataActualRead.map((estilo, index) => (
                   <div key={index}>
                     <label>{estilo.nombre}</label>
-                    <input type="number" value={estilo.cantidad} readOnly />
+                    <input type="number" value={estilo.cantidad - estilo.cantidadRecibida} readOnly />
                   </div>
                 ))}
               </div>
@@ -178,7 +198,7 @@ const FormEditPro = () => {
           <div className="InventoryModificationData">
             <div className="createInventoryModificationData">
               <div className="createInventoryDataM">
-                <h3> {nombrePersona} </h3>
+                <h4> {" Material a entregar"} </h4>
                 {inventoryDataModified.map((estilo, index) => (
                   <div key={index}>
                     <label>{estilo.nombre}</label>

@@ -1,0 +1,88 @@
+.FormMovBod {
+    display: flex;
+    background-color: aliceblue;
+    width: 90%;
+    height: 75%;
+    flex-direction: column !important;
+    padding: 15px;
+    padding-left: 35px !important;
+    border-radius: 15px;
+  }
+  
+  .SelectContainerEditInventory {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 15px;
+    background-color: #cacaca46;
+    border-radius: 15px;
+    padding: 10px;
+    
+  }
+  
+  .InputGroup {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    width: 218px;
+
+  }
+  
+  .InputGroup label {
+    margin-right: 10px;
+  }
+
+  .InputGroup select {
+    height: 35px;
+  }
+
+  .ColumnContainer {
+    display: flex;
+    flex-direction: row !important;
+    justify-content: center;
+    padding: 5px;
+    gap: 10px;
+    min-width: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: scroll;
+    overflow-y: scroll;
+  }
+
+  .InventoryData{
+    background-color: #65636330;
+    padding: 20px;
+    border-radius: 15px;
+  }
+ 
+  .InventoryModoficationData {
+    flex: 1;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;;
+  }
+
+  .InventoryDataM{
+    padding: 20px;
+    border-radius: 15px;
+    background-color: #ffffff;
+  }
+
+  .ColumnContainer::-webkit-scrollbar {
+    width: 0.001em; /* Ancho de la barra de desplazamiento */
+    background-color: #f5f5f5; /* Color de fondo de la barra de desplazamiento */
+  }
+  
+  .ColumnContainer::-webkit-scrollbar-thumb {
+    background-color: #888; /* Color del pulgar de la barra de desplazamiento */
+    border-radius: 0.1px; /* Borde redondeado del pulgar de la barra de desplazamiento */
+  }
+  
+  .ColumnContainer::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* Color del pulgar de la barra de desplazamiento al pasar el mouse sobre él */
+  }

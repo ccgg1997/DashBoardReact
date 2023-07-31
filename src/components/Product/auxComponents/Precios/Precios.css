@@ -3,7 +3,6 @@
   width: 100% !important;
   height: 90%;
   flex-direction: column;
-  margin-top: 1rem;
   justify-content: first baseline;
   overflow-x: scroll;
 }
@@ -34,7 +33,7 @@
 
 .button {
   height: 100%;
-  background-color: #08c945e8 !important;
+  background-color: #0f6fff !important;
   width: 200px;
   color: white;
   border: none;
@@ -64,6 +63,16 @@
 .containerTablefilter {
   display: flex;
   flex-direction: column;
+}
+
+.containerFormPrecioEspecial{
+  display: flex;
+  flex-direction: row;
+  justify-content:left;
+  align-items: center;
+  padding-bottom: 15px;
+  gap: 19%;
+  margin-left: 1%;
 }
 
 @media screen and (max-width: 1200px) {

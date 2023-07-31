@@ -51,7 +51,8 @@ export const Precios = () => {
   return (
     <>
       <div className="Precios">
-        <div className="contenedorOpcionesPrecios">
+        <div className="containerFormPrecioEspecial">
+              <FormPrecioEspecial />
           <div className="opcion-Boton">
             <select value={selectedItem} onChange={handleItemChange}>
               <option value="">Selecciona un elemento</option>
@@ -62,14 +63,11 @@ export const Precios = () => {
               ))}
             </select>
             <button className="button" onClick={handleSearchClick}>
-              {cargando? 'Cargando...'
-              :'Buscar lista de precio especial'}
+              {cargando ? "Cargando..." : "Buscar lista de precio especial"}
             </button>
           </div>
-          <div className="containerFormPrecioEspecial">
-            <FormPrecioEspecial />
-          </div>
         </div>
+
         <div className="precioContainer">
           <div className="containerTablefilter">
             <TableFilter

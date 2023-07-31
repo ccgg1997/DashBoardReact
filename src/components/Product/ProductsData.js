@@ -5,7 +5,7 @@ import {Produccion} from './auxComponents/Produccion/Produccion'
 
 export  const TabsData = [
     { name: 'Inventario', component: <InventarioTableFilter/> },
-    { name: 'Precios ', component: <Precios/> },
     { name: 'Produccion', component: <Produccion/> },
+    { name: 'Precios ', component: <Precios/> },
 ]
 

@@ -101,7 +101,20 @@ export const movInventario = async (data, token) => {
   }
 }
 
-
+export const movEntreBodegas = async (data, token) => {
+  const movEntreBodegasAddress = apiAddress + "/produccion/movientrebodega";
+  try {
+    const response = await axios.post(movEntreBodegasAddress, data, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("Error al crear el movimiento");
+  }
+}
+  
 export const crearInventario = async (data, token) => {
   const crearInventarioAddress = apiAddress + "/inventario";
   try {

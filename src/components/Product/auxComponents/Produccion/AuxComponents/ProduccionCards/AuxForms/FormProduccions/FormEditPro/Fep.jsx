@@ -75,6 +75,8 @@ const FormEditPro = () => {
       return true;
     }
     try {
+    const stilos_filtered = inventoryDataModified.filter((estilo) => estilo.cantidad > 0); 
+    setInventoryDataModified(stilos_filtered); 
     await crearProduccion(produccionObject, token);
     const inventario = await infoInventario(token);
     const produccion = await infoProduccion(token);

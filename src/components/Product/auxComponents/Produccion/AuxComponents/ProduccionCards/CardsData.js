@@ -21,22 +21,22 @@ export const CardsData = [
   //   component: <FormPPF/>,
   // },
   {
-    title: "Crear Producción",
-    color: {
-      backGround: "rgb(82, 182, 222 , 1)",
-      boxShadow: "1px 1px 2px #be2596",
-    },
-    png: UilFileMedical ,
-    component: <FCreatePro/>,
-  },
-  {
     title: "Recibir Material",
     color: {
-      backGround: "rgb(93, 173, 226)",
+      backGround: "rgb(11, 144, 252 )",
       boxShadow: "1px 1px 2px #330066",
     },
     png: UilFileHeart,
     component: <FormEditPro/>,
+  },
+  {
+    title: "Crear Producción",
+    color: {
+      backGround: "rgb(251, 85, 11 )",
+      boxShadow: "1px 1px 2px #be2596",
+    },
+    png: UilFileMedical ,
+    component: <FCreatePro/>,
   },
   
   

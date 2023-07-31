@@ -92,7 +92,7 @@ const FacturaInfo = () => {
     };
 
     const facturaDB = {
-      negocioId: selectedItem.id,
+      negocioId: parseInt(selectedItem.id),
       total: total,
       productos: productosActualizados,
     }

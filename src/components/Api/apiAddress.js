@@ -360,6 +360,29 @@ export const createFactura = async (data, token) => {
   }
 };
 
+export const searchFactura = async (id, token) => {
+  const searchFacturaAddress = apiAddress + "/factura/" + id;
+  try {
+    const response = await axios.get(searchFacturaAddress, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    if(response.data.message === "el id de factura ingresado no existe") {
+      return response.data;
+    }
+    return response.data;
+  } catch (error) {
+    if(error.response.status === 400) {
+      throw new Error(error.response.data.error);
+    }else{
+      throw new Error("Error al buscar la factura");
+    }
+  }
+};
+
+
+
 // -----------------------------------PRODUCCION/INVENTARIO-----------------------------------
 
 

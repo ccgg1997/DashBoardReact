@@ -17,14 +17,13 @@ const generarPDF = (factura) => {
   const img = new Image();
   img.src = imagen;
 
-  const dibujarTablaProductos = (x, y, data) => {
-    const tableWidth = doc.internal.pageSize.width / 2 - 10;
+  const dibujarTablaProductos = (x, y, data,tablaWidth) => {
     doc.autoTable({
       head: [["Producto", "Cantidad", "Precio", "Subtotal"]],
       body: data,
       startY: y,
       startX: x,
-      tableWidth,
+      tablaWidth,
     });
   };
 
@@ -45,7 +44,7 @@ const generarPDF = (factura) => {
     doc.setFontSize(12);
 
     const fields = [
-      { label: "Fecha", value: fechaFormateada},
+      { label: "Fecha", value: fechaFormateada },
       { label: "Cliente", value: factura.cliente },
       { label: "Dueño", value: factura.duenio },
       { label: "Teléfono", value: factura.telefono },
@@ -58,20 +57,52 @@ const generarPDF = (factura) => {
     const col1 = fields.slice(0, 4);
     const col2 = fields.slice(4, 7);
 
+    let desplazamientoVertical = 0; // Variable para mantener un seguimiento del desplazamiento vertical
 
     // Dibujamos la primera columna
     col1.forEach((field, index) => {
       const textoOrganizado = dividirPalabras(field.value);
-      doc.text(`${field.label}: ${textoOrganizado}`, x + 10, y + 50 + index * 10);
 
+      // Medimos la altura del texto para determinar el desplazamiento
+      const textHeight = doc.getTextDimensions(
+        `${field.label}: ${textoOrganizado}`
+      ).h;
+
+      // Ajustamos el desplazamiento vertical para la siguiente palabra
+      desplazamientoVertical += textHeight + 5; // 5 es un margen entre líneas
+
+      // Dibujamos la palabra en la posición correspondiente
+      doc.text(
+        `${field.label}: ${textoOrganizado}`,
+        x + 10,
+        y + 40 + desplazamientoVertical + index * 10
+      );
     });
 
+    let desplazamientoVertical2 = 0; // Variable para mantener un seguimiento del desplazamiento vertical
+    
     // Dibujamos la segunda columna
     col2.forEach((field, index) => {
       const textoOrganizado = dividirPalabras(field.value);
-      doc.text(`${field.label}: ${textoOrganizado}`, x + 65, y + 50 + index * 10);
+
+      // Medimos la altura del texto para determinar el desplazamiento
+      const textHeight = doc.getTextDimensions(
+        `${field.label}: ${textoOrganizado}`
+      ).h;
+
+      // Ajustamos el desplazamiento vertical para la siguiente palabra
+      desplazamientoVertical2 += textHeight + 5; // 5 es un margen entre líneas
+
+      // Dibujamos la palabra en la posición correspondiente
+      doc.text(
+        `${field.label}: ${textoOrganizado}`,
+        x + 70,
+        y + 40 + desplazamientoVertical2 + index * 10
+      );
     });
 
+    //ubicamos la mitad de la hoja horizontalmente
+    const tablaWidth = doc.internal.pageSize.width / 2;
     // Tabla de productos
     const productos = factura.productos;
     const data = productos.map((producto) => [
@@ -79,9 +110,10 @@ const generarPDF = (factura) => {
       producto.cantidad,
       producto.precio,
       agregarPuntos(producto.total),
+
     ]);
 
-    dibujarTablaProductos(x, y + 90, data);
+    dibujarTablaProductos(x, y + 120, data, tablaWidth);
   };
 
   // Dibujar la primera copia de la factura en la página 1
@@ -94,20 +126,24 @@ const generarPDF = (factura) => {
   doc.save("factura.pdf");
 };
 
-//funcion auxiliar para dividir las palabras
+// Función auxiliar para dividir las palabras
 const dividirPalabras = (palabra) => {
-  if(typeof palabra === "number") return agregarPuntos(palabra);
+  if (typeof palabra === "number") return agregarPuntos(palabra);
 
-  if (typeof palabra !== "string") return;
+  if (typeof palabra !== "string") return palabra;
 
-  const palabras = palabra.split(" ");
-  for(let i = 0; i < palabras.length; i++){
-    if(palabras[i].length > 16 ){
-      palabras[i] = palabras[i].substring(0, 10) + "-\n" + palabras[i].substring(10);
+  let acumulador = 0;
+  for (let i = 0; i < palabra.length; i++) {
+    acumulador++;
+    if (acumulador === 17) {
+      // Enviamos el resto de la palabra a la siguiente línea
+      palabra = palabra.slice(0, i) + "-\n" + palabra.slice(i);
+      acumulador = 0;
     }
   }
-  return palabras.join(" ");
-}
+
+  return palabra;
+};
 
 //funcion para agregar puntos a los numeros
 const agregarPuntos = (numero) => {

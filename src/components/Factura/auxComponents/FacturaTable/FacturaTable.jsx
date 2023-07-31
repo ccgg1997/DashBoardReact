@@ -102,6 +102,9 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
     }
     setProducts([]);
     onProductosChange([]);
+    setProductLine("");
+    setSelectedProduct("");
+
   }, [isSelected]);
 
   // Maneja la selección de un producto y muestra la ventana modal con detalles
@@ -149,7 +152,7 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
       productoNombre: selectedProducto.nombre,
       familia: nombreFamilia,
       cantidad: cantidad,
-      precio: agregarPuntos(selectedProducto.precio),
+      precio: parseInt(selectedProducto.precio),
       estilos: estilos,
       total: 0,
     };
@@ -158,7 +161,7 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
 
   // Actualiza los estilos cuando el nombre de la familia cambia
   useEffect(() => {
-    if (nombreFamilia && productLine.estilos.length === 0) {
+    if (nombreFamilia && productLine && productLine.estilos.length === 0) {
       const estilos = obtenerStyle(productLine.productoId);
       setProductLine((prevProductLine) => ({
         ...prevProductLine,
@@ -320,6 +323,6 @@ const DistribucionProducto = ({ isOpen, onClose, data, updateProduct }) => {
 
 // Función para agregar puntos a los números 
 const agregarPuntos = (numero) => {
-  numero = parseInt(numero);
+  if(!numero) return;
   return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };

@@ -107,6 +107,9 @@ const FacturaInfo = () => {
       idFactura = resul.id;
       setMensaje("Factura creada con éxito", "exito");
       setFacturaToPDF(copyFactura);
+      setSelectedCliente("");
+      setSelectedItem(null);
+      setIsOpen(false);
     }
   };
 

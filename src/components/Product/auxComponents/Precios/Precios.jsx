@@ -1,12 +1,19 @@
 import React from "react";
 import "./Precios.css";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import TableFilter from "../../../Basicos/TableFilter/TableFilter";
 import { useSelector } from "react-redux";
 import { infoPreciosClienteEspecial } from "../../../Api/apiAddress";
 import { FormPrecioEspecial } from "./FormPrecioEspecial/FormPrecioEspecial";
+import Notificacion from "../../../Basicos/Notificacion/Notificacion";
 
 export const Precios = () => {
+
+  //estados del componente
+  const [mostrarNotificacion, setMostrarNotificacion] = useState(false);
+  const [tipoNotificacion, setTipoNotificacion] = useState("");
+  const [mensajeNotificacion, setMensajeNotificacion] = useState("");
+
   //variables iniciales (clientes, precios, token)
   const cliente = useSelector((state) => state.clientes);
   const clientes = cliente.cliente;
@@ -23,6 +30,7 @@ export const Precios = () => {
   };
 
   const handleSearchClick = async (e) => {
+    if(selectedItem === "") return setMensaje("Selecciona un cliente", "error");
     e.preventDefault();
     setCargando(true);
     const preciosEspecial = await infoPreciosClienteEspecial(
@@ -47,6 +55,20 @@ export const Precios = () => {
       type: typeof precio[0][key] === "number" ? "number" : undefined,
     };
   });
+
+  //funciones para controlar el comportamiento de la notificacion
+  useEffect(() => {
+    if (mostrarNotificacion) {
+      setMostrarNotificacion(false);
+    }
+  }, [mostrarNotificacion]);
+
+  const setMensaje = (mensaje, tipo) => {
+    setMensajeNotificacion(mensaje);
+    setTipoNotificacion(tipo);
+    setMostrarNotificacion(true);
+    return true;
+  };
 
   return (
     <>
@@ -86,6 +108,11 @@ export const Precios = () => {
             </div>
           )}
         </div>
+        <Notificacion
+        mensaje={mensajeNotificacion}
+        tipoNotificacion={tipoNotificacion}
+        mostrarNotificacion={mostrarNotificacion}
+      />
       </div>
     </>
   );

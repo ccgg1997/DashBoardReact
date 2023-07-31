@@ -90,7 +90,7 @@ const FormMovBod = () => {
     if(cantidad>diferencia){
       setMensaje("La cantidad no puede ser mayor a la cantidad de la produccion", "error");
       return true;
-    }
+    } 
     const updatedEstilos = [...inventoryDataModified];
     updatedEstilos[index].estilos[subIndex].cantidad = cantidad;
     setInventoryDataModified(updatedEstilos);

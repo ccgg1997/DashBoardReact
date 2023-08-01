@@ -7,6 +7,7 @@ import { useCallback } from "react";
 import Notificacion from "../../../Basicos/Notificacion/Notificacion";
 import generarPDF from "../../../Basicos/generatePdf/generatePdf";
 import { createFactura } from "../../../Api/apiAddress";
+import logo from "../../../../../src/imgs/logo.png";
 
 const FacturaInfo = () => {
   // State variables
@@ -68,7 +69,7 @@ const FacturaInfo = () => {
   const [selectedItem, setSelectedItem] = useState(null);
 
   //objeto factura con los datos de la factura
-  const crearFactura = async() => {
+  const crearFactura = async () => {
     if (!selectedItem) return;
     if (!verificarTotal(producto)) {
       setMensaje("Hay producto/s sin cantidad, verifica por favor", "error");
@@ -95,15 +96,15 @@ const FacturaInfo = () => {
       negocioId: parseInt(selectedItem.id),
       total: total,
       productos: productosActualizados,
-    }
+    };
 
     setFacturaToDB(facturaDB);
     const resul = await createFactura(facturaDB, token);
-    if(resul.error){
+    if (resul.error) {
       setMensaje(resul, "error");
       return;
-    }else{ 
-      const copyFactura = {...factura,id: resul.id};
+    } else {
+      const copyFactura = { ...factura, id: resul.id };
       idFactura = resul.id;
       setMensaje("Factura creada con éxito", "exito");
       setFacturaToPDF(copyFactura);
@@ -189,53 +190,58 @@ const FacturaInfo = () => {
       className="FacturaInfo"
       style={{ overflowY: "scroll", maxHeight: "450px" }}
     >
-      {/* Title */}
-      <div className="FacturaInfo__title">
-        <h1>Bolsas Romy</h1>
+      <div className="FacturaInfo__header">
+          <img src={logo} alt="logo" style={{ width: '50px', height: '50px' }} />
+          <h1>Bolsas Romy</h1>
       </div>
-      {selectedCliente && producto.length > 0 && (
-        <button className="boton-flotante" onClick={crearFactura}>
-          Crear factura
-        </button>
-      )}
-      {/* Information */}
-      <div className="FacturaInfo__info">
-        <div className="FacturaInfo__info__fecha">
-          <p>{fechaActual}</p>
+      <div className="factInfo">
+        {/* Title */}
+        <div className="FacturaInfo__title">
         </div>
-        <div className="FacturaInfo__info__cliente">
-          <p>
-            Cliente:{" "}
-            <select value={selectedCliente} onChange={handleCliente}>
-              <option>Selecciona un cliente</option>
-              {uniqueNames.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </select>
-          </p>
-        </div>
-        {/* Selected client details */}
-        {selectedItem && (
-          <>
-            <div className="FacturaInfo__info__duenio">
-              <p>Dueño: {selectedItem.duenio}</p>
-            </div>
-            <div className="FacturaInfo__info__direccion">
-              <p>Dirección: {selectedItem.direccion}</p>
-            </div>
-            <div className="FacturaInfo__info__telefono">
-              <p>Teléfono: {selectedItem.telefono}</p>
-            </div>
-            <div className="FacturaInfo__info__barrio">
-              <p>Barrio: {selectedItem.barrio}</p>
-            </div>
-          </>
+        {selectedCliente && producto.length > 0 && (
+          <button className="boton-flotante" onClick={crearFactura}>
+            Crear factura
+          </button>
         )}
-        <div className="FacturaInfo__info__total">
-          {/* Total price */}
-          <p>Total: ${total}</p>
+        {/* Information */}
+        <div className="FacturaInfo__info">
+          <div className="FacturaInfo__info__fecha">
+            <p>{fechaActual}</p>
+          </div>
+          <div className="FacturaInfo__info__cliente">
+            <p>
+              Cliente:{" "}
+              <select value={selectedCliente} onChange={handleCliente}>
+                <option>Selecciona un cliente</option>
+                {uniqueNames.map((item) => (
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
+                ))}
+              </select>
+            </p>
+          </div>
+          {/* Selected client details */}
+          {selectedItem && (
+            <>
+              <div className="FacturaInfo__info__duenio">
+                <p>Dueño: {selectedItem.duenio}</p>
+              </div>
+              <div className="FacturaInfo__info__direccion">
+                <p>Dirección: {selectedItem.direccion}</p>
+              </div>
+              <div className="FacturaInfo__info__telefono">
+                <p>Teléfono: {selectedItem.telefono}</p>
+              </div>
+              <div className="FacturaInfo__info__barrio">
+                <p>Barrio: {selectedItem.barrio}</p>
+              </div>
+            </>
+          )}
+          <div className="FacturaInfo__info__total">
+            {/* Total price */}
+            <p>Total: ${total}</p>
+          </div>
         </div>
       </div>
       {/* Product table */}

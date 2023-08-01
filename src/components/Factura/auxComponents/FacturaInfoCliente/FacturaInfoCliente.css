@@ -1,13 +1,29 @@
-.FacturaInfo__title{
-    text-align: center;
-    display: flex;
-    justify-content: center;
+.FacturaInfo__header {
+  display: flex;
+  align-items: center;
+  margin-left: 4%;
+
 }
+
+.FacturaInfo{
+  background-color: rgb(250, 246, 246);
+  border-radius: 10px;
+}
+
 
 .FacturaInfo__info {
   display: flex;
   flex-wrap: wrap;
   flex-basis: 50%;
+}
+
+.factInfo{
+    display: flex;
+    flex-direction: column;
+    margin: 0 2%;
+    
+    border-radius:6px ;
+    padding: 3px;
 }
 
 .FacturaInfo__info__cliente,
@@ -17,7 +33,7 @@
 .FacturaInfo__info__barrio,
 .FacturaInfo__info__fecha {
   flex-basis: 50%;
-  margin-bottom: 8px;
+  margin-bottom: 0.5px;
   display: flex;
   flex-direction: column;
   justify-content: center;

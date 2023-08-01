@@ -45,7 +45,6 @@ export function Login(props) {
       const responseBodegas = await infoBodegas(token);
       const responseProductos = await infoProductos(token);
       const responsePersonas = await infoPersonas(token);
-      console.log(responseProductos);
       //setiar la variable global del token e inventario
       dispatch(
         setAuthData({

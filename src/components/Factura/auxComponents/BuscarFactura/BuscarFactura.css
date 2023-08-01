@@ -1,15 +1,19 @@
 
 
-.BuscarFacturaInfo__info{
+.BuscarFacturaInfo{
     display: flex;
-    flex-wrap: wrap;
-    flex-basis: 50%;
     margin-bottom: 8px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    margin: 0;
-    padding: 0;
-    font-weight: 600;
-
+    align-items: center;
+    
 }
+
+.campoBuscarFacturaInfo__info{
+    display: flex;
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    
+}
+

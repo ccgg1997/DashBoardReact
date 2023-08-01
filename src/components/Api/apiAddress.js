@@ -381,6 +381,25 @@ export const searchFactura = async (id, token) => {
   }
 };
 
+export const deleteFactura = async (id, token) => {
+  const deleteFacturaAddress = apiAddress + "/factura/" + id;
+  try {
+    const response = await axios.delete(deleteFacturaAddress, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if(error.response.status === 400) {
+      throw new Error(error.response.data.error);
+    }else{
+      throw new Error("Error al eliminar la factura");
+    }
+  }
+};
+
+
 
 
 // -----------------------------------PRODUCCION/INVENTARIO-----------------------------------

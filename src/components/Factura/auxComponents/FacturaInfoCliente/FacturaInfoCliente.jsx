@@ -73,7 +73,6 @@ const FacturaInfo = () => {
 
   //objeto factura con los datos de la factura
   const crearFactura = async () => {
-    return true;
 
     if (!selectedItem) return;
     if (!verificarTotal(producto)) {

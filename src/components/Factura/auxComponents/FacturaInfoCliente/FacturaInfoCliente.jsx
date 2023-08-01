@@ -8,6 +8,8 @@ import Notificacion from "../../../Basicos/Notificacion/Notificacion";
 import generarPDF from "../../../Basicos/generatePdf/generatePdf";
 import { createFactura } from "../../../Api/apiAddress";
 import logo from "../../../../../src/imgs/logo.png";
+import FacturaPdf from "../FacturaPdf/FacturaPdf";
+import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 
 const FacturaInfo = () => {
   // State variables
@@ -16,6 +18,7 @@ const FacturaInfo = () => {
   const [total, setTotal] = useState(0);
   const [facturaToPDF, setFacturaToPDF] = useState({}); //objeto factura con los datos de la factura para generar el pdf
   const [facturaToDB, setFacturaToDB] = useState({}); //objeto factura con los datos de la factura para guardar en la base de datos
+  const [mostrarpdf, setMostrarPdf] = useState(true);
 
   // Redux state
   const clientes = useSelector((state) => state.clientes);
@@ -70,6 +73,8 @@ const FacturaInfo = () => {
 
   //objeto factura con los datos de la factura
   const crearFactura = async () => {
+    return true;
+
     if (!selectedItem) return;
     if (!verificarTotal(producto)) {
       setMensaje("Hay producto/s sin cantidad, verifica por favor", "error");
@@ -191,17 +196,18 @@ const FacturaInfo = () => {
       style={{ overflowY: "scroll", maxHeight: "450px" }}
     >
       <div className="FacturaInfo__header">
-          <img src={logo} alt="logo" style={{ width: '50px', height: '50px' }} />
-          <h1>Bolsas Romy</h1>
+        <img src={logo} alt="logo" style={{ width: "50px", height: "50px" }} />
+        <h1>Bolsas Romy</h1>
       </div>
       <div className="factInfo">
         {/* Title */}
-        <div className="FacturaInfo__title">
-        </div>
+        <div className="FacturaInfo__title"></div>
         {selectedCliente && producto.length > 0 && (
-          <button className="boton-flotante" onClick={crearFactura}>
-            Crear factura
-          </button>
+          <PDFDownloadLink document={<FacturaPdf></FacturaPdf>} fileName="FACTURA">
+            <button className="boton-flotante" onClick={crearFactura}>
+              Crear factura
+            </button>
+          </PDFDownloadLink>
         )}
         {/* Information */}
         <div className="FacturaInfo__info">
@@ -254,6 +260,7 @@ const FacturaInfo = () => {
           />
         )}
       </div>
+  
       {/* Componente Notificacion para mostrar mensajes */}
       <Notificacion
         mensaje={mensajeNotificacion}

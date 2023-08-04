@@ -4,6 +4,39 @@ import { Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 import logo from "../FacturaPdf/imagenes/logo.png";
 
 const styles = StyleSheet.create({
+  table: {
+    padding: 15,
+    display: "flex",
+    flexDirection: "column",
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  tableHeader: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#000",
+    backgroundColor: "#f2f2f2",
+    padding: 5,
+    alignItems: "center",
+  },
+  tableHeaderCell: {
+    fontSize: 12,
+    fontWeight: "bold",
+    width: "50%",
+    textAlign: "center",
+  },
+  tableRow: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#000",
+    padding: 3,
+    alignItems: "center",
+  },
+  tableCell: {
+    fontSize: 10,
+    width: "50%",
+    textAlign: "center",
+  },
   page: {
     flexDirection: "row", // Cambiar de 'column' a 'row'
     backgroundColor: "#fff",
@@ -54,9 +87,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-    marginTop: 7,
+    marginTop: 6,
     padding: 2,
-    gap: 5,
   },
   image: {
     width: 42,
@@ -70,7 +102,7 @@ const styles = StyleSheet.create({
   },
   textFecha: {
     fontSize: 14,
-    marginBottom: 10,
+    marginBottom: 15,
   },
 
   text: {
@@ -86,13 +118,18 @@ const styles = StyleSheet.create({
   },
 });
 
-const InvoiceSection = ({ dataStatic, infoEmpresa, clienteInfo, items, telBarrio }) => {
+const InvoiceSection = ({
+  dataStatic,
+  infoEmpresa,
+  clienteInfo,
+  items,
+  telBarrio,
+}) => {
   const calculateTotal = () => {
     // Lógica para calcular el total basado en los ítems
     let total = 0;
-    for (const item of items) {
-      const priceWithoutCurrency = item.price.substring(1); // Eliminamos el símbolo '$'
-      total += parseFloat(priceWithoutCurrency);
+    for (const item of items) { 
+      total +=( item.price * item.cantidad);
     }
     return "$" + total.toFixed(2); // Volver a agregar el símbolo '$' y mantener dos decimales
   };
@@ -123,12 +160,12 @@ const InvoiceSection = ({ dataStatic, infoEmpresa, clienteInfo, items, telBarrio
         style={{
           ...styles.text,
           fontFamily: "Helvetica-Bold",
-          marginTop: 2,
+          marginTop: 4,
+          marginBottom: 12,
         }}
       >
         {dataStatic.fecha}
       </Text>
-
       {clienteInfo.map((item, index) => (
         <View style={{ flexDirection: "row" }} key={index}>
           <Text style={{ ...styles.text, fontFamily: "Helvetica-Bold" }}>
@@ -137,7 +174,6 @@ const InvoiceSection = ({ dataStatic, infoEmpresa, clienteInfo, items, telBarrio
           <Text style={styles.text}>{item.value}</Text>
         </View>
       ))}
-
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         {telBarrio.map((item, index) => (
           <View style={{ flexDirection: "row" }} key={index}>
@@ -148,13 +184,32 @@ const InvoiceSection = ({ dataStatic, infoEmpresa, clienteInfo, items, telBarrio
           </View>
         ))}
       </View>
-
+      // Ejemplo de tabla manual
+      <View style={styles.table}>
+        {/* Encabezado de la tabla */}
+        <View style={styles.tableRow}>
+          <Text style={styles.tableCell}>Codigo</Text>
+          <Text style={styles.tableCell}>Nombre</Text>
+          <Text style={styles.tableCell}>Cantidad</Text>
+          <Text style={styles.tableCell}>Precio</Text>
+          <Text style={styles.tableCell}>Total</Text>
+          
+        </View>
+        {items.map((item, index) => (
+          <View key={index} style={styles.tableRow}>
+            <Text style={styles.tableCell}>{item.codigo}</Text>
+            <Text style={styles.tableCell}>{item.name}</Text>
+            <Text style={styles.tableCell}>{item.cantidad}</Text>
+            <Text style={styles.tableCell}>{item.price}</Text>
+            <Text style={styles.tableCell}>{item.price * item.cantidad}</Text>
+          </View>
+        ))}
+      </View>
       {items.map((item, index) => (
         <Text style={styles.text} key={index}>
           {item.name + ": " + item.price}
         </Text>
       ))}
-
       <Text style={styles.text}>Total: {calculateTotal()}</Text>
     </View>
   );

@@ -259,6 +259,10 @@ const FacturaInfo = () => {
           />
         )}
       </div>
+
+      <PDFViewer width="100%" height="600px">
+        <FacturaPdf></FacturaPdf>
+      </PDFViewer>
   
       {/* Componente Notificacion para mostrar mensajes */}
       <Notificacion

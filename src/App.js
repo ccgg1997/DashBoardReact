@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Product from "./components/Product/Product";
 import Clientes from "./components/Clientes/Clientes";
 import Factura from "./components/Factura/Factura";
+import Analytics from "./components/Analytics/Analytics";
 
 
 function App() {
@@ -28,7 +29,7 @@ function App() {
               <Route path="/Product" element={<Product />} />
               <Route path="/Clientes" element={<Clientes />} />
               <Route path="/Factura" element={<Factura/>} />
-
+              <Route path="/Analytics" element={<Analytics/>} />
               {/* Agrega más rutas para tus nuevas pestañas aquí */}
             </Routes>
             

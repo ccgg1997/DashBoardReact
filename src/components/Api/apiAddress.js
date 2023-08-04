@@ -381,6 +381,27 @@ export const searchFactura = async (id, token) => {
   }
 };
 
+//funcion para buscar factura por intervalo de fechas
+export const searchFacturaByDate = async (data, token) => {
+  const fechaInicio = data.fechainicio;
+  const fechaFin = data.fechafin;
+  const searchFacturaByDateAddress = apiAddress + "/factura/" + fechaInicio + "/" + fechaFin;
+  try {
+    const response = await axios.get(searchFacturaByDateAddress, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if(error.response.status === 400) {
+      throw new Error(error.response.data.error);
+    }else{
+      throw new Error("Error al buscar la factura");
+    }
+  }
+};
+
 export const deleteFactura = async (id, token) => {
   const deleteFacturaAddress = apiAddress + "/factura/" + id;
   try {

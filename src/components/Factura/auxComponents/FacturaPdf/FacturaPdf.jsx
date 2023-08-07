@@ -47,12 +47,25 @@ const Invoice = () => {
     { label: "Direc.", value: dataStatic.clienteDireccion,style:{textAlign: "center",width:"100%",fontFamily: "Helvetica-Bold"} }
   ];
 
-  const telBarrio = [
-    { label: "Teléfono :", value: dataStatic.clienteTel ,style:{} },
-    { label: "Barrio   :", value: dataStatic.clienteBarrio ,style:{} },
-  ];
-
   const items = [
+    { codigo:"p01",name: "bolsas economica media larga", price: 10, cantidad: 2 },
+    { codigo:"p02",name: "Item 2", price: 20, cantidad: 3 },
+    { codigo:"p01",name: "bolsas economica media larga", price: 10, cantidad: 2 },
+    { codigo:"p02",name: "Item 2", price: 20, cantidad: 3 },
+    { codigo:"p01",name: "bolsas economica media larga", price: 10, cantidad: 2 },
+    { codigo:"p02",name: "Item 2", price: 20, cantidad: 3 },
+    { codigo:"p01",name: "bolsas economica media larga", price: 10, cantidad: 2 },
+    { codigo:"p02",name: "Item 2", price: 20, cantidad: 3 },
+    { codigo:"p01",name: "bolsas economica media larga", price: 10, cantidad: 2 },
+    { codigo:"p02",name: "Item 2", price: 20, cantidad: 3 },
+    { codigo:"p01",name: "bolsas economica media larga", price: 10, cantidad: 2 },
+    { codigo:"p02",name: "Item 2", price: 20, cantidad: 3 },
+    { codigo:"p01",name: "bolsas economica media larga", price: 10, cantidad: 2 },
+    { codigo:"p02",name: "Item 2", price: 20, cantidad: 3 },
+    { codigo:"p01",name: "bolsas economica media larga", price: 10, cantidad: 2 },
+    { codigo:"p02",name: "Item 2", price: 20, cantidad: 3 }, 
+    { codigo:"p01",name: "bolsas economica media larga", price: 10, cantidad: 2 },
+    { codigo:"p02",name: "Item 2", price: 20, cantidad: 3 },
     { codigo:"p01",name: "bolsas economica media larga", price: 10, cantidad: 2 },
     { codigo:"p02",name: "Item 2", price: 20, cantidad: 3 },
   ];
@@ -66,14 +79,12 @@ const Invoice = () => {
           infoEmpresa={infoEmpresa}
           clienteInfo={clienteInfo}
           items={items}
-          telBarrio={telBarrio}
         />
         <InvoiceSection
           dataStatic={dataStatic}
           infoEmpresa={infoEmpresa}
           clienteInfo={clienteInfo}
           items={items}
-          telBarrio={telBarrio}
         />
       </Page>
     </Document>

@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     fontFamily: "Helvetica",
     padding: 10,
+    flexGrow: 1,
   },
   section: {
     flexGrow: 1,
@@ -116,6 +117,16 @@ const styles = StyleSheet.create({
   textiDF: {
     fontSize: 10,
   },
+  footer: {
+    position: "absolute",
+    bottom: 10,
+    left: 10,
+    right: 10,
+    borderTopWidth: 1,
+    borderTopColor: "#ccc",
+    paddingTop: 10,
+    alignItems: "center",
+  }
 });
 
 const InvoiceSection = ({
@@ -123,7 +134,6 @@ const InvoiceSection = ({
   infoEmpresa,
   clienteInfo,
   items,
-  telBarrio,
 }) => {
   const calculateTotal = () => {
     // Lógica para calcular el total basado en los ítems
@@ -166,33 +176,26 @@ const InvoiceSection = ({
       >
         {dataStatic.fecha}
       </Text>
-      {clienteInfo.map((item, index) => (
-        <View style={{ flexDirection: "row", flexWrap: "wrap" }} key={index}>
-          <Text style={{ ...styles.text, fontFamily: "Helvetica-Bold", width:50 }}>
-            {item.label }
-          </Text>
-          <Text style={styles.text}>{": "}</Text>
-          <Text style={{...styles.text,...item.style}}>{item.value}</Text>
-        </View>
-      ))}
-      {/* <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-        }}
-      >
-        {telBarrio.map((item, index) => (
+      <View>
+        {clienteInfo.map((item, index) => (
           <View style={{ flexDirection: "row", flexWrap: "wrap" }} key={index}>
-            <Text style={{ ...styles.text, fontFamily: "Helvetica-Bold" }}>
+            <Text
+              style={{
+                ...styles.text,
+                fontFamily: "Helvetica-Bold",
+                width: 50,
+              }}
+            >
               {item.label}
             </Text>
-            <Text style={styles.text}>{item.value}</Text>
+            <Text style={styles.text}>{": "}</Text>
+            <Text style={{ ...styles.text, ...item.style }}>{item.value}</Text>
           </View>
         ))}
-      </View> */}
-      // Ejemplo de tabla manual
+      </View>
+      
       <View style={styles.table}>
+        // tabla manual
         {/* Encabezado de la tabla */}
         <View
           style={{
@@ -202,14 +205,24 @@ const InvoiceSection = ({
             borderStyle: "dashed",
           }}
         >
-          <Text style={{...styles.tableCell,fontFamily: "Helvetica-Bold"}}>Codigo</Text>
-          <Text style={{...styles.tableCell,fontFamily: "Helvetica-Bold"}}>Nombre</Text>
-          <Text style={{...styles.tableCell,fontFamily: "Helvetica-Bold"}}>Cantidad</Text>
-          <Text style={{...styles.tableCell,fontFamily: "Helvetica-Bold"}}>Precio</Text>
-          <Text style={{...styles.tableCell,fontFamily: "Helvetica-Bold"}}>SubTotal</Text>
+          <Text style={{ ...styles.tableCell, fontFamily: "Helvetica-Bold" }}>
+            Codigo
+          </Text>
+          <Text style={{ ...styles.tableCell, fontFamily: "Helvetica-Bold" }}>
+            Nombre
+          </Text>
+          <Text style={{ ...styles.tableCell, fontFamily: "Helvetica-Bold" }}>
+            Cantidad
+          </Text>
+          <Text style={{ ...styles.tableCell, fontFamily: "Helvetica-Bold" }}>
+            Precio
+          </Text>
+          <Text style={{ ...styles.tableCell, fontFamily: "Helvetica-Bold" }}>
+            SubTotal
+          </Text>
         </View>
         {items.map((item, index) => (
-          <View key={index} style={styles.tableRow}>
+          <View key={index} style={{ ...styles.tableRow }}>
             <Text style={styles.tableCell}>{item.codigo}</Text>
             <Text style={styles.tableCell}>{item.name}</Text>
             <Text style={styles.tableCell}>{item.cantidad}</Text>
@@ -221,8 +234,14 @@ const InvoiceSection = ({
         ))}
       </View>
       <View style={{ alignItems: "flex-end" }}>
-        <Text style={{ ...styles.text,fontFamily: "Helvetica-Bold",}}>
+        <Text style={{ ...styles.text, fontFamily: "Helvetica-Bold" }}>
           Total: {calculateTotal()}
+        </Text>
+      </View>
+      {/* Footer */}
+      <View style={styles.footer}>
+        <Text style={{ ...styles.text, fontFamily: "Helvetica-Bold", fontSize: 10 }}>
+          DIOS TE BENDIGA Y BENDIGA TU NEGOCIO.
         </Text>
       </View>
     </View>

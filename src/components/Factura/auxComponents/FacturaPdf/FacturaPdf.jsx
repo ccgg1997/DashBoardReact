@@ -22,11 +22,11 @@ const Invoice = () => {
     tel1: "(317) 682 79 71",
     fecha: "Agosto 03,2023",
     facturaId: "0001",
-    clienteNombre: "Cliente 1",
+    clienteNombre: "Cliente 1 remates la ,ejor del minco",
     clienteDuenio: "Duenio 1",
-    clienteDireccion: "Direccion 1",
-    clienteTel: "Tel 1",
-    clienteBarrio: "Barrio 1",
+    clienteDireccion: "calle 89 # 89-89 barrio calicanto, al frente de la tienda de la esquina",
+    clienteTel: "Tel 146464564564564564564645645645 33333333333 ",
+    clienteBarrio: "Bario calicanto",
   };
   const infoEmpresa = [
     {
@@ -40,14 +40,16 @@ const Invoice = () => {
   ];
 
   const clienteInfo = [
-    { label: "Nombre:", value: dataStatic.clienteNombre },
-    { label: "Dueño:", value: dataStatic.clienteDuenio },
-    { label: "Direccion:", value: dataStatic.clienteDireccion },
+    { label: "Cliente", value: dataStatic.clienteNombre,style:{width:"80%",fontFamily: "Helvetica-Bold" }},
+    { label: "Dueño/a", value: dataStatic.clienteDuenio ,style:{} },
+    { label: "Barrio", value: dataStatic.clienteBarrio ,style:{} },
+    { label: "Celular", value: dataStatic.clienteTel ,style:{} },
+    { label: "Direc.", value: dataStatic.clienteDireccion,style:{textAlign: "center",width:"100%",fontFamily: "Helvetica-Bold"} }
   ];
 
   const telBarrio = [
-    { label: "Tel:", value: dataStatic.clienteTel },
-    { label: "Barrio:", value: dataStatic.clienteBarrio },
+    { label: "Teléfono :", value: dataStatic.clienteTel ,style:{} },
+    { label: "Barrio   :", value: dataStatic.clienteBarrio ,style:{} },
   ];
 
   const items = [

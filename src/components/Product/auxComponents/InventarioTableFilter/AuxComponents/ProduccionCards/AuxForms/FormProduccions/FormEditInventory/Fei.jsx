@@ -104,7 +104,6 @@ const FormEditInventory = () => {
         const objetoInvModificado = inventoryDataModified[0].estilos;
         const totalAcumulado = objetoInvModificado.reduce(
             (acumulado, elemento) => {
-              console.log(acumulado);
               return acumulado + parseInt(elemento.cantidad, 10);
             },
             0
@@ -127,7 +126,6 @@ const FormEditInventory = () => {
           productoId: productSelected,
           estilos: estilosConCantidadMayorA0,
         };
-      console.log(totalAcumulado);
       //se hace la consulta a la api
       await updateInventarioApi(inventarioActualizado);
       if(updateInventarioApi){
@@ -187,7 +185,6 @@ const FormEditInventory = () => {
           <select
             onChange={(event) => {
               setProductSelected(event.target.value);
-              console.log(productSelected);
               setBodegaSelected("");
             }}
             value={productSelected}

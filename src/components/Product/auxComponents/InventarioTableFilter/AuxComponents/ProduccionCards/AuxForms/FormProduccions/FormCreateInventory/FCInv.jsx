@@ -99,7 +99,6 @@ const FCreateInv = () => {
 
   //funcion para crear el inventario
   const crearInventarioApi = async() => {
-    console.log(objetCrearInventario);
     await crearInventario(objetCrearInventario, token);
     setMensaje("Inventario creado correctamente", "success");
     setBodegaSelected("0");

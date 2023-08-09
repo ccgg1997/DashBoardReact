@@ -12,7 +12,8 @@ import{setFamilia} from "../../features/familias/familia";
 import { setBodega } from "../../features/bodega/bodega";
 import{setProducto} from "../../features/productos/producto";
 import{setPersona} from "../../features/persona/persona";
-import { signin, infoInventario, createCookie,infoClientes, infoPrecios,infoFamilia, infoProduccion,infoBodegas,infoProductos, infoPersonas } from "../Api/apiAddress";
+import{setFacturasHoy} from "../../features/facturasHoy/facturasHoy";
+import { signin, infoInventario, createCookie,infoClientes, infoPrecios,infoFamilia, infoProduccion,infoBodegas,infoProductos, infoPersonas,searchFacturaByDate } from "../Api/apiAddress";
 ReactModal.setAppElement(document.getElementById("root"));
 
 export function Login(props) {
@@ -21,6 +22,11 @@ export function Login(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [wrongCredentials, setWrongCredentials] = useState(false);
   const dispatch = useDispatch();
+  const [fechaHoy, fechaManana] = fecharHoyMañana();
+  const data = {
+    fechainicio: fechaHoy,
+    fechafin: fechaManana,
+  }
 
   const handlelogin = async (e) => {
     e.preventDefault(); // Cancelar el envío del formulario
@@ -45,6 +51,8 @@ export function Login(props) {
       const responseBodegas = await infoBodegas(token);
       const responseProductos = await infoProductos(token);
       const responsePersonas = await infoPersonas(token);
+      const responseFacturasHoy = await searchFacturaByDate(data,token);
+
       //setiar la variable global del token e inventario
       dispatch(
         setAuthData({
@@ -65,6 +73,7 @@ export function Login(props) {
       dispatch(setBodega(responseBodegas));
       dispatch(setProducto(responseProductos));
       dispatch(setPersona(responsePersonas));
+      dispatch(setFacturasHoy(responseFacturasHoy));
 
       // Crea la cookie
       createCookie(
@@ -130,4 +139,22 @@ export function Login(props) {
       </footer>
     </>
   );
+}
+
+function fecharHoyMañana() {
+  const hoy = new Date();
+  const manana = new Date(hoy);
+  manana.setDate(hoy.getDate() + 1);
+
+  const formatoFecha = fecha => {
+    const year = fecha.getFullYear();
+    const month = String(fecha.getMonth() + 1).padStart(2, '0');
+    const day = String(fecha.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const fechaHoyFormateada = formatoFecha(hoy);
+  const fechaMananaFormateada = formatoFecha(manana);
+
+  return [fechaHoyFormateada, fechaMananaFormateada];
 }

@@ -147,20 +147,6 @@ const InvoiceSection = ({
     setClienteInfo(clienteInfodata);
     setItems(itemsdata);
     setDataStatic(dataStaticdata);
-    console.log(
-      "infoEmpresa:",
-      infoEmpresa,
-      "infoEmpresadata:",
-      infoEmpresadata
-    );
-    console.log(
-      "clienteInfo:",
-      clienteInfo,
-      "clienteInfodata:",
-      clienteInfodata
-    );
-    console.log("items:", items, "itemsdata:", itemsdata);
-    console.log("dataStatic:", dataStatic, "dataStaticdata:", dataStaticdata);
   }, [infoEmpresa, clienteInfo, items, dataStatic]);
 
   const calculateTotal = () => {

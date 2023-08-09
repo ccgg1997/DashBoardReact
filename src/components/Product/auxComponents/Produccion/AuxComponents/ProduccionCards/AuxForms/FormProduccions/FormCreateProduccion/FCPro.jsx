@@ -100,7 +100,6 @@ const FCreatePro = () => {
 
   //funcion para crear el inventario
   const crearInventarioApi = async() => {
-    console.log(objetCrearProduccion);
     if(cantidad===0){
       setMensaje("No se puede crear una produccion con 0 unidades", "error");
       return false;

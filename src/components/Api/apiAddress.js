@@ -381,6 +381,9 @@ export const searchFactura = async (id, token) => {
   }
 };
 
+
+
+
 //funcion para buscar factura por intervalo de fechas
 export const searchFacturaByDate = async (data, token) => {
   const fechaInicio = data.fechainicio;

@@ -8,6 +8,7 @@ import produccionReducer from "../features/ordenesproduccion/ordenesproduccion";
 import bodegaReducer from "../features/bodega/bodega";
 import productoReducer from "../features/productos/producto";
 import personaReducer from "../features/persona/persona";
+import facturasHoyReducer from "../features/facturasHoy/facturasHoy";
 
 
 export const store = configureStore({
@@ -21,7 +22,7 @@ export const store = configureStore({
     bodega: bodegaReducer,
     producto: productoReducer,
     persona: personaReducer,
-
+    facturasHoy: facturasHoyReducer,
   },
   
 });

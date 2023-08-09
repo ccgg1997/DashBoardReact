@@ -27,6 +27,7 @@ const BuscarFactura = () => {
   const [open, setOpen] = React.useState(false);
 
   const token = useSelector((state) => state.auth.token);
+  const facturasHoy = useSelector((state) => state.facturasHoy.facturasHoy);
 
   const handlePrint = () => {
     setIsInfoFactura(false);
@@ -55,7 +56,8 @@ const BuscarFactura = () => {
         const data = transformData(factura);
         setFacturaToPDF(data);
         setForceRender(forceRender + 1);
-        console.log("viendo la superdata::::*/:" + JSON.stringify(data));
+        //console.log("viendo la superdata::::*/:" + JSON.stringify(data));
+        console.log("::::::ATENCION::: FACTURAS DEL DIA DE HOY :"+ JSON.stringify(facturasHoy) ) ;
       }
     } catch (error) {
       setMensaje(error.message, "error");
@@ -121,8 +123,8 @@ const BuscarFactura = () => {
     >
       <div className={isInfoFactura ? "contenedortitulobotones2" : "contenedortitulobotones" }>
         <div className="tituloBuscar">
-          <ScrollDialog texto="" titulo="Facturas Realizadas Hoy" />
-          {"Bolsas Romy "}
+          <ScrollDialog texto={facturasHoy} titulo="Facturas Realizadas Hoy" />
+          <div>{"Bolsas Romy "}</div>
         </div>
         <div className="campoBuscarFacturaInfo__info">
           <TextField
@@ -161,27 +163,7 @@ const BuscarFactura = () => {
           </div>
         </div>
       )}
-
-      {/* {isInfoFactura && factura && (
-        <div className="contenedor">
-          <h1>hola</h1>
-          <button onClick={setIsInfoFactura(false)}>Cerrar</button>
-          <div
-            style={{ width: "100vw", height: "100vh", flexDirection: "column" }}
-          >
-            <PDFViewer
-              key={forceRender}
-              style={{ width: "80%", height: "100%" }}
-            >
-              <FacturaPdf key={forceRender} factura={facturaToPDF} />
-            </PDFViewer>
-          </div>
-        </div>
-      )} */}
-      {/* Product table */}
-
       <div className="BuscarFacturaInfo__table"></div>
-
       <Notificacion
         mensaje={mensajeNotificacion}
         tipoNotificacion={tipoNotificacion}

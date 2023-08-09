@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./FacturaInfoCliente.css";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { infoPreciosClienteEspecial } from "../../../Api/apiAddress";
 import BasicTable from "../FacturaTable/FacturaTable";
 import { useCallback } from "react";
 import Notificacion from "../../../Basicos/Notificacion/Notificacion";
 import generarPDF from "../../../Basicos/generatePdf/generatePdf";
-import { createFactura } from "../../../Api/apiAddress";
+import { createFactura,searchFacturaByDate } from "../../../Api/apiAddress";
 import logo from "../../../../../src/imgs/logo.png";
 import FacturaPdf from "../FacturaPdf/FacturaPdf";
 import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 import ReactPDF from "@react-pdf/renderer";
+import { setFacturasHoy } from "../../../../features/facturasHoy/facturasHoy";
 
 const FacturaInfo = () => {
   const handlePrint = () => {
@@ -18,13 +20,20 @@ const FacturaInfo = () => {
   };
 
   // State variables
+  const dispatch = useDispatch();
   const [facturaDisponible, setFacturaDisponible] = useState(false);
   const [producto, setProductos] = useState([]);
   const [preciosEspeciales, setPreciosEspeciales] = useState([]);
   const [total, setTotal] = useState(0);
   const [facturaToPDF, setFacturaToPDF] = useState({}); //objeto factura con los datos de la factura para generar el pdf
   const [facturaToDB, setFacturaToDB] = useState({}); //objeto factura con los datos de la factura para guardar en la base de datos
-  const [mostrarpdf, setMostrarPdf] = useState(true);
+
+  
+  const [fechaHoy, fechaManana] = fecharHoyMañana();
+  const data = {
+    fechainicio: fechaHoy,
+    fechafin: fechaManana,
+  }
 
   // Redux state
   const clientes = useSelector((state) => state.clientes);
@@ -114,12 +123,16 @@ const FacturaInfo = () => {
       setMensaje(resul, "error");
       return;
     } else {
+
+      //actualizar el listado de facturas del día
+      const responseFacturasHoy = await searchFacturaByDate(data,token);
+      dispatch(setFacturasHoy(responseFacturasHoy));
+      
       // Obtén la fecha actual
       const today = formatDateToYYYYMMDD(new Date());
       
       const copyFactura = { ...factura, id: resul.id,fecha: today };
       idFactura = resul.id;
-      console.log("factura creada", idFactura);
       setMensaje("Factura creada con éxito", "success");
       setFacturaToPDF(copyFactura);
       setSelectedCliente("");
@@ -132,9 +145,6 @@ const FacturaInfo = () => {
   // cuando el estado facturaToPDF se actualice correctamente.
   useEffect(() => {
     if (facturaToPDF && Object.keys(facturaToPDF).length > 0) {
-      console.log(
-        "factura creada hh:::" + facturaToPDF.id + " " + facturaToPDF.cliente + JSON.stringify(facturaToPDF)
-      );
       setFacturaDisponible(true);
     }
   }, [facturaToPDF]);
@@ -321,6 +331,24 @@ const formatDateToYYYYMMDD = (date) =>{
   const year = date.getFullYear();
 
   return `${dayOfWeek} ${day} de ${month} del ${year}`;
+}
+
+function fecharHoyMañana() {
+  const hoy = new Date();
+  const manana = new Date(hoy);
+  manana.setDate(hoy.getDate() + 1);
+
+  const formatoFecha = fecha => {
+    const year = fecha.getFullYear();
+    const month = String(fecha.getMonth() + 1).padStart(2, '0');
+    const day = String(fecha.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const fechaHoyFormateada = formatoFecha(hoy);
+  const fechaMananaFormateada = formatoFecha(manana);
+
+  return [fechaHoyFormateada, fechaMananaFormateada];
 }
 
 export default FacturaInfo;

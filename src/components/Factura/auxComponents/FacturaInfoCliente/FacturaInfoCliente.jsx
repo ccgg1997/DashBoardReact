@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./FacturaInfoCliente.css";
 import { useSelector } from "react-redux";
 import { infoPreciosClienteEspecial } from "../../../Api/apiAddress";
@@ -10,9 +10,15 @@ import { createFactura } from "../../../Api/apiAddress";
 import logo from "../../../../../src/imgs/logo.png";
 import FacturaPdf from "../FacturaPdf/FacturaPdf";
 import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
+import ReactPDF from "@react-pdf/renderer";
 
 const FacturaInfo = () => {
+  const handlePrint = () => {
+    setFacturaDisponible(false); // Abre la vista de impresión del navegador
+  };
+
   // State variables
+  const [facturaDisponible, setFacturaDisponible] = useState(false);
   const [producto, setProductos] = useState([]);
   const [preciosEspeciales, setPreciosEspeciales] = useState([]);
   const [total, setTotal] = useState(0);
@@ -70,10 +76,10 @@ const FacturaInfo = () => {
   const uniqueNames = [...new Set(cliente.map((item) => item.negocio))];
   const [selectedCliente, setSelectedCliente] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
+  const [forceRender, setForceRender] = useState(0);
 
   //objeto factura con los datos de la factura
   const crearFactura = async () => {
-
     if (!selectedItem) return;
     if (!verificarTotal(producto)) {
       setMensaje("Hay producto/s sin cantidad, verifica por favor", "error");
@@ -108,21 +114,33 @@ const FacturaInfo = () => {
       setMensaje(resul, "error");
       return;
     } else {
-      const copyFactura = { ...factura, id: resul.id };
+      // Obtén la fecha actual
+      const today = formatDateToYYYYMMDD(new Date());
+      
+      const copyFactura = { ...factura, id: resul.id,fecha: today };
       idFactura = resul.id;
-      setMensaje("Factura creada con éxito", "exito");
+      console.log("factura creada", idFactura);
+      setMensaje("Factura creada con éxito", "success");
       setFacturaToPDF(copyFactura);
       setSelectedCliente("");
       setSelectedItem(null);
       setIsOpen(false);
+      setForceRender(forceRender + 1);
     }
   };
 
   // cuando el estado facturaToPDF se actualice correctamente.
   useEffect(() => {
     if (facturaToPDF && Object.keys(facturaToPDF).length > 0) {
-      generarPDF(facturaToPDF);
+      console.log(
+        "factura creada hh:::" + facturaToPDF.id + " " + facturaToPDF.cliente + JSON.stringify(facturaToPDF)
+      );
+      setFacturaDisponible(true);
     }
+  }, [facturaToPDF]);
+
+  useEffect(() => {
+    // Este efecto se ejecutará cada vez que facturaToPDF cambie
   }, [facturaToPDF]);
 
   // Calculate the total price
@@ -190,88 +208,119 @@ const FacturaInfo = () => {
   };
 
   return (
-    <div
-      className="FacturaInfo"
-      style={{ overflowY: "scroll", maxHeight: "450px" }}
-    >
-      <div className="FacturaInfo__header">
-        <img src={logo} alt="logo" style={{ width: "50px", height: "50px" }} />
-        <h1>Bolsas Romy</h1>
-      </div>
-      <div className="factInfo">
-        {/* Title */}
-        <div className="FacturaInfo__title"></div>
-        {selectedCliente && producto.length > 0 && (
-          <PDFDownloadLink document={<FacturaPdf></FacturaPdf>} fileName="FACTURA">
-            <button className="boton-flotante" onClick={crearFactura}>
-              Crear factura
-            </button>
-          </PDFDownloadLink>
-        )}
-        {/* Information */}
-        <div className="FacturaInfo__info">
-          <div className="FacturaInfo__info__fecha">
-            <p>{fechaActual}</p>
+    <>
+      {!facturaDisponible && (
+        <div
+          className="FacturaInfo"
+          style={{ overflowY: "scroll", maxHeight: "450px" }}
+        >
+          <div className="FacturaInfo__header">
+            <img
+              src={logo}
+              alt="logo"
+              style={{ width: "50px", height: "50px" }}
+            />
+            <h1>Bolsas Romy</h1>
           </div>
-          <div className="FacturaInfo__info__cliente">
-            <p>
-              Cliente:{" "}
-              <select value={selectedCliente} onChange={handleCliente}>
-                <option>Selecciona un cliente</option>
-                {uniqueNames.map((item) => (
-                  <option key={item} value={item}>
-                    {item}
-                  </option>
-                ))}
-              </select>
-            </p>
+          <div className="factInfo">
+            {/* Title */}
+            <div className="FacturaInfo__title"></div>
+            {selectedCliente && producto.length > 0 && (
+              // <PDFDownloadLink document={<FacturaPdf></FacturaPdf>} fileName="FACTURA">
+              //   <button className="boton-flotante" onClick={crearFactura}>
+              //     Crear factura
+              //   </button>
+              // </PDFDownloadLink>
+              <button className="boton-flotante" onClick={crearFactura}>
+                Crear factura
+              </button>
+            )}
+            {/* Information */}
+            <div className="FacturaInfo__info">
+              <div className="FacturaInfo__info__fecha">
+                <p>{fechaActual}</p>
+              </div>
+              <div className="FacturaInfo__info__cliente">
+                <p>
+                  Cliente:{" "}
+                  <select  className= "Select" value={selectedCliente} onChange={handleCliente}>
+                    <option>Selecciona un cliente</option>
+                    {uniqueNames.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                </p>
+              </div>
+              {/* Selected client details */}
+              {selectedItem && (
+                <>
+                  <div className="FacturaInfo__info__duenio">
+                    <p>Dueño: {selectedItem.duenio}</p>
+                  </div>
+                  <div className="FacturaInfo__info__direccion">
+                    <p>Dirección: {selectedItem.direccion}</p>
+                  </div>
+                  <div className="FacturaInfo__info__telefono">
+                    <p>Teléfono: {selectedItem.telefono}</p>
+                  </div>
+                  <div className="FacturaInfo__info__barrio">
+                    <p>Barrio: {selectedItem.barrio}</p>
+                  </div>
+                </>
+              )}
+              <div className="FacturaInfo__info__total">
+                {/* Total price */}
+                <p>Total: ${total}</p>
+              </div>
+            </div>
           </div>
-          {/* Selected client details */}
-          {selectedItem && (
-            <>
-              <div className="FacturaInfo__info__duenio">
-                <p>Dueño: {selectedItem.duenio}</p>
-              </div>
-              <div className="FacturaInfo__info__direccion">
-                <p>Dirección: {selectedItem.direccion}</p>
-              </div>
-              <div className="FacturaInfo__info__telefono">
-                <p>Teléfono: {selectedItem.telefono}</p>
-              </div>
-              <div className="FacturaInfo__info__barrio">
-                <p>Barrio: {selectedItem.barrio}</p>
-              </div>
-            </>
-          )}
-          <div className="FacturaInfo__info__total">
-            {/* Total price */}
-            <p>Total: ${total}</p>
+          {/* Product table */}
+          <div className="FacturaInfo__table">
+            {isOpen && (
+              <BasicTable
+                onProductosChange={handleProductosChange}
+                preciosEspeciales={preciosEspeciales}
+                isSelected={selectedCliente}
+              />
+            )}
+          </div>
+
+          {/* Componente Notificacion para mostrar mensajes */}
+          <Notificacion
+            mensaje={mensajeNotificacion}
+            tipoNotificacion={tipoNotificacion}
+            mostrarNotificacion={mostrarNotificacion}
+          />
+        </div>
+      )}
+      {facturaDisponible && (
+        <div className="contenedor">
+          <button onClick={handlePrint}>Cerrar</button>
+          <div
+            style={{ width: "100vw", height: "100vh", flexDirection: "column" }}
+          >
+            <PDFViewer  key={forceRender} style={{ width: "80%", height: "100%" }}>
+              <FacturaPdf key={forceRender} factura={facturaToPDF} />
+            </PDFViewer>
           </div>
         </div>
-      </div>
-      {/* Product table */}
-      <div className="FacturaInfo__table">
-        {isOpen && (
-          <BasicTable
-            onProductosChange={handleProductosChange}
-            preciosEspeciales={preciosEspeciales}
-            isSelected={selectedCliente}
-          />
-        )}
-      </div>
-
-      <PDFViewer width="100%" height="600px">
-        <FacturaPdf></FacturaPdf>
-      </PDFViewer>
-  
-      {/* Componente Notificacion para mostrar mensajes */}
-      <Notificacion
-        mensaje={mensajeNotificacion}
-        tipoNotificacion={tipoNotificacion}
-        mostrarNotificacion={mostrarNotificacion}
-      />
-    </div>
+      )}
+    </>
   );
 };
+
+const formatDateToYYYYMMDD = (date) =>{
+  const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+  const dayOfWeek = daysOfWeek[date.getDay()];
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+
+  return `${dayOfWeek} ${day} de ${month} del ${year}`;
+}
 
 export default FacturaInfo;

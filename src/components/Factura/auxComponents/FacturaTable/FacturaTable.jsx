@@ -239,9 +239,10 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
             </TableRow>
           ))}
           {/* Fila para seleccionar un nuevo producto */}
-          <TableRow>
+          <TableRow style={{backgroundColor: 'rgb(250, 246, 246)' }}>
             <TableCell align="center">
               <select
+                className= "Select"
                 onChange={(e) => setSelectedProduct(e.target.value)}
                 value={selectedProduct}
               >

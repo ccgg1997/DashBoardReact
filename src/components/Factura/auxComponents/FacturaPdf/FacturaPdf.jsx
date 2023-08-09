@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Document, Page,StyleSheet } from "@react-pdf/renderer";
 import InvoiceSection from "./FacturaEstrucutura"; // Make sure to provide the correct path to the InvoiceSection component
 import whatsapppnmg from "../FacturaPdf/imagenes/whatsapppnmg.png";
@@ -14,19 +14,22 @@ const styles = StyleSheet.create({
     }
   });
 
-const Invoice = () => {
+const Invoice = (factura) => {
+  useEffect(() => {
+
+  }, [factura]);
   const dataStatic = {
     nombre: "BOLSAS ROMY",
     correo: "romybolsas@gmail.com",
     tel2: "(312) 850 30 62",
     tel1: "(317) 682 79 71",
-    fecha: "Agosto 03,2023",
-    facturaId: "0001",
-    clienteNombre: "Cliente 1 remates la ,ejor del minco",
-    clienteDuenio: "Duenio 1",
-    clienteDireccion: "calle 89 # 89-89 barrio calicanto, al frente de la tienda de la esquina",
-    clienteTel: "Tel 146464564564564564564645645645 33333333333 ",
-    clienteBarrio: "Bario calicanto",
+    fecha:  factura.factura.fecha,
+    facturaId: factura.factura.id,
+    clienteNombre: factura.factura.cliente,
+    clienteDuenio: factura.factura.duenio,
+    clienteDireccion: factura.factura.direccion,
+    clienteTel: factura.factura.telefono,
+    clienteBarrio: factura.factura.barrio
   };
   const infoEmpresa = [
     {
@@ -44,47 +47,33 @@ const Invoice = () => {
     { label: "Dueño/a", value: dataStatic.clienteDuenio ,style:{} },
     { label: "Barrio", value: dataStatic.clienteBarrio ,style:{} },
     { label: "Celular", value: dataStatic.clienteTel ,style:{} },
-    { label: "Direc.", value: dataStatic.clienteDireccion,style:{textAlign: "center",width:"100%",fontFamily: "Helvetica-Bold"} }
+    { label: "Direc.", value: dataStatic.clienteDireccion,style:{fontFamily: "Helvetica-Bold"} }
   ];
 
-  const items = [
-    { codigo:"p01",name: "bolsas economica media larga", price: 10, cantidad: 2 },
-    { codigo:"p02",name: "Item 2", price: 20, cantidad: 3 },
-    { codigo:"p01",name: "bolsas economica media larga", price: 10, cantidad: 2 },
-    { codigo:"p02",name: "Item 2", price: 20, cantidad: 3 },
-    { codigo:"p01",name: "bolsas economica media larga", price: 10, cantidad: 2 },
-    { codigo:"p02",name: "Item 2", price: 20, cantidad: 3 },
-    { codigo:"p01",name: "bolsas economica media larga", price: 10, cantidad: 2 },
-    { codigo:"p02",name: "Item 2", price: 20, cantidad: 3 },
-    { codigo:"p01",name: "bolsas economica media larga", price: 10, cantidad: 2 },
-    { codigo:"p02",name: "Item 2", price: 20, cantidad: 3 },
-    { codigo:"p01",name: "bolsas economica media larga", price: 10, cantidad: 2 },
-    { codigo:"p02",name: "Item 2", price: 20, cantidad: 3 },
-    { codigo:"p01",name: "bolsas economica media larga", price: 10, cantidad: 2 },
-    { codigo:"p02",name: "Item 2", price: 20, cantidad: 3 },
-    { codigo:"p01",name: "bolsas economica media larga", price: 10, cantidad: 2 },
-    { codigo:"p02",name: "Item 2", price: 20, cantidad: 3 }, 
-    { codigo:"p01",name: "bolsas economica media larga", price: 10, cantidad: 2 },
-    { codigo:"p02",name: "Item 2", price: 20, cantidad: 3 },
-    { codigo:"p01",name: "bolsas economica media larga", price: 10, cantidad: 2 },
-    { codigo:"p02",name: "Item 2", price: 20, cantidad: 3 },
-  ];
+  const items = factura.factura.productos.map(item => {
+    return {
+      codigo: item.productoId,
+      name: item.productoNombre,
+      cantidad: item.cantidad,
+      price: item.precio
+    };
+  });
 
   return (
     <Document>
       <Page size="letter" style={styles.page} orientation="landscape">
         {/* Use the InvoiceSection component twice */}
         <InvoiceSection
-          dataStatic={dataStatic}
-          infoEmpresa={infoEmpresa}
-          clienteInfo={clienteInfo}
-          items={items}
+          dataStaticdata={dataStatic}
+          infoEmpresadata={infoEmpresa}
+          clienteInfodata={clienteInfo}
+          itemsdata={items}
         />
         <InvoiceSection
-          dataStatic={dataStatic}
-          infoEmpresa={infoEmpresa}
-          clienteInfo={clienteInfo}
-          items={items}
+          dataStaticdata={dataStatic}
+          infoEmpresadata={infoEmpresa}
+          clienteInfodata={clienteInfo}
+          itemsdata={items}
         />
       </Page>
     </Document>

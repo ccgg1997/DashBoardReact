@@ -1,0 +1,9 @@
+.infoBotton{
+    font-size: 27px;
+    font-weight: bolder;
+    border-radius: 15px;
+    background-color: rgb(194, 204, 204);
+    padding: 0px ;
+    cursor: pointer;
+    
+}

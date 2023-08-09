@@ -8,16 +8,17 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { margin } from "@mui/system";
+import ScrollDialog from "../../../Basicos/ModalScrolll/ModalScroll";
+import FacturaPdf from "../FacturaPdf/FacturaPdf";
+import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 
 const BuscarFactura = () => {
   const [idFactura, setIdFactura] = React.useState("");
   const [factura, setFactura] = useState({});
-  const [detalleFactura, setDetalleFactura] = useState([]);
-  const [facturaInfo, setFacturaInfo] = useState({});
-  const [negocioInfo, setNegocioInfo] = useState({});
-
   const [isInfoFactura, setIsInfoFactura] = useState(false);
 
+  const [facturaToPDF, setFacturaToPDF] = useState({});
+  const [forceRender, setForceRender] = useState(0);
   // Estado local para mostrar notificaciones
   const [mensajeNotificacion, setMensajeNotificacion] = useState("");
   const [tipoNotificacion, setTipoNotificacion] = useState("");
@@ -27,13 +28,18 @@ const BuscarFactura = () => {
 
   const token = useSelector((state) => state.auth.token);
 
+  const handlePrint = () => {
+    setIsInfoFactura(false);
+    setFacturaToPDF({}); // Abre la vista de impresión del navegador
+  };
+
   const onClick = async () => {
     if (idFactura === "") {
       setMensaje("Ingrese un id de factura", "error");
       return;
     }
 
-    if (facturaInfo && facturaInfo.id === idFactura) {
+    if (facturaToPDF && facturaToPDF.id === idFactura) {
       setMensaje("Factura ya cargada", "error");
       return;
     }
@@ -46,9 +52,10 @@ const BuscarFactura = () => {
         setMensaje("Factura encontrada", "success");
         setIsInfoFactura(true);
         setFactura(factura);
-        setDetalleFactura(factura.detalleFactura);
-        setFacturaInfo(factura.factura);
-        setNegocioInfo(factura.negocio);
+        const data = transformData(factura);
+        setFacturaToPDF(data);
+        setForceRender(forceRender + 1);
+        console.log("viendo la superdata::::*/:" + JSON.stringify(data));
       }
     } catch (error) {
       setMensaje(error.message, "error");
@@ -89,9 +96,6 @@ const BuscarFactura = () => {
         setMensaje("Factura eliminada", "success");
         setIsInfoFactura(false);
         setFactura({});
-        setDetalleFactura([]);
-        setFacturaInfo({});
-        setNegocioInfo({});
         closeModal();
       }
     } catch (error) {
@@ -106,57 +110,76 @@ const BuscarFactura = () => {
     }
   }, [mostrarNotificacion]);
 
+  useEffect(() => {
+    // Este efecto se ejecutará cada vez que facturaToPDF cambie
+  }, [facturaToPDF]);
+
   return (
     <div
       className="BuscarFacturaInfo"
-      style={{ overflowY: "scroll", maxHeight: "450px" }}
+      style={{ overflowY: "scroll", maxHeight: "500px" }}
     >
-      <div className="BuscarFacturaInfo__title">
-        <h1>Bolsas Romy</h1>
+      <div className={isInfoFactura ? "contenedortitulobotones2" : "contenedortitulobotones" }>
+        <div className="tituloBuscar">
+          <ScrollDialog texto="" titulo="Facturas Realizadas Hoy" />
+          {"Bolsas Romy "}
+        </div>
+        <div className="campoBuscarFacturaInfo__info">
+          <TextField
+            id="outlined-basic"
+            onChange={handleChange}
+            label="Id de la factura"
+            variant="outlined"
+          />
+        </div>
+        <div className="buscarFacturaInfo__boton">
+          <Button variant="contained" sx={{ margin: "10px" }} onClick={onClick}>
+            Buscar
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ margin: "10px" }}
+            onClick={openModal}
+          >
+            Eliminar
+          </Button>
+        </div>
       </div>
-      <div className="campoBuscarFacturaInfo__info">
-        <TextField
-          id="outlined-basic"
-          onChange={handleChange}
-          label="Id de la factura"
-          variant="outlined"
-        />
-      </div>
-      <div className="buscarFacturaInfo__boton">
-        <Button variant="contained" sx={{ margin: "10px" }} onClick={onClick}>
-          Buscar
-        </Button>
-        <Button variant="contained" sx={{ margin: "10px" }} onClick={openModal}>
-          Eliminar
-        </Button>
-      </div>
-      {isInfoFactura && factura && (
-        <div className="BuscarFacturaInfo__info">
-          <div className="BuscarFacturaInfo__info__fecha">
-            <p>fecha: {facturaInfo.fecha}</p>
-          </div>
-          <div className="BuscaracturaInfo__info__cliente">
-            Nro de factura: {facturaInfo.id}
-          </div>
-          <div className="BuscarFacturaInfo__info__duenio">
-            <p>Dueño: {negocioInfo.duenio}</p>
-          </div>
-          <div className="BuscarFacturaInfo__info__direccion">
-            <p>Dirección: {negocioInfo.direccion}</p>
-          </div>
-          <div className="BuscarFacturaInfo__info__telefono">
-            <p>Teléfono: {negocioInfo.telefono}</p>
-          </div>
-          <div className="BuscarFacturaInfo__info__barrio">
-            <p>Barrio: {negocioInfo.barrio}</p>
-          </div>
-          <div className="BuscarFacturaInfo__info__total">
-            {/* Total price */}
-            <p>Total: ${facturaInfo.total}</p>
+
+      {isInfoFactura && (
+        <div className="contenedor">
+          <button onClick={handlePrint}>Cerrar</button>
+          <div
+            style={{ width: "100vw", height: "100vh", flexDirection: "column" }}
+          >
+            <PDFViewer
+              key={forceRender}
+              style={{ width: "80%", height: "100%" }}
+            >
+              <FacturaPdf key={forceRender} factura={facturaToPDF} />
+            </PDFViewer>
           </div>
         </div>
       )}
+
+      {/* {isInfoFactura && factura && (
+        <div className="contenedor">
+          <h1>hola</h1>
+          <button onClick={setIsInfoFactura(false)}>Cerrar</button>
+          <div
+            style={{ width: "100vw", height: "100vh", flexDirection: "column" }}
+          >
+            <PDFViewer
+              key={forceRender}
+              style={{ width: "80%", height: "100%" }}
+            >
+              <FacturaPdf key={forceRender} factura={facturaToPDF} />
+            </PDFViewer>
+          </div>
+        </div>
+      )} */}
       {/* Product table */}
+
       <div className="BuscarFacturaInfo__table"></div>
 
       <Notificacion
@@ -218,5 +241,43 @@ const Confirmacion = ({ onClickEliminar, open, onClose }) => {
     </div>
   );
 };
+
+function transformData(data) {
+  const { factura, detalleFactura, negocio } = data;
+  const { id, fecha, total } = factura;
+  const { productos } = detalleFactura;
+  const { nombre, duenio, telefono, direccion, barrio } = negocio;
+
+  const transformedData = {
+    id,
+    negocioId: 123456, // Aquí deberías poner el ID correcto del negocio
+    cliente: nombre,
+    duenio,
+    telefono,
+    direccion,
+    barrio,
+    total,
+    productos: productos.map((producto) => ({
+      productoId: producto.productoId,
+      productoNombre: producto.productoNombre,
+      familia: producto.familia,
+      cantidad: producto.cantidad,
+      precio: producto.precio,
+      estilos: producto.estilos.map((estilo) => ({
+        nombre: estilo.nombre,
+        cantidad: estilo.cantidad,
+      })),
+      total: producto.total.toString(),
+    })),
+    fecha: new Date(fecha).toLocaleDateString("es-ES", {
+      weekday: "long",
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    }),
+  };
+
+  return transformedData;
+}
 
 export default BuscarFactura;

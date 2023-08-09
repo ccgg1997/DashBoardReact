@@ -1,5 +1,5 @@
 // InvoiceSection.js
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 import logo from "../FacturaPdf/imagenes/logo.png";
 
@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
   },
   textiDF: {
     fontSize: 10,
+    fontFamily: "Helvetica-Bold",
   },
   footer: {
     position: "absolute",
@@ -126,22 +127,55 @@ const styles = StyleSheet.create({
     borderTopColor: "#ccc",
     paddingTop: 10,
     alignItems: "center",
-  }
+  },
 });
 
 const InvoiceSection = ({
-  dataStatic,
-  infoEmpresa,
-  clienteInfo,
-  items,
+  dataStaticdata,
+  infoEmpresadata,
+  clienteInfodata,
+  itemsdata,
+  fecha
 }) => {
+  const [infoEmpresa, setInfoEmpresa] = useState([]);
+  const [clienteInfo, setClienteInfo] = useState([]);
+  const [items, setItems] = useState([]);
+  const [dataStatic, setDataStatic] = useState([]);
+
+  useEffect(() => {
+    setInfoEmpresa(infoEmpresadata);
+    setClienteInfo(clienteInfodata);
+    setItems(itemsdata);
+    setDataStatic(dataStaticdata);
+    console.log(
+      "infoEmpresa:",
+      infoEmpresa,
+      "infoEmpresadata:",
+      infoEmpresadata
+    );
+    console.log(
+      "clienteInfo:",
+      clienteInfo,
+      "clienteInfodata:",
+      clienteInfodata
+    );
+    console.log("items:", items, "itemsdata:", itemsdata);
+    console.log("dataStatic:", dataStatic, "dataStaticdata:", dataStaticdata);
+  }, [infoEmpresa, clienteInfo, items, dataStatic]);
+
   const calculateTotal = () => {
     // Lógica para calcular el total basado en los ítems
+    if (items && items.length === 0) return "$0.00"; // Si no hay ítems, el total es $0.00 (esto se puede cambiar
     let total = 0;
     for (const item of items) {
       total += item.price * item.cantidad;
     }
-    return "$" + total.toFixed(2); // Volver a agregar el símbolo '$' y mantener dos decimales
+    return total.toLocaleString("es-CO", {
+      style: "currency",
+      currency: "COP",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
   };
 
   return (
@@ -149,51 +183,58 @@ const InvoiceSection = ({
       <View style={styles.titleContainer}>
         <View style={styles.factura_id1}>
           <Image src={logo} style={styles.image} />
-          <Text style={styles.title}>{dataStatic.nombre}</Text>
+          <Text style={styles.title}>{dataStatic && dataStatic.nombre}</Text>
         </View>
         <View style={styles.factura_id2}>
           <Text style={styles.textiD}>REMISION DE COMPRA</Text>
           <Text style={styles.textiDF}>
-            {"FACTURA No." + dataStatic.facturaId}
+            {dataStatic && "No." + dataStatic.facturaId}
           </Text>
         </View>
       </View>
       <View style={styles.infoEmpresa}>
-        {infoEmpresa.map((item, index) => (
-          <View style={{ flexDirection: "row" }} key={index}>
-            <Image src={item.icon} style={{ ...styles.icon, padding: 1 }} />
-            <Text style={{ ...styles.textiD, padding: 1 }}>{item.text}</Text>
-          </View>
-        ))}
+        {infoEmpresa &&
+          infoEmpresa.map((item, index) => (
+            <View style={{ flexDirection: "row" }} key={index}>
+              <Image src={item.icon} style={{ ...styles.icon, padding: 1 }} />
+              <Text style={{ ...styles.textiD, padding: 1 }}>{item.text}</Text>
+            </View>
+          ))}
       </View>
       <Text
         style={{
           ...styles.text,
           fontFamily: "Helvetica-Bold",
-          marginTop: 4,
-          marginBottom: 12,
+          marginTop: 6,
+          marginBottom: 8,
         }}
       >
-        {dataStatic.fecha}
+        {dataStatic && dataStatic.fecha}
       </Text>
-      <View>
-        {clienteInfo.map((item, index) => (
-          <View style={{ flexDirection: "row", flexWrap: "wrap" }} key={index}>
-            <Text
-              style={{
-                ...styles.text,
-                fontFamily: "Helvetica-Bold",
-                width: 50,
-              }}
+      <View style={{borderWidth:1, borderRadius:5,paddingVertical: 4, paddingHorizontal: 4 }}>
+        {clienteInfo &&
+          clienteInfo.map((item, index) => (
+            <View
+              style={{ flexDirection: "row", flexWrap: "wrap" }}
+              key={index}
             >
-              {item.label}
-            </Text>
-            <Text style={styles.text}>{": "}</Text>
-            <Text style={{ ...styles.text, ...item.style }}>{item.value}</Text>
-          </View>
-        ))}
+              <Text
+                style={{
+                  ...styles.text,
+                  fontFamily: "Helvetica-Bold",
+                  width: 50,
+                }}
+              >
+                {item.label}
+              </Text>
+              <Text style={styles.text}>{": "}</Text>
+              <Text style={{ ...styles.text, ...item.style }}>
+                {item.value}
+              </Text>
+            </View>
+          ))}
       </View>
-      
+
       <View style={styles.table}>
         // tabla manual
         {/* Encabezado de la tabla */}
@@ -221,17 +262,23 @@ const InvoiceSection = ({
             SubTotal
           </Text>
         </View>
-        {items.map((item, index) => (
-          <View key={index} style={{ ...styles.tableRow }}>
-            <Text style={styles.tableCell}>{item.codigo}</Text>
-            <Text style={styles.tableCell}>{item.name}</Text>
-            <Text style={styles.tableCell}>{item.cantidad}</Text>
-            <Text style={styles.tableCell}>{item.price}</Text>
-            <Text style={styles.tableCell}>
-              {"$" + item.price * item.cantidad}
-            </Text>
-          </View>
-        ))}
+        {items &&
+          items.map((item, index) => (
+            <View key={index} style={{ ...styles.tableRow }}>
+              <Text style={styles.tableCell}>{item.codigo}</Text>
+              <Text style={styles.tableCell}>{item.name}</Text>
+              <Text style={styles.tableCell}>{item.cantidad}</Text>
+              <Text style={styles.tableCell}>{item.price}</Text>
+              <Text style={styles.tableCell}>
+                {(item.price * item.cantidad).toLocaleString("es-CO", {
+                  style: "currency",
+                  currency: "COP",
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                })}
+              </Text>
+            </View>
+          ))}
       </View>
       <View style={{ alignItems: "flex-end" }}>
         <Text style={{ ...styles.text, fontFamily: "Helvetica-Bold" }}>
@@ -240,7 +287,9 @@ const InvoiceSection = ({
       </View>
       {/* Footer */}
       <View style={styles.footer}>
-        <Text style={{ ...styles.text, fontFamily: "Helvetica-Bold", fontSize: 10 }}>
+        <Text
+          style={{ ...styles.text, fontFamily: "Helvetica-Bold", fontSize: 10 }}
+        >
           DIOS TE BENDIGA Y BENDIGA TU NEGOCIO.
         </Text>
       </View>

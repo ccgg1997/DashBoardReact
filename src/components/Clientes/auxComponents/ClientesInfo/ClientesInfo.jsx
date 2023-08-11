@@ -12,7 +12,6 @@ const ClientesInfo = () => {
   const clientes  = useSelector((state) => state.clientes);
   const { encabezados, valoresTable } = clientesDataTable(clientes);
 
-
   return <div className="ClientesInfo">
     <ClienteCards CardsData={CardsData}/>
     <TableFilter nombre={"CLIENTES"}

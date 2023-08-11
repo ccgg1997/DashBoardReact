@@ -405,6 +405,27 @@ export const searchFacturaByDate = async (data, token) => {
   }
 };
 
+//funcion para buscar factura por intervalo de 3 meses atras
+export const searchFacturaByLast3Months = async (token) => {
+  const searchFacturaBy3lastMonthsAddress = apiAddress + "/factura/last3Months";
+  try {
+    const response = await axios.get(searchFacturaBy3lastMonthsAddress, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    if(error.response.status === 400) {
+      throw new Error(error.response.data.error);
+    }else{
+      throw new Error("Error al buscar la factura");
+    }
+  }
+};
+
+
 export const deleteFactura = async (id, token) => {
   const deleteFacturaAddress = apiAddress + "/factura/" + id;
   try {

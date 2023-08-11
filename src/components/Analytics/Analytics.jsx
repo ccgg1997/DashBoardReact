@@ -14,33 +14,35 @@ const botones = [
   { id: 4, nombre: "ver completo" },
 ];
 
-const ventas = [
-  { id: 1, cliente: "Cliente 1", valorVenta: 1200 },
-  { id: 2, cliente: "Cliente 2", valorVenta: 800 },
-  { id: 3, cliente: "Cliente 3", valorVenta: 1500 },
-  { id: 4, cliente: "Cliente 4", valorVenta: 900 },
-  { id: 5, cliente: "Cliente 5", valorVenta: 1300 },
-  { id: 6, cliente: "Cliente 6", valorVenta: 700 },
-  { id: 7, cliente: "Cliente 7", valorVenta: 1600 },
-  { id: 8, cliente: "Cliente 8", valorVenta: 1100 },
-  { id: 9, cliente: "Cliente 9", valorVenta: 1800 },
-  { id: 10, cliente: "Cliente 10", valorVenta: 950 },
-];
-
-const nombre = "Ventas";
-const encabezados = [
-  { field: "cliente", headerName: "Cliente" },
-  { field: "valorVenta", headerName: "valorVenta" },
-];
+/**
+ * Analytics component displays a chart and a table of sales data.
+ * It allows the user to filter the data by different time periods and shows a notification message.
+ *
+ * @returns {JSX.Element} The rendered Analytics component.
+ */
 const Analytics = () => {
-  const [fechainicio, setFechainicio] = React.useState("");
-  const [fechafin, setFechafin] = React.useState("");
   const [mostrarNotificacion, setMostrarNotificacion] = React.useState(false);
   const [mensajeNotificacion, setMensajeNotificacion] = React.useState("");
   const [tipo, setTipo] = React.useState("");
-  const [dataToGraph, setDataToGraph] = React.useState([]);
+  const [dataToGraph, setDataToGraph] = React.useState({
+    clientes: [],
+    ventasDia: [{ fechas: [], ventas: [] }],
+  });
 
-  const { token } = useSelector((state) => state.auth);
+  //traemos los datos de reducer de analytics y ordenamos por fecha
+  const infoVentas = useSelector((state) => state.analytics);
+
+  const periodo60_90 = infoVentas.infoVentas[0];
+  const periodo30_60 = infoVentas.infoVentas[1];
+  const periodo1_30 = infoVentas.infoVentas[2];
+  const completo = infoVentas.infoVentas[3];
+
+  const nombre = "Ventas";
+  const encabezados = [
+    { field: "_id", headerName: "Cliente" },
+    { field: "total", headerName: "valorVenta" },
+  ];
+  const ventas = dataToGraph.clientes;
 
   const setMensaje = (mensaje, tipo) => {
     setMostrarNotificacion(true);
@@ -48,12 +50,28 @@ const Analytics = () => {
     setTipo(tipo);
   };
 
-  const handleFiltro = async (ide) => {
-    if (ide === 1 || fechafin === "") {
-      setMensaje("Estamo aplicando filtro de rango: #" + ide, "error");
-      return;
-    }
-  };
+  //funcion para filtrar los datos por periodo utilizando useCallback para evitar renderizado innecesario
+  const handleFiltro = React.useCallback(
+    async (ide) => {
+      switch (ide) {
+        case 1:
+          setDataToGraph(periodo1_30);
+          break;
+        case 2:
+          setDataToGraph(periodo30_60);
+          break;
+        case 3:
+          setDataToGraph(periodo60_90);
+          break;
+        case 4:
+          setDataToGraph(completo);
+          break;
+        default:
+          break;
+      }
+    },
+    [periodo1_30, periodo30_60, periodo60_90, completo]
+  );
 
   // Oculta la notificación después de que se muestra
   React.useEffect(() => {
@@ -62,8 +80,12 @@ const Analytics = () => {
     }
   }, [mostrarNotificacion]);
 
-  const data = {
-    options: {
+  React.useEffect(() => {
+    handleFiltro(4);
+  }, [handleFiltro]);
+  //configuracion del grafico utilizando useMemo para evitar renderizado innecesario
+  const dataOptions = React.useMemo(() => {
+    return {
       chart: {
         type: "area",
         height: "auto",
@@ -99,24 +121,28 @@ const Analytics = () => {
       },
       xaxis: {
         type: "datetime",
-        categories: [
-          "2021-09-01T00:00:00.000Z",
-          "2021-09-01T01:30:00.000Z",
-          "2021-09-01T02:30:00.000Z",
-          "2021-09-01T03:30:00.000Z",
-          "2021-09-01T04:30:00.000Z",
-          "2021-09-01T05:30:00.000Z",
-          "2021-09-01T06:30:00.000Z",
-        ],
+        categories: dataToGraph.ventasDia[0].fechas,
       },
-    },
-  };
-  const series = [
-    {
-      name: "Expenses",
-      data: [10, 100, 50, 70, 80, 30],
-    },
-  ];
+    };
+  }, [dataToGraph]);
+
+  const series = React.useMemo(() => {
+    if (
+      dataToGraph &&
+      dataToGraph.ventasDia &&
+      dataToGraph.ventasDia.length > 0 &&
+      dataToGraph.ventasDia[0].totales
+    ) {
+      return [
+        {
+          name: "Expenses",
+          data: dataToGraph.ventasDia[0].totales,
+        },
+      ];
+    }
+    return [];
+  }, [dataToGraph]);
+
   return (
     <div className="Analytics">
       <h1>Facturas por fecha</h1>
@@ -134,16 +160,18 @@ const Analytics = () => {
           );
         })}
       </div>
+
       <div className="contenedorGrafico">
         <div className="grafico">
-          <Chart series={series} type="area" options={data.options} />
-        </div>
-        <div className="tabla">
-          <TableFilter
-            nombre={nombre}
-            nombreColumnas={encabezados}
-            datosFilas={ventas}
-          />
+          <Chart series={series} type="area" options={dataOptions} />
+
+          <div className="tabla">
+            <TableFilter
+              nombre={nombre}
+              nombreColumnas={encabezados}
+              datosFilas={ventas}
+            />
+          </div>
         </div>
       </div>
 
@@ -155,5 +183,4 @@ const Analytics = () => {
     </div>
   );
 };
-
 export default Analytics;

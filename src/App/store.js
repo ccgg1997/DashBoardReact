@@ -9,7 +9,7 @@ import bodegaReducer from "../features/bodega/bodega";
 import productoReducer from "../features/productos/producto";
 import personaReducer from "../features/persona/persona";
 import facturasHoyReducer from "../features/facturasHoy/facturasHoy";
-
+import analyticsReducer from "../features/analytics/analytics";
 
 export const store = configureStore({
   reducer: {
@@ -23,6 +23,8 @@ export const store = configureStore({
     producto: productoReducer,
     persona: personaReducer,
     facturasHoy: facturasHoyReducer,
+    analytics: analyticsReducer,
+    
   },
   
 });

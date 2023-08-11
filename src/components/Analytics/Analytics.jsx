@@ -1,8 +1,37 @@
 import React from "react";
 import "./Analytics.css";
-import { searchFacturaByDate } from "../Api/apiAddress";
 import Notificacion from "../Basicos/Notificacion/Notificacion";
 import { useSelector } from "react-redux";
+import { Button } from "@mui/material";
+import Chart from "react-apexcharts";
+import TableFilter from "../Basicos/TableFilter/TableFilter";
+
+//definir botones para filtrado
+const botones = [
+  { id: 1, nombre: "1-30 dias" },
+  { id: 2, nombre: "30-60 dias" },
+  { id: 3, nombre: "60-90 dias" },
+  { id: 4, nombre: "ver completo" },
+];
+
+const ventas = [
+  { id: 1, cliente: "Cliente 1", valorVenta: 1200 },
+  { id: 2, cliente: "Cliente 2", valorVenta: 800 },
+  { id: 3, cliente: "Cliente 3", valorVenta: 1500 },
+  { id: 4, cliente: "Cliente 4", valorVenta: 900 },
+  { id: 5, cliente: "Cliente 5", valorVenta: 1300 },
+  { id: 6, cliente: "Cliente 6", valorVenta: 700 },
+  { id: 7, cliente: "Cliente 7", valorVenta: 1600 },
+  { id: 8, cliente: "Cliente 8", valorVenta: 1100 },
+  { id: 9, cliente: "Cliente 9", valorVenta: 1800 },
+  { id: 10, cliente: "Cliente 10", valorVenta: 950 },
+];
+
+const nombre = "Ventas";
+const encabezados = [
+  { field: "cliente", headerName: "Cliente" },
+  { field: "valorVenta", headerName: "valorVenta" },
+];
 const Analytics = () => {
   const [fechainicio, setFechainicio] = React.useState("");
   const [fechafin, setFechafin] = React.useState("");
@@ -19,40 +48,10 @@ const Analytics = () => {
     setTipo(tipo);
   };
 
-
-  const handleChangefechainicio = (e) => {
-    setFechainicio(e.target.value);
-  };
-
-  const handleChangefechafin = (e) => {
-    setFechafin(e.target.value);
-
-  };
-
-  const onClick = async () => {
-    if (fechainicio === "" || fechafin === "") {
-      setMensaje("Por favor ingrese una fecha", "error");
+  const handleFiltro = async (ide) => {
+    if (ide === 1 || fechafin === "") {
+      setMensaje("Estamo aplicando filtro de rango: #" + ide, "error");
       return;
-    }    
-    try {
-
-      if(fechainicio > fechafin){
-        setMensaje("La fecha de inicio no puede ser mayor a la fecha fin", "error");
-        return;
-      }
-
-      const data = {
-        fechainicio,
-        fechafin,
-      }
-      
-
-      const res = await searchFacturaByDate(data, token);
-      setDataToGraph(res.data);
-
-
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -63,37 +62,91 @@ const Analytics = () => {
     }
   }, [mostrarNotificacion]);
 
+  const data = {
+    options: {
+      chart: {
+        type: "area",
+        height: "auto",
+      },
 
+      dropShadow: {
+        enabled: false,
+        enabledSeries: undefined,
+        top: 0,
+        left: 0,
+        blur: 3,
+        color: "#000",
+        opacity: 0.35,
+      },
+      fill: {
+        colors: ["#fff"],
+        type: "gradient",
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: "smooth",
+        colors: ["#fff"],
+      },
+      tooltip: {
+        x: {
+          format: "dd/MM/yy HH:mm",
+        },
+      },
+      grid: {
+        show: true,
+      },
+      xaxis: {
+        type: "datetime",
+        categories: [
+          "2021-09-01T00:00:00.000Z",
+          "2021-09-01T01:30:00.000Z",
+          "2021-09-01T02:30:00.000Z",
+          "2021-09-01T03:30:00.000Z",
+          "2021-09-01T04:30:00.000Z",
+          "2021-09-01T05:30:00.000Z",
+          "2021-09-01T06:30:00.000Z",
+        ],
+      },
+    },
+  };
+  const series = [
+    {
+      name: "Expenses",
+      data: [10, 100, 50, 70, 80, 30],
+    },
+  ];
   return (
     <div className="Analytics">
-      <div className="Analytics__title">
-        <h1>Analytics</h1>
+      <h1>Facturas por fecha</h1>
+      <div className="botones">
+        {botones.map((boton) => {
+          return (
+            <Button
+              key={boton.id}
+              variant="contained"
+              sx={{ margin: "10px" }}
+              onClick={() => handleFiltro(boton.id)}
+            >
+              {boton.nombre}
+            </Button>
+          );
+        })}
       </div>
-      <div className="Analytics__chart">
-        <div className="Analytics__chart__title">
-        fecha inicio:{" "}
-        <p>
-        <input
-          type="date"
-          value={fechainicio}
-          onChange={handleChangefechainicio}
-          />
-          </p>
+      <div className="contenedorGrafico">
+        <div className="grafico">
+          <Chart series={series} type="area" options={data.options} />
         </div>
-        <div className="Analytics__chart__title">
-        fecha fin:{" "}
-        <p>
+        <div className="tabla">
+          <TableFilter
+            nombre={nombre}
+            nombreColumnas={encabezados}
+            datosFilas={ventas}
+          />
+        </div>
+      </div>
 
-        <input
-          type="date"
-          value={fechafin}
-          onChange={handleChangefechafin}
-          />
-          </p>
-        </div>
-        
-        <button onClick={onClick}>Buscar</button>
-      </div>
       <Notificacion
         mensaje={mensajeNotificacion}
         tipoNotificacion={tipo}
@@ -102,98 +155,5 @@ const Analytics = () => {
     </div>
   );
 };
-
-
-  /*
-  let base = +new Date(1968, 9, 3);
-  let oneDay = 24 * 3600 * 1000;
-  let date = [];
-  let data = [Math.random() * 300];
-  let option;
-  for (let i = 1; i < 20000; i++) {
-    var now = new Date((base += oneDay));
-    date.push([now.getFullYear(), now.getMonth() + 1, now.getDate()].join("/"));
-    data.push(Math.round((Math.random() - 0.5) * 20 + data[i - 1]));
-  }
-  option = {
-    tooltip: {
-      trigger: "axis",
-      position: function (pt) {
-        return [pt[0], "10%"];
-      },
-    },
-    title: {
-      left: "center",
-      text: "Large Area Chart",
-    },
-    toolbox: {
-      feature: {
-        dataZoom: {
-          yAxisIndex: "none",
-        },
-        restore: {},
-        saveAsImage: {},
-      },
-    },
-    xAxis: {
-      type: "category",
-      boundaryGap: false,
-      data: date,
-    },
-    yAxis: {
-      type: "value",
-      boundaryGap: [0, "100%"],
-    },
-    dataZoom: [
-      {
-        type: "inside",
-        start: 0,
-        end: 10,
-      },
-      {
-        start: 0,
-        end: 10,
-      },
-    ],
-    series: [
-      {
-        name: "Data",
-        type: "line",
-        symbol: "none",
-        sampling: "lttb",
-        itemStyle: {
-          color: "rgb(255, 70, 131)",
-        },
-        areaStyle: {
-          color: new window.echarts.graphic.LinearGradient(0, 0, 0, 1, [            {
-              offset: 0,
-              color: "rgb(255, 158, 68)",
-            },
-            {
-              offset: 1,
-              color: "rgb(255, 70, 131)",
-            },
-          ]),
-        },
-        data: data,
-      },
-    ],
-  };
-
-  return (
-    <div className="Analytics">
-      <div className="Analytics__title">
-        <h1>Analytics</h1>
-      </div>
-      <div className="Analytics__chart">
-        <ReactEcharts
-          option={option}
-          style={{ height: "100%", width: "100%" }}
-          className="react_for_echarts"
-        />
-      </div>
-    </div>
-  );
-};*/
 
 export default Analytics;

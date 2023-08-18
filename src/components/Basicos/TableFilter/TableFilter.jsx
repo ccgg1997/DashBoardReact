@@ -36,13 +36,13 @@ export default function TableFilter(props) {
 
   return (
     <>
-      <h4>{nombre}</h4>
-      <div className="TableFilter">
+      {nombre && <h4>{nombre}</h4>}
+      <div className="TableFilter" style={{ width: '100%' }}>
         <DataGrid
           rows={filasConId}
           columns={columnasConAjuste}
           pagination
-          pageSize={numberRows}
+          pageSize={10}
           disablePageSizeSelector
           hideFooterPagination
         />

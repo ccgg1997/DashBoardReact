@@ -27,7 +27,7 @@
   padding: 20px;
   border-radius: 0 15px 13px 13px;
   box-shadow: 1px 8px 5px 0px rgba(0, 0, 0, 0.477);
-  max-height: 550px;
+  max-height: 90%;
   overflow-y: scroll;
   scrollbar-width: thin; /* Para navegadores Firefox */
   scrollbar-color: transparent transparent; 

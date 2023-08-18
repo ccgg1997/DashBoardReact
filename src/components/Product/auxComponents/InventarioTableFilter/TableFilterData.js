@@ -1,57 +1,46 @@
-export const functionTableData = (() => {
-  const cache = new Map();
-  let uniqueIdCounter = 0;
+let uniqueIdCounter = 0;
 
-  return (inventario, filtro) => {
-    const cacheKey = `${JSON.stringify(inventario)}-${filtro}`;
+export const functionTableData = (inventario, filtro) => {
+  const listaFiltrada = inventario.filter(({ familiaNombre }) => familiaNombre === filtro);
 
-    if (cache.has(cacheKey)) {
-      return cache.get(cacheKey);
-    }
+  const nuevaLista = listaFiltrada.map(
+    ({ tipo, bodegaId, familiaNombre, productoId, cantidad, estilos, nombreProducto }) => {
+      const estilosReducidos = estilos.reduce((acc, estilo) => {
+        acc[estilo.nombre.replace(/ /g, "")] = estilo.cantidad;
+        return acc;
+      }, {});
 
-    const listaFiltrada = inventario.filter(
-      ({ familiaNombre }) => familiaNombre === filtro
-    );
-    if(listaFiltrada.length === 0) return { nombresKeys: [], nuevaLista: [] };
-    const nuevaLista = listaFiltrada.map(
-      ({ tipo,bodegaId, familiaNombre, productoId, cantidad, estilos,nombreProducto }) => {
-        const estilosReducidos = estilos.reduce((acc, estilo) => {
-          acc[estilo.nombre.replace(/ /g, "")] = estilo.cantidad;
-          return acc;
-        }, {});
+      const uniqueId = generateUniqueId();
 
-        const uniqueId = generateUniqueId();
-
-        return {
-          id: uniqueId,
-          ProductId: productoId,
-          tipo:tipo,
-          BodegaId: bodegaId,
-          nombreProducto:nombreProducto,
-          Familia: familiaNombre,
-          Cantidad: cantidad,
-          ...estilosReducidos,
-        };
-      }
-    );
-
-    const nombresKeys = Object.keys(nuevaLista[0]).map((key) => {
       return {
+        id: uniqueId,
+        ProductId: productoId,
+        tipo: tipo,
+        BodegaId: bodegaId,
+        nombreProducto: nombreProducto,
+        Familia: familiaNombre,
+        Cantidad: cantidad,
+        ...estilosReducidos,
+      };
+    }
+  );
+
+  const nombresKeys = nuevaLista.length > 0
+    ? Object.keys(nuevaLista[0]).map((key) => ({
         field: key,
         headerName: key.charAt(0).toUpperCase() + key.slice(1),
         width: key === "id" ? 10 : 80,
         type: typeof nuevaLista[0][key] === "number" ? "number" : undefined,
-      };
-    });
-    const result = { nombresKeys, nuevaLista };
-    cache.set(cacheKey, result);
+      }))
+    : [];
 
-  };
+  return { nombresKeys, nuevaLista };
+};
 
-  function generateUniqueId() {
-    return uniqueIdCounter++;
-  }
-})();
+function generateUniqueId() {
+  return uniqueIdCounter++;
+}
+
 
 export const familiasNombre = (familia) => {
   const familias = familia.map(({ nombre }) => nombre);

@@ -55,7 +55,7 @@ function ExpandedCard({param,setExpanded}){
     const data = {
         options: {
             chart: {
-                type: 'area',
+                type: 'bar',
                 height: 'auto',
             },
 
@@ -116,7 +116,7 @@ function ExpandedCard({param,setExpanded}){
             </div>
             <span>{param.title}</span>
             <div className="ChartContainer">
-                <Chart series={param.series} type='area' options={data.options}/>
+                <Chart series={param.series} type='bar' options={data.options}/>
             </div>
             <span>Last 24 hours</span>
         </motion.div>

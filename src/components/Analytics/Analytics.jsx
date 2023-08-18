@@ -4,7 +4,7 @@ import Notificacion from "../Basicos/Notificacion/Notificacion";
 import { useSelector } from "react-redux";
 import { Button } from "@mui/material";
 import Chart from "react-apexcharts";
-import TableFilter from "../Basicos/TableFilter/TableFilter";
+import { DataGrid } from "@mui/x-data-grid";
 
 //definir botones para filtrado
 const botones = [
@@ -39,10 +39,15 @@ const Analytics = () => {
 
   const nombre = "Ventas";
   const encabezados = [
-    { field: "_id", headerName: "Cliente" },
-    { field: "total", headerName: "valorVenta" },
+    { field: "_id", headerName: "Cliente", flex: 1, minWidth: 230 },
+    { field: "total", headerName: "valorVenta", flex: 1, minWidth: 230 },
   ];
-  const ventas = dataToGraph.clientes;
+  const ventas = { ...dataToGraph, dataToGraph }.clientes.map(
+    (venta, index) => ({
+      id: venta._id, // Utiliza la propiedad _id como identificador único
+      ...venta,
+    })
+  );
 
   const setMensaje = (mensaje, tipo) => {
     setMostrarNotificacion(true);
@@ -56,6 +61,7 @@ const Analytics = () => {
       switch (ide) {
         case 1:
           setDataToGraph(periodo1_30);
+          console.log(JSON.stringify(infoVentas));
           break;
         case 2:
           setDataToGraph(periodo30_60);
@@ -123,6 +129,22 @@ const Analytics = () => {
         type: "datetime",
         categories: dataToGraph.ventasDia[0].fechas,
       },
+      yaxis: {
+        labels: {
+          formatter: function (value) {
+            return new Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency: "USD",
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(value);
+          },
+        },
+        style: {
+          fontWeight: "bolder",
+          fontSize: 12, // Aplica negrita al texto del eje y
+        },
+      },
     };
   }, [dataToGraph]);
 
@@ -160,18 +182,29 @@ const Analytics = () => {
           );
         })}
       </div>
+      <h3>
+
+        {dataToGraph && dataToGraph.totalVentasDia !== undefined ? (
+          <h3>
+            Ventas:{" "}
+            {dataToGraph.totalVentasDia.toLocaleString("es-CO", {
+              style: "currency",
+              currency: "COP",
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })}
+          </h3>
+        ) : (
+          <h3>Ventas: N/A</h3> // Mensaje alternativo si no hay datos disponibles
+        )}
+      </h3>
 
       <div className="contenedorGrafico">
         <div className="grafico">
           <Chart series={series} type="area" options={dataOptions} />
-
-          <div className="tabla">
-            <TableFilter
-              nombre={nombre}
-              nombreColumnas={encabezados}
-              datosFilas={ventas}
-            />
-          </div>
+        </div>
+        <div className="tabla">
+          <TTabla rows={ventas} columns={encabezados} />
         </div>
       </div>
 
@@ -183,4 +216,21 @@ const Analytics = () => {
     </div>
   );
 };
+
+const TTabla = ({ rows, columns }) => {
+  const numberRows = rows.length;
+  return (
+    <div style={{ height: "50%", width: "100%" }}>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        disablePageSizeSelector
+        pagination
+        pageSize={100}
+        hideFooter
+      />
+    </div>
+  );
+};
+
 export default Analytics;

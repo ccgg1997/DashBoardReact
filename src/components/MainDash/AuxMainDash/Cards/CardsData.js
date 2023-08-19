@@ -15,13 +15,7 @@ export const CardsData = [
         },
         barValue: 70,
         value: "$25,000",
-        png:UilUsdSquare,
-        series:[
-            {
-                name:"Sales",
-                data:[31,41,28,51,42,109,100]
-            },
-        ],
+        png:UilUsdSquare, 
     },
     {
         title:"Revenue",
@@ -32,12 +26,7 @@ export const CardsData = [
         barValue: 60,
         value: "$2,500",
         png:UilMoneyWithdrawal,
-        series:[
-            {
-                name:"Revenue",
-                data:[10,100,50,70,80,30]
-            },
-        ],
+  
     },
     {
         title:"Revenue",
@@ -48,12 +37,7 @@ export const CardsData = [
         barValue: 60,
         value: "$15,000.000",
         png:UilClipboardAlt,
-        series:[
-            {
-                name:"Expenses",
-                data:[10,100,50,70,80,30]
-            },
-        ],
+        
     },
     
 

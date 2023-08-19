@@ -52,7 +52,7 @@ function CompactCard({param,setExpanded}){
 
 //expandedCard
 function ExpandedCard({param,setExpanded}){
-    const data = {
+    const data2 = {
         options: {
             chart: {
                 type: 'bar',
@@ -64,13 +64,13 @@ function ExpandedCard({param,setExpanded}){
                 enabledSeries: undefined,
                 top: 0,
                 left: 0,
-                blur: 3,
-                color: '#000',
-                opacity: 0.35,
+                blur: 0,
+                color: '#FFFFFF',
+                opacity: 100,
             },
             fill: {
-                colors: ['#fff'],
-                type: 'gradient',
+                colors: ['#FFFFFF'],
+               
 
             },
             dataLabels: {
@@ -87,22 +87,14 @@ function ExpandedCard({param,setExpanded}){
             },
             grid: {
                 show: true,
-            },
-            xaxis: {
-                type: 'datetime',
-                categories: [
-                    '2021-09-01T00:00:00.000Z',
-                    '2021-09-01T01:30:00.000Z',
-                    '2021-09-01T02:30:00.000Z',
-                    '2021-09-01T03:30:00.000Z',
-                    '2021-09-01T04:30:00.000Z',
-                    '2021-09-01T05:30:00.000Z',
-                    '2021-09-01T06:30:00.000Z',
-                ],
             }
+            
 
         }
     }
+
+    const data = {...data2.options, xaxis: param.xaxis}
+    console.log(JSON.stringify(param.xaxis))
     return (
         <motion.div 
             className="ExpandedCard"
@@ -116,7 +108,7 @@ function ExpandedCard({param,setExpanded}){
             </div>
             <span>{param.title}</span>
             <div className="ChartContainer">
-                <Chart series={param.series} type='bar' options={data.options}/>
+                <Chart series={param.series} type='bar' options={data}/>
             </div>
             <span>Last 24 hours</span>
         </motion.div>

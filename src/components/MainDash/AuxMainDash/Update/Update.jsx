@@ -1,8 +1,12 @@
 import React from 'react'
 import './Update.css'
-import { DataNoticias } from './DataNoticias'
+import { useSelector } from "react-redux";
+import logo from './logo.png'
+//import { DataNoticias } from './DataNoticias'
 
 const Update = () => {
+  const { eventos } = useSelector((state) => state.eventos);
+  const DataNoticias = eventos;
   const UpdatesData = DataNoticias
   return (
     <div className="Updates">
@@ -10,13 +14,12 @@ const Update = () => {
         UpdatesData.map((update,id) => {
               return( 
                 <div className="update" key={id}>
-                  <img src={update.img} alt=''/>
+                  <img src={logo} alt=''/>
                   <div className="noti">
                     <div style={{marginBottom:'0.5rem'}}>
-                      <span>{update.name}</span>
-                      <span>{update.noti}</span>
+                      <span>{update.title}</span>
                     </div>
-                    <span> {update.time}</span>
+                    <span> {update.start}</span>
                   </div>
 
                 </div>

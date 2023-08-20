@@ -18,7 +18,6 @@ const Cards = () => {
   const fina1 = filtradoCalidad("FINA", inventarioReducido);
   const economica1 = filtradoCalidad("ECONOMICA", inventarioReducido);
   const holograma1 = filtradoCalidad("HOLOGRAMA", inventarioReducido);
-  console.log(inventarioReducido);
 
   const CardsData = [
     {

@@ -61,7 +61,6 @@ const Analytics = () => {
       switch (ide) {
         case 1:
           setDataToGraph(periodo1_30);
-          console.log(JSON.stringify(infoVentas));
           break;
         case 2:
           setDataToGraph(periodo30_60);

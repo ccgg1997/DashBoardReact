@@ -1,5 +1,6 @@
 .Updates{
     width: 88%;
+    height: 100%;
     background: white ;
     border-radius: 0.7rem;
     padding: 1rem;
@@ -12,6 +13,8 @@
 .update{
     display:flex;
     gap: 0.5rem;
+    height: 100%;
+    width: 100%;
 }
 
 .update>img{

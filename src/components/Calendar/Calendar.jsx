@@ -7,6 +7,10 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import { useSelector } from "react-redux";
+import { createEvento,infoEventos,deleteEvento } from "../Api/apiAddress";
+import { setEventos } from "../../features/eventos/eventos";
+import { useDispatch } from "react-redux";
 
 import "./Calendar.css";
 
@@ -17,33 +21,33 @@ const CalendarComponent = () => {
   const [newEventTitle, setNewEventTitle] = useState("");
   const [newEventDate, setNewEventDate] = useState("");
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const { eventos } = useSelector((state) => state.eventos);
+  const { token } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  console.log(eventos, "eventos", token);
 
-  const exampleEvents = [
-    { title: "Evento 1", start: "2023-08-18" },
-    { title: "Evento 2", start: "2023-08-19" },
-    // Agrega más eventos aquí
-  ];
+  const exampleEvents = eventos;
 
   useEffect(() => {
     setEvents(exampleEvents);
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    const newEvent = { title: newEventTitle, start: newEventDate };
-    setEvents([...events, newEvent]);
+    const newEvent = await createEvento({ title: newEventTitle, start: newEventDate },token);
+    const eventsApi = await infoEventos(token);
+    dispatch(setEventos(eventsApi));
+    setEvents(eventsApi);
     closeModal();
   };
 
-  const handleDeleteEvent = () => {
-    const updatedEvents = events.filter(
-      (event) =>
-        event.title !== selectedEvent.title ||
-        event.start !== selectedEvent.start
-    );
-    setEvents(updatedEvents);
+  const handleDeleteEvent = async() => {
+    const deleteEventApi= await deleteEvento(selectedEvent,token);
+    const eventsApi = await infoEventos(token);
+    dispatch(setEventos(eventsApi));
+    setEvents(eventsApi);
+    closeModal();
     setSelectedEvent(null);
-    closeDeleteModal();
   };
 
   const openModal = () => {
@@ -68,7 +72,7 @@ const CalendarComponent = () => {
     const calendarEl = document.getElementById("myCalendar");
     const calendar = new Calendar(calendarEl, {
       plugins: [dayGridPlugin, interactionPlugin, listPlugin],
-      events: events,
+      events: exampleEvents,
       editable: true,
       headerToolbar: {
         left: "prev,next today",
@@ -77,7 +81,7 @@ const CalendarComponent = () => {
       }
     });
     calendar.render();
-  }, [events]);
+  }, [exampleEvents]);
 
   return (
     <div className="micalendario">
@@ -149,14 +153,14 @@ const CalendarComponent = () => {
             onChange={(e) => {
               const selectedTitle = e.target.value;
               const selected = events.find((event) => event.title === selectedTitle);
-              setSelectedEvent(selected);
+              setSelectedEvent(selected.identifier);
             }}
             sx={{ mb: 2 }}
           >
             <option value="">Seleccione un evento</option>
             {events.map((event, index) => (
               <option key={index} value={event.title}>
-                {event.title}
+                {event.identifier}
               </option>
             ))}
           </select>

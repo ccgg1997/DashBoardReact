@@ -56,8 +56,6 @@ const BuscarFactura = () => {
         const data = transformData(factura);
         setFacturaToPDF(data);
         setForceRender(forceRender + 1);
-        //console.log("viendo la superdata::::*/:" + JSON.stringify(data));
-        console.log("::::::ATENCION::: FACTURAS DEL DIA DE HOY :"+ JSON.stringify(facturasHoy) ) ;
       }
     } catch (error) {
       setMensaje(error.message, "error");

@@ -10,6 +10,7 @@ import productoReducer from "../features/productos/producto";
 import personaReducer from "../features/persona/persona";
 import facturasHoyReducer from "../features/facturasHoy/facturasHoy";
 import analyticsReducer from "../features/analytics/analytics";
+import eventosReducer from "../features/eventos/eventos";
 
 export const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ export const store = configureStore({
     persona: personaReducer,
     facturasHoy: facturasHoyReducer,
     analytics: analyticsReducer,
+    eventos: eventosReducer,
     
   },
   

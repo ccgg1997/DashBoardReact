@@ -14,8 +14,9 @@ import{setProducto} from "../../features/productos/producto";
 import{setPersona} from "../../features/persona/persona";
 import{setFacturasHoy} from "../../features/facturasHoy/facturasHoy";
 import { setInfoVentas } from "../../features/analytics/analytics";
+import { setEventos } from "../../features/eventos/eventos";
 
-import { signin, infoInventario, createCookie,infoClientes, infoPrecios,infoFamilia, infoProduccion,infoBodegas,infoProductos, infoPersonas,searchFacturaByDate,searchFacturaByLast3Months } from "../Api/apiAddress";
+import { signin, infoInventario, createCookie,infoClientes, infoPrecios,infoFamilia, infoProduccion,infoBodegas,infoProductos, infoPersonas,searchFacturaByDate,searchFacturaByLast3Months,infoEventos } from "../Api/apiAddress";
 ReactModal.setAppElement(document.getElementById("root"));
 
 export function Login(props) {
@@ -55,7 +56,7 @@ export function Login(props) {
       const responsePersonas = await infoPersonas(token);
       const responseFacturasHoy = await searchFacturaByDate(data,token);
       const responseInfoVentas = await searchFacturaByLast3Months(token);
-      
+      const responseEventos = await infoEventos(token);
 
       //setiar la variable global del token e inventario
       dispatch(
@@ -79,6 +80,7 @@ export function Login(props) {
       dispatch(setPersona(responsePersonas));
       dispatch(setFacturasHoy(responseFacturasHoy));
       dispatch(setInfoVentas(responseInfoVentas));
+      dispatch(setEventos(responseEventos));
 
       // Crea la cookie
       createCookie(

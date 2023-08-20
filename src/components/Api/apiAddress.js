@@ -24,7 +24,10 @@ export const infoProduccion = async (token) => {
     });
     return response.data;
   } catch (error) {
-    throw new Error("Error al obtener la información de las ordenes de producción (funciones apiAdress.js):", error);
+    throw new Error(
+      "Error al obtener la información de las ordenes de producción (funciones apiAdress.js):",
+      error
+    );
   }
 };
 
@@ -42,7 +45,6 @@ export const crearProduccion = async (data, token) => {
   }
 };
 
-
 //-----------------Familia FUNCIONES-----------------
 export const infoFamilia = async (token) => {
   const infoFamiliaAddress = apiAddress + "/familia";
@@ -54,7 +56,10 @@ export const infoFamilia = async (token) => {
     });
     return response.data;
   } catch (error) {
-    throw new Error("Error al obtener la información de las familias (funciones apiAdress.js):", error);
+    throw new Error(
+      "Error al obtener la información de las familias (funciones apiAdress.js):",
+      error
+    );
   }
 };
 
@@ -99,7 +104,7 @@ export const movInventario = async (data, token) => {
   } catch (error) {
     throw new Error("Error al crear el movimiento");
   }
-}
+};
 
 export const movEntreBodegas = async (data, token) => {
   const movEntreBodegasAddress = apiAddress + "/produccion/movientrebodega";
@@ -113,8 +118,8 @@ export const movEntreBodegas = async (data, token) => {
   } catch (error) {
     throw new Error("Error al crear el movimiento");
   }
-}
-  
+};
+
 export const crearInventario = async (data, token) => {
   const crearInventarioAddress = apiAddress + "/inventario";
   try {
@@ -146,16 +151,13 @@ export const infoClientes = async (token) => {
 export const crearCliente = async (data, token) => {
   const crearClienteAddress = apiAddress + "/negocio";
   try {
-    console.log(data, token, "en agregar front cleinte");
     const response = await axios.post(crearClienteAddress, data, {
       headers: {
         "x-access-token": token,
       },
     });
-    console.log(response.data);
     return response.data;
   } catch (error) {
-    console.log(error);
     throw new Error("Error al crear el cliente");
   }
 };
@@ -166,7 +168,7 @@ export const eliminarCliente = async (id, token) => {
     const response = await axios.delete(eliminarClienteAddress, {
       headers: {
         "x-access-token": token,
-      },  
+      },
     });
     return response.data;
   } catch (error) {
@@ -188,7 +190,6 @@ export const editarCliente = async (id, data, token) => {
   }
 };
 
-
 //----------------PRECIOS------------------
 export const infoPrecios = async (token) => {
   const infoPreciosAddress = apiAddress + "/listaprecios";
@@ -205,9 +206,8 @@ export const infoPrecios = async (token) => {
 };
 
 export const infoPreciosClienteEspecial = async (id, token) => {
-  const infoPreciosClienteEspecialAddress =
-    apiAddress + "/listaprecios/" + id;
-  try { 
+  const infoPreciosClienteEspecialAddress = apiAddress + "/listaprecios/" + id;
+  try {
     const response = await axios.get(infoPreciosClienteEspecialAddress, {
       headers: {
         "x-access-token": token,
@@ -217,10 +217,9 @@ export const infoPreciosClienteEspecial = async (id, token) => {
   } catch (error) {
     throw new Error(
       "Error al obtener la información de los precios del cliente especial"
-    );  
+    );
   }
 };
-
 
 //-----------------PRODUCTOS FUNCIONES-----------------
 export const infoProductos = async (token) => {
@@ -237,7 +236,7 @@ export const infoProductos = async (token) => {
   }
 };
 
-export const cambiarPrecioClienteEspecial = async (token,product_id, data, ) => {
+export const cambiarPrecioClienteEspecial = async (token, product_id, data) => {
   const cambiarPrecioClienteEspecialAddress =
     apiAddress + "/products/precioEspecialProd/" + product_id;
   try {
@@ -256,8 +255,9 @@ export const cambiarPrecioClienteEspecial = async (token,product_id, data, ) => 
   }
 };
 
-export const cambiarPrecioTodos = async (token,product_id, data) => {
-  const cambiarPrecioTodosAddress = apiAddress + "/products/updateAllPriceProductos/" + product_id;
+export const cambiarPrecioTodos = async (token, product_id, data) => {
+  const cambiarPrecioTodosAddress =
+    apiAddress + "/products/updateAllPriceProductos/" + product_id;
   try {
     const response = await axios.put(cambiarPrecioTodosAddress, data, {
       headers: {
@@ -265,8 +265,7 @@ export const cambiarPrecioTodos = async (token,product_id, data) => {
       },
     });
     return response.data;
-  }
-  catch (error) {
+  } catch (error) {
     throw new Error("Error al cambiar el precio de todos los productos");
   }
 };
@@ -279,8 +278,7 @@ export const createProduct = async (data, token) => {
         "x-access-token": token,
       },
     });
-    console.log(response.data);
-    return 'check';
+    return "check";
   } catch (error) {
     throw new Error("Error al crear el producto");
   }
@@ -298,7 +296,7 @@ export const createPersona = async (data, token) => {
     return response.data;
   } catch (error) {
     throw new Error("Error al crear la persona");
-  } 
+  }
 };
 
 export const infoPersonas = async (token) => {
@@ -315,7 +313,6 @@ export const infoPersonas = async (token) => {
   }
 };
 
-
 export const createCookie = (name, value, days = 0.15) => {
   let expires = "";
   if (days) {
@@ -325,7 +322,6 @@ export const createCookie = (name, value, days = 0.15) => {
   }
   document.cookie = name + "=" + value + expires + "; path=/";
 };
-
 
 //-------------------bodegas-------------------------
 export const infoBodegas = async (token) => {
@@ -352,7 +348,7 @@ export const createFactura = async (data, token) => {
         "x-access-token": token,
       },
     });
-    
+
     return response.data;
   } catch (error) {
     console.log(error);
@@ -368,27 +364,25 @@ export const searchFactura = async (id, token) => {
         "x-access-token": token,
       },
     });
-    if(response.data.message === "el id de factura ingresado no existe") {
+    if (response.data.message === "el id de factura ingresado no existe") {
       return response.data;
     }
     return response.data;
   } catch (error) {
-    if(error.response.status === 400) {
+    if (error.response.status === 400) {
       throw new Error(error.response.data.error);
-    }else{
+    } else {
       throw new Error("Error al buscar la factura");
     }
   }
 };
 
-
-
-
 //funcion para buscar factura por intervalo de fechas
 export const searchFacturaByDate = async (data, token) => {
   const fechaInicio = data.fechainicio;
   const fechaFin = data.fechafin;
-  const searchFacturaByDateAddress = apiAddress + "/factura/" + fechaInicio + "/" + fechaFin;
+  const searchFacturaByDateAddress =
+    apiAddress + "/factura/" + fechaInicio + "/" + fechaFin;
   try {
     const response = await axios.get(searchFacturaByDateAddress, {
       headers: {
@@ -397,9 +391,9 @@ export const searchFacturaByDate = async (data, token) => {
     });
     return response.data;
   } catch (error) {
-    if(error.response.status === 400) {
+    if (error.response.status === 400) {
       throw new Error(error.response.data.error);
-    }else{
+    } else {
       throw new Error("Error al buscar la factura");
     }
   }
@@ -414,17 +408,15 @@ export const searchFacturaByLast3Months = async (token) => {
         "x-access-token": token,
       },
     });
-    console.log(response.data);
     return response.data;
   } catch (error) {
-    if(error.response.status === 400) {
+    if (error.response.status === 400) {
       throw new Error(error.response.data.error);
-    }else{
+    } else {
       throw new Error("Error al buscar la factura");
     }
   }
 };
-
 
 export const deleteFactura = async (id, token) => {
   const deleteFacturaAddress = apiAddress + "/factura/" + id;
@@ -436,18 +428,67 @@ export const deleteFactura = async (id, token) => {
     });
     return response.data;
   } catch (error) {
-    if(error.response.status === 400) {
+    if (error.response.status === 400) {
       throw new Error(error.response.data.error);
-    }else{
+    } else {
       throw new Error("Error al eliminar la factura");
     }
   }
 };
 
+// -------------------------------------EVENTOS ---------------------
+export const infoEventos = async (token) => {
+  const infoEventosAddress = apiAddress + "/eventos/";
+  try {
+    const response = await axios.get(infoEventosAddress, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if (error.response.status === 400) {
+      throw new Error(error.response.data.error);
+    } else {
+      throw new Error("Error al obtener la información de los eventos");
+    }
+  }
+};
 
+export const createEvento = async (data, token) => {
+  const createEventoAddress = apiAddress + "/eventos/";
+  try {
+    const response = await axios.post(createEventoAddress, data, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if (error.response.status === 400) {
+      throw new Error(error.response.data.error);
+    } else {
+      throw new Error("Error al crear el evento");
+    }
+  }
+};
 
+export const deleteEvento = async (id, token) => {
+  const deleteEventoAddress = apiAddress + "/eventos/" + id;
+  try {
+    const response = await axios.delete(deleteEventoAddress, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if (error.response.status === 400) {
+      throw new Error(error.response.data.error);
+    } else {
+      throw new Error("Error al eliminar el evento");
+    }
+  }
+};
 
 // -----------------------------------PRODUCCION/INVENTARIO-----------------------------------
-
-
-

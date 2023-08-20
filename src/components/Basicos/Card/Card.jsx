@@ -94,7 +94,6 @@ function ExpandedCard({param,setExpanded}){
     }
 
     const data = {...data2.options, xaxis: param.xaxis}
-    console.log(JSON.stringify(param.xaxis))
     return (
         <motion.div 
             className="ExpandedCard"

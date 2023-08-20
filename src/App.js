@@ -8,6 +8,7 @@ import Product from "./components/Product/Product";
 import Clientes from "./components/Clientes/Clientes";
 import Factura from "./components/Factura/Factura";
 import Analytics from "./components/Analytics/Analytics";
+import Calendario from "./components/Calendar/Calendar";
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
               <Route path="/Clientes" element={<Clientes />} />
               <Route path="/Factura" element={<Factura/>} />
               <Route path="/Analytics" element={<Analytics/>} />
+              <Route path="/Calendario" element={<Calendario/>} />
               {/* Agrega más rutas para tus nuevas pestañas aquí */}
             </Routes>
             

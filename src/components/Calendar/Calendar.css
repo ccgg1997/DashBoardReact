@@ -1,0 +1,30 @@
+
+.micalendario{  
+    display: flex;
+    flex-direction: column;
+    width: 99%;
+    height: 90%;
+    padding-top: 3%;
+    padding-right: 5%;
+    padding-left: 1%;
+    overflow-y: scroll;
+    overflow-x: scroll;
+    
+    
+}
+
+.botonesContenedor{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 10%;
+    gap: 3%;
+    margin-bottom: 3%;
+}
+
+.myCalendar{
+   
+    background-color: white;
+    border-radius: 5%;
+    padding: 2%;
+}

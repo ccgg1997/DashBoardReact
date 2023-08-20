@@ -5,6 +5,7 @@ import {
   UilUsersAlt,
   UilPackage,
   UilChartLine,
+  UilCalendarAlt,
 } from "@iconscout/react-unicons";
 
 //Sidebar Data
@@ -31,8 +32,13 @@ export const SidebarData = [
   },
   {
     icon: UilChartLine,
-    heading: "Analytics",
+    heading: "Gráfico ventas",
     path:"Analytics"
   },
+  {
+    icon: UilCalendarAlt,
+    heading: "Calendario",
+    path:  "Calendario",
+  }
 ];
 

@@ -17,3 +17,7 @@
 //          dashboard responsive            //
 
 //https://www.youtube.com/watch?v=K7vHoUwClaM&t=10s&ab_channel=ZAINKEEPSCODE
+
+
+//uñtimos yarn
+//yarn add @fullcalendar/core @fullcalendar/daygrid @fullcalendar/interaction

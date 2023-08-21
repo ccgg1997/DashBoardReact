@@ -55,7 +55,6 @@ export function Login(props) {
       const responseProductos = await infoProductos(token);
       const responsePersonas = await infoPersonas(token);
       const responseFacturasHoy = await searchFacturaByDate(data,token);
-      const responseInfoVentas = await searchFacturaByLast3Months(token);
       const responseEventos = await infoEventos(token);
 
       //setiar la variable global del token e inventario
@@ -79,8 +78,13 @@ export function Login(props) {
       dispatch(setProducto(responseProductos));
       dispatch(setPersona(responsePersonas));
       dispatch(setFacturasHoy(responseFacturasHoy));
-      dispatch(setInfoVentas(responseInfoVentas));
       dispatch(setEventos(responseEventos));
+      if (responseSignin.roles && responseSignin.roles === "admin") {
+        const responseInfoVentas = await searchFacturaByLast3Months(token);
+        dispatch(setInfoVentas(responseInfoVentas));
+        console.log(responseInfoVentas);
+      }
+
 
       // Crea la cookie
       createCookie(

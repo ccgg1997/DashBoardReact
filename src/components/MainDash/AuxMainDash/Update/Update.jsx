@@ -6,7 +6,9 @@ import logo from './logo.png'
 
 const Update = () => {
   const { eventos } = useSelector((state) => state.eventos);
-  const DataNoticias = eventos;
+  const DataNoticiascrudo = eventos;
+  const today = new Date().toISOString().split('T')[0];
+  const DataNoticias = DataNoticiascrudo.filter(event => event.start === today);
   const UpdatesData = DataNoticias
   return (
     <div className="Updates">

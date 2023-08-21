@@ -184,9 +184,8 @@ const Analytics = () => {
         })}
       </div>
       <h3>
-
         {dataToGraph && dataToGraph.totalVentasDia !== undefined ? (
-          <h3>
+          <span>
             Ventas:{" "}
             {dataToGraph.totalVentasDia.toLocaleString("es-CO", {
               style: "currency",
@@ -194,9 +193,9 @@ const Analytics = () => {
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
             })}
-          </h3>
+          </span>
         ) : (
-          <h3>Ventas: N/A</h3> // Mensaje alternativo si no hay datos disponibles
+          <span>Ventas: N/A</span> // Mensaje alternativo si no hay datos disponibles
         )}
       </h3>
 

@@ -46,7 +46,7 @@ const MainDash = () => {
         <div className="rightsidecontainer">
           <RightSide
             updatesComponent={<Update />}
-            title1={"NOTICIAS"}
+            title1={"ACTIVIDADES DEL DIA"}
             
           />
         </div>

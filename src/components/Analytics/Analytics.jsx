@@ -32,6 +32,8 @@ const Analytics = () => {
   //traemos los datos de reducer de analytics y ordenamos por fecha
   const infoVentas = useSelector((state) => state.analytics);
 
+  //traemos el token para acceder a su permiso
+
   const periodo60_90 = infoVentas.infoVentas[0];
   const periodo30_60 = infoVentas.infoVentas[1];
   const periodo1_30 = infoVentas.infoVentas[2];

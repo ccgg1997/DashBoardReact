@@ -5,6 +5,7 @@ import { SidebarData } from "./SideBarData";
 import { UilSignOutAlt, UilBars } from "@iconscout/react-unicons";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 
 const Sidebar = () => {
@@ -15,6 +16,7 @@ const Sidebar = () => {
   };
   const [selected, setSelected] = React.useState(0);
   const [expanded, setExpanded] = React.useState(true);
+  const rol = useSelector((state) => state.auth.rol);
 
   const sidebarVariants = {
     true: {
@@ -49,6 +51,7 @@ const Sidebar = () => {
         {/* menu */}
         <div className="menu">
           {SidebarData.map((item, index) => {
+            if (item.heading === "Gráfico ventas" && rol !== "admin") return null;
             return (
               <div
                 className={selected === index ? "menuItem active" : "menuItem"}

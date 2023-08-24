@@ -1,5 +1,6 @@
 import axios from "axios";
-export const apiAddress = "http://localhost:5000/api";
+const apiBaseAdress= "http://api.bolsasromy.works"
+export const apiAddress = apiBaseAdress+"/api";
 
 export const signin = async (cedula, password) => {
   const signinAddress = apiAddress + "/users/signin";

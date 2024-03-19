@@ -13,6 +13,7 @@ import FacturaPdf from "../FacturaPdf/FacturaPdf";
 import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 import ReactPDF from "@react-pdf/renderer";
 import { setFacturasHoy } from "../../../../features/facturasHoy/facturasHoy";
+import Select from 'react-select';
 
 const FacturaInfo = () => {
   const handlePrint = () => {
@@ -200,7 +201,7 @@ const FacturaInfo = () => {
   };
 
   const handleCliente = async (e) => {
-    const selec = e.target.value;
+    const selec = e.value;
     if (selec === "Selecciona un cliente") {
       setSelectedCliente(selec);
       setIsOpen(false);
@@ -253,15 +254,25 @@ const FacturaInfo = () => {
               <div className="FacturaInfo__info__cliente">
                 <p>
                   Cliente:{" "}
-                  <select  className= "Select" value={selectedCliente} onChange={handleCliente}>
+                  {/* <select  className= "Select" value={selectedCliente} onChange={handleCliente}>
                     <option>Selecciona un cliente</option>
                     {uniqueNames.map((item) => (
                       <option key={item} value={item}>
                         {item}
                       </option>
                     ))}
-                  </select>
+                  </select> */}
                 </p>
+                <Select
+                  className="Select"
+                  value={
+                    selectedCliente
+                      ? { value: selectedCliente, label: selectedCliente }
+                      : { value: 'default', label: 'Selecciona un cliente' } // Valor por defecto
+                  }
+                  onChange={handleCliente}
+                  options={uniqueNames.map((item) => ({ value: item, label: item }))}
+                />
               </div>
               {/* Selected client details */}
               {selectedItem && (

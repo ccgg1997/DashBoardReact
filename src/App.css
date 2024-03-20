@@ -18,7 +18,8 @@
     #ffcfd1 31.55%,
     #f3c6f1 90.85%
   );
-  height: 100vh;
+  height: 97.7vh;
+  padding: 1%;
   display: flex;
   justify-content: center;
   align-items: center;

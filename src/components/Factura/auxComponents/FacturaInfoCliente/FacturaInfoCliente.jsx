@@ -272,6 +272,14 @@ const FacturaInfo = () => {
                   }
                   onChange={handleCliente}
                   options={uniqueNames.map((item) => ({ value: item, label: item }))}
+                  styles={{
+                    menu: (provided, state) => ({
+                      ...provided,
+                      position: 'absolute',
+                      zIndex: 9999, // Asegura que el menú aparezca por encima de otros elementos
+                      width: 'auto', // Ancho automático para adaptarse al contenido
+                    }),
+                  }}
                 />
               </div>
               {/* Selected client details */}

@@ -1,5 +1,6 @@
 .BuscarFacturaInfo {
   display: flex;
+  margin-top: 10px;
   margin-bottom: 8px;
   display: flex;
   flex-direction: column;
@@ -25,8 +26,10 @@
   justify-content: center;
   gap: 2%;
   width: 50%;
-  transition: transform 0.6s ease; /* Agrega la transición para transformar */
-  transform: translateX(0); /* Establece la posición inicial */
+  transition: transform 0.6s ease;
+  /* Agrega la transición para transformar */
+  transform: translateX(0);
+  /* Establece la posición inicial */
 }
 
 .contenedortitulobotones {
@@ -36,7 +39,8 @@
 .contenedortitulobotones2 {
   margin-top: 2%;
   flex-direction: row;
-  transform: translateX(-10%); /* Establece la posición inicial */
+  transform: translateX(-10%);
+  /* Establece la posición inicial */
 }
 
 .campoBuscarFacturaInfo__info {
@@ -44,4 +48,94 @@
   margin-bottom: 14px;
   display: flex;
   flex-direction: column;
+}
+
+.box {
+  width: 80%;
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.abonar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.infoFacturaAbonar {
+  background-color: #5081eb;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.historial {
+  margin-right: 10px;
+
+}
+
+.totalBalance {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-around;
+  gap: 5px;
+}
+
+.balance {
+  margin-left: 10px;
+}
+
+.ingresoAbono {
+  display: flex;
+  justify-content: space-around;
+  gap: 5px;
+}
+
+.estado {
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-around;
+  gap: 5px;
+
+}
+
+.pagada {
+  background-color: rgb(28, 160, 28);
+  /* Cambia el fondo a verde cuando está pagada */
+}
+
+.pendiente {
+  background-color: rgb(228, 176, 80);
+  /* Cambia el fondo a rojo cuando está pendiente */
+}
+
+.botonesAbonar {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 20px;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.labelAbono {
+  justify-content: center;
+  display: flex;
+  margin-left: 10px;
+}
+
+.abonoValor {
+  display: flex;
+  margin-top: 15px;
+  margin-bottom: 15px;
+
+}
+
+.inputAbono {
+  margin: 10px 10px 10px 10px;
+  justify-content: center;
 }

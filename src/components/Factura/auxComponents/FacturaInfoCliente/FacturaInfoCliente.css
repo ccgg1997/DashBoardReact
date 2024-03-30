@@ -2,10 +2,11 @@
   display: flex;
   align-items: center;
   margin-left: 1%;
+  margin-top: 1%;
 
 }
 
-.FacturaInfo{
+.FacturaInfo {
   background-color: rgb(250, 246, 246);
   border-radius: 10px;
 }
@@ -17,13 +18,16 @@
   flex-basis: 50%;
 }
 
-.factInfo{
-    display: flex;
-    flex-direction: column;
-    margin: 0 2%;
-    
-    border-radius:6px ;
-    padding: 3px;
+.factInfo {
+  display: flex;
+  flex-direction: column;
+  margin: 0 2%;
+  border-radius: 6px;
+  padding: 3px;
+}
+
+.FacturaInfo__info__cliente {
+  margin-top: 5%;
 }
 
 .FacturaInfo__info__cliente,
@@ -37,20 +41,24 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  
+
 
 }
 
-.FacturaInfo__info__fecha{
-    margin: 0;
-    padding: 0;
-    font-weight: 600;
+.FacturaInfo__table {
+  z-index: 15;
 }
 
-.SelectCliente{
-    width: 100%;
-    height: 40px;
-    border-radius: 50px;
+.FacturaInfo__info__fecha {
+  margin: 0;
+  padding: 0;
+  font-weight: 600;
+}
+
+.SelectCliente {
+  width: 100%;
+  height: 40px;
+  border-radius: 50px;
 }
 
 .FacturaInfo__info__boton {
@@ -83,4 +91,11 @@
 /* Estilo al pasar el ratón por encima */
 .boton-flotante:hover {
   background-color: #0056b3;
+}
+
+.select {
+  width: 100%;
+  height: 40px;
+  border-radius: 50px;
+  z-index: 8;
 }

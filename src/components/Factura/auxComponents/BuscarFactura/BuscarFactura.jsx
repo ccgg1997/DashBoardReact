@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from "react";
 import "./BuscarFactura.css";
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, Tooltip } from "@mui/material";
 import Notificacion from "../../../Basicos/Notificacion/Notificacion";
-import { searchFactura, deleteFactura } from "../../../Api/apiAddress";
+import {
+  searchFactura,
+  abonarFactura,
+  deleteFactura,
+} from "../../../Api/apiAddress";
 import { useSelector } from "react-redux";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import { margin } from "@mui/system";
 import ScrollDialog from "../../../Basicos/ModalScrolll/ModalScroll";
 import FacturaPdf from "../FacturaPdf/FacturaPdf";
-import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
+import { PDFViewer } from "@react-pdf/renderer";
 
 const BuscarFactura = () => {
   const [idFactura, setIdFactura] = React.useState("");
   const [factura, setFactura] = useState({});
   const [isInfoFactura, setIsInfoFactura] = useState(false);
+  const [infoFacturaAbonar, setInfoFacturaAbonar] = useState(false);
 
   const [facturaToPDF, setFacturaToPDF] = useState({});
   const [forceRender, setForceRender] = useState(0);
@@ -25,6 +29,7 @@ const BuscarFactura = () => {
   const [mostrarNotificacion, setMostrarNotificacion] = useState(false);
 
   const [open, setOpen] = React.useState(false);
+  const [openModalAbono, setOpenModalAbono] = React.useState(false);
 
   const token = useSelector((state) => state.auth.token);
   const facturasHoy = useSelector((state) => state.facturasHoy.facturasHoy);
@@ -82,6 +87,48 @@ const BuscarFactura = () => {
     setOpen(false);
   };
 
+  const handleAbonar = async () => {
+    if (idFactura === "") {
+      setMensaje("Ingrese un id de factura a abonar", "error");
+      return;
+    }
+    try {
+      const factura = await searchFactura(idFactura, token);
+      setMensaje("Factura encontrada", "success");
+      setFactura(factura);
+      setOpenModalAbono(true);
+      setInfoFacturaAbonar(true);
+    } catch (error) {
+      setMensaje(error.message, "error");
+    }
+  };
+
+  const updateAbono = async (abono) => {
+    if (idFactura === "") {
+      setMensaje("Ingrese un id de factura a abonar", "error");
+      return;
+    }
+    const data = {
+      id: idFactura,
+      abono: abono,
+    };
+
+    try {
+      const factura = await abonarFactura(data, token);
+      if (factura.message === "el id de factura ingresado no existe") {
+        setMensaje(factura.message, "error");
+      } else {
+        setMensaje("Factura abonada", "success");
+        setInfoFacturaAbonar(false);
+        setOpenModalAbono(false);
+        setFactura({});
+        closeModal();
+      }
+    } catch (error) {
+      setMensaje(error.message, "error");
+    }
+  };
+
   const onClickEliminar = async () => {
     if (idFactura === "") {
       setMensaje("Ingrese un id de factura a eliminar", "error");
@@ -90,6 +137,7 @@ const BuscarFactura = () => {
 
     try {
       const factura = await deleteFactura(idFactura, token);
+      console.log(factura);
       if (factura.message === "el id de factura ingresado no existe") {
         setMensaje(factura.message, "error");
       } else {
@@ -119,9 +167,20 @@ const BuscarFactura = () => {
       className="BuscarFacturaInfo"
       style={{ overflowY: "scroll", maxHeight: "500px" }}
     >
-      <div className={isInfoFactura ? "contenedortitulobotones2" : "contenedortitulobotones" }>
+      <div
+        className={
+          isInfoFactura ? "contenedortitulobotones2" : "contenedortitulobotones"
+        }
+      >
         <div className="tituloBuscar">
-          <ScrollDialog texto={facturasHoy} titulo="Facturas Realizadas Hoy" />
+          <Tooltip title="Historial facturas de hoy" arrow>
+            <div>
+              <ScrollDialog
+                texto={facturasHoy}
+                titulo="Facturas Realizadas Hoy"
+              />
+            </div>
+          </Tooltip>
           <div>{"Bolsas Romy "}</div>
         </div>
         <div className="campoBuscarFacturaInfo__info">
@@ -136,6 +195,15 @@ const BuscarFactura = () => {
           <Button variant="contained" sx={{ margin: "10px" }} onClick={onClick}>
             Buscar
           </Button>
+          <Tooltip title="Abonar saldo a una factura" arrow>
+            <Button
+              variant="contained"
+              sx={{ margin: "10px" }}
+              onClick={handleAbonar}
+            >
+              Abonar
+            </Button>
+          </Tooltip>
           <Button
             variant="contained"
             sx={{ margin: "10px" }}
@@ -154,7 +222,7 @@ const BuscarFactura = () => {
           >
             <PDFViewer
               key={forceRender}
-              style={{ width: "80%", height: "100%" }}
+              style={{ width: "75%", height: "100%" }}
             >
               <FacturaPdf key={forceRender} factura={facturaToPDF} />
             </PDFViewer>
@@ -173,6 +241,16 @@ const BuscarFactura = () => {
         open={open}
         onClose={closeModal}
       />
+
+      {infoFacturaAbonar && (
+        <Abonar
+          onClickAbonar={handleAbonar}
+          updateAbono={updateAbono}
+          factura={factura}
+          open={openModalAbono}
+          onClose={() => setOpenModalAbono(false)}
+        />
+      )}
     </div>
   );
 };
@@ -189,10 +267,6 @@ const style = {
 };
 
 const Confirmacion = ({ onClickEliminar, open, onClose }) => {
-  const closeModal = () => {
-    onClose();
-  };
-
   return (
     <div>
       <Modal
@@ -212,12 +286,155 @@ const Confirmacion = ({ onClickEliminar, open, onClose }) => {
             <Button variant="contained" onClick={onClickEliminar}>
               Si
             </Button>
-            <Button variant="contained" color="error" onClick={closeModal}>
+            <Button variant="contained" color="error" onClick={onClose}>
               Cancelar
             </Button>
           </Typography>
         </Box>
       </Modal>
+    </div>
+  );
+};
+
+const Abonar = ({ updateAbono, factura, open, onClose }) => {
+  const [mensajeNotificacion, setMensajeNotificacion] = useState("");
+  const [tipoNotificacion, setTipoNotificacion] = useState("");
+  const [mostrarNotificacion, setMostrarNotificacion] = useState(false);
+
+  // Función para mostrar notificaciones
+  const setMensaje = (mensaje, tipo) => {
+    setMensajeNotificacion(mensaje);
+    setTipoNotificacion(tipo);
+    setMostrarNotificacion(true);
+  };
+
+  const closeModal = () => {
+    onClose();
+  };
+
+  const total = parseInt(factura.factura.total);
+  const abonoAct = parseInt(factura.factura.totalAbonos);
+  const [abono, setAbono] = useState(null);
+  const [ocultarAbono, setOcultarAbono] = useState(false);
+  const balance = total - abonoAct;
+  useEffect(() => {
+    const balance = total - abonoAct;
+    setOcultarAbono(balance <= 0);
+    console.log(ocultarAbono);
+  }, [total, abonoAct]);
+  
+
+  const handleAbonoAdicionar = (e) => {
+    setAbono(e.target.value);
+  };
+
+  const onClickAbonar = () => {
+    if (abono === null || abono === "") {
+      setMensaje("Ingrese un valor de abono", "error");
+    } else {
+      updateAbono(abono);
+    }
+  };
+
+  return (
+    <div className="abonar">
+      <Modal
+        open={open}
+        onClose={onClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style} className="box">
+          <div className="infoFacturaAbonar">
+            <div className="historial">
+              <Tooltip title="Historial de abonos" arrow>
+                <div>
+                  <ScrollDialog
+                    texto={factura.factura.abonos}
+                    titulo="Historial de abonos"
+                  />
+                </div>
+              </Tooltip>
+            </div>
+            <Typography variant="h6" component="h2">
+              Factura No. {factura.factura.id}
+            </Typography>
+            <div className="balance">
+              <Typography variant="h6" component="h2">
+                Cliente: {factura.negocio.nombre}
+              </Typography>
+            </div>
+          </div>
+          <div>
+            <div
+              className={`estado ${
+                factura.factura.estado ? "pagada" : "pendiente"
+              }`}
+            >
+              <h3>Estado: {factura.factura.estado ? "Pagada" : "Pendiente"}</h3>
+            </div>
+            <div>
+              <div className="totalBalance">
+                <div className="">
+                  <h3>Total</h3>
+                  <h2>${formatAmount(factura.factura.total)}</h2>
+                </div>
+                <div className="">
+                  <h3>Saldo</h3>
+                  <h2>${formatAmount(balance)}</h2>
+                </div>
+              </div>
+              <form className="ingresoAbono">
+                {!ocultarAbono && (
+                <div className="abonoValor">
+                  <div className="labelAbono">
+                    <h3>Valor del abono: </h3>
+                  </div>
+                  <div className="inputAbono">
+                    <TextField
+                      type="number"
+                      id="value"
+                      inputProps={{ min: 0 }}
+                      size="small"
+                      sx={{
+                        "& input": {
+                          color: "blue", // Cambia el color del texto de entrada del TextField
+                        },
+                      }}
+                      onChange={handleAbonoAdicionar}
+                    />
+                  </div>
+                </div>
+                  )}
+              </form>
+            </div>
+            <div className="botonesAbonar">
+              {!ocultarAbono && (
+              <Button
+                onClick={onClickAbonar}
+                className="w-full"
+                variant="contained"
+              >
+                Abonar
+              </Button>
+              )}
+
+              <Button
+                onClick={closeModal}
+                className="w-full"
+                variant="contained"
+              >
+                Cancelar
+              </Button>
+            </div>
+          </div>
+        </Box>
+      </Modal>
+      <Notificacion
+        mensaje={mensajeNotificacion}
+        tipoNotificacion={tipoNotificacion}
+        mostrarNotificacion={mostrarNotificacion}
+      />
     </div>
   );
 };
@@ -259,5 +476,16 @@ function transformData(data) {
 
   return transformedData;
 }
+
+// Formatear valores con puntos
+const formatAmount = (amount) => {
+  // Formatear el número con dos decimales y añadir separadores de miles
+  let formattedAmount = amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+  // Eliminar los ceros decimales al final
+  formattedAmount = formattedAmount.replace(/\.?0+$/, "");
+
+  return formattedAmount;
+};
 
 export default BuscarFactura;

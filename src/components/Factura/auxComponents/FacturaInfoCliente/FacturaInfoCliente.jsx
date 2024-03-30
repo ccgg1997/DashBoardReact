@@ -7,13 +7,13 @@ import BasicTable from "../FacturaTable/FacturaTable";
 import { useCallback } from "react";
 import Notificacion from "../../../Basicos/Notificacion/Notificacion";
 import generarPDF from "../../../Basicos/generatePdf/generatePdf";
-import { createFactura,searchFacturaByDate } from "../../../Api/apiAddress";
+import { createFactura, searchFacturaByDate } from "../../../Api/apiAddress";
 import logo from "../../../../../src/imgs/logo.png";
 import FacturaPdf from "../FacturaPdf/FacturaPdf";
 import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 import ReactPDF from "@react-pdf/renderer";
 import { setFacturasHoy } from "../../../../features/facturasHoy/facturasHoy";
-import Select from 'react-select';
+import Select from "react-select";
 
 const FacturaInfo = () => {
   const handlePrint = () => {
@@ -29,12 +29,11 @@ const FacturaInfo = () => {
   const [facturaToPDF, setFacturaToPDF] = useState({}); //objeto factura con los datos de la factura para generar el pdf
   const [facturaToDB, setFacturaToDB] = useState({}); //objeto factura con los datos de la factura para guardar en la base de datos
 
-  
   const [fechaHoy, fechaManana] = fecharHoyMañana();
   const data = {
     fechainicio: fechaHoy,
     fechafin: fechaManana,
-  }
+  };
 
   // Redux state
   const clientes = useSelector((state) => state.clientes);
@@ -124,15 +123,14 @@ const FacturaInfo = () => {
       setMensaje(resul, "error");
       return;
     } else {
-
       //actualizar el listado de facturas del día
-      const responseFacturasHoy = await searchFacturaByDate(data,token);
+      const responseFacturasHoy = await searchFacturaByDate(data, token);
       dispatch(setFacturasHoy(responseFacturasHoy));
-      
+
       // Obtén la fecha actual
       const today = formatDateToYYYYMMDD(new Date());
-      
-      const copyFactura = { ...factura, id: resul.id,fecha: today };
+
+      const copyFactura = { ...factura, id: resul.id, fecha: today };
       idFactura = resul.id;
       setMensaje("Factura creada con éxito", "success");
       setFacturaToPDF(copyFactura);
@@ -223,7 +221,7 @@ const FacturaInfo = () => {
       {!facturaDisponible && (
         <div
           className="FacturaInfo"
-          style={{ overflowY: "scroll", maxHeight: "450px" }}
+          style={{ overflowY: "visible", maxHeight: "450px" }}
         >
           <div className="FacturaInfo__header">
             <img
@@ -252,34 +250,19 @@ const FacturaInfo = () => {
                 <p>{fechaActual}</p>
               </div>
               <div className="FacturaInfo__info__cliente">
-                <p>
-                  Cliente:{" "}
-                  {/* <select  className= "Select" value={selectedCliente} onChange={handleCliente}>
-                    <option>Selecciona un cliente</option>
-                    {uniqueNames.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                  </select> */}
-                </p>
+                <p>Cliente: </p>
                 <Select
-                  className="Select"
+                  className="select"
                   value={
                     selectedCliente
                       ? { value: selectedCliente, label: selectedCliente }
-                      : { value: 'default', label: 'Selecciona un cliente' } // Valor por defecto
+                      : { value: "default", label: "Selecciona un cliente" } // Valor por defecto
                   }
                   onChange={handleCliente}
-                  options={uniqueNames.map((item) => ({ value: item, label: item }))}
-                  styles={{
-                    menu: (provided, state) => ({
-                      ...provided,
-                      position: 'absolute',
-                      zIndex: 9999, // Asegura que el menú aparezca por encima de otros elementos
-                      width: 'auto', // Ancho automático para adaptarse al contenido
-                    }),
-                  }}
+                  options={uniqueNames.map((item) => ({
+                    value: item,
+                    label: item,
+                  }))}
                 />
               </div>
               {/* Selected client details */}
@@ -330,7 +313,10 @@ const FacturaInfo = () => {
           <div
             style={{ width: "100vw", height: "100vh", flexDirection: "column" }}
           >
-            <PDFViewer  key={forceRender} style={{ width: "80%", height: "100%" }}>
+            <PDFViewer
+              key={forceRender}
+              style={{ width: "80%", height: "100%" }}
+            >
               <FacturaPdf key={forceRender} factura={facturaToPDF} />
             </PDFViewer>
           </div>
@@ -340,27 +326,48 @@ const FacturaInfo = () => {
   );
 };
 
-const formatDateToYYYYMMDD = (date) =>{
-  const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-  const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+const formatDateToYYYYMMDD = (date) => {
+  const daysOfWeek = [
+    "Domingo",
+    "Lunes",
+    "Martes",
+    "Miércoles",
+    "Jueves",
+    "Viernes",
+    "Sábado",
+  ];
+  const months = [
+    "enero",
+    "febrero",
+    "marzo",
+    "abril",
+    "mayo",
+    "junio",
+    "julio",
+    "agosto",
+    "septiembre",
+    "octubre",
+    "noviembre",
+    "diciembre",
+  ];
 
   const dayOfWeek = daysOfWeek[date.getDay()];
-  const day = String(date.getDate()).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, "0");
   const month = months[date.getMonth()];
   const year = date.getFullYear();
 
   return `${dayOfWeek} ${day} de ${month} del ${year}`;
-}
+};
 
 function fecharHoyMañana() {
   const hoy = new Date();
   const manana = new Date(hoy);
   manana.setDate(hoy.getDate() + 1);
 
-  const formatoFecha = fecha => {
+  const formatoFecha = (fecha) => {
     const year = fecha.getFullYear();
-    const month = String(fecha.getMonth() + 1).padStart(2, '0');
-    const day = String(fecha.getDate()).padStart(2, '0');
+    const month = String(fecha.getMonth() + 1).padStart(2, "0");
+    const day = String(fecha.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
 

@@ -1,9 +1,10 @@
+
 .Sidebar{
     display: flex;
     flex-direction: column;
     position: relative;
     padding-top: 13%;
-    
+    z-index: 99;
     transition: all 300ms ease;
     
 }

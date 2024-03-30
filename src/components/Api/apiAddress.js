@@ -1,5 +1,5 @@
 import axios from "axios";
-const apiBaseAdress= "https://api.bolsasromy.works"
+const apiBaseAdress= "http://localhost:5000"
 export const apiAddress = apiBaseAdress+"/api";
 
 export const signin = async (cedula, password) => {
@@ -354,6 +354,21 @@ export const createFactura = async (data, token) => {
   } catch (error) {
     console.log(error);
     throw new Error("Error al crear la factura");
+  }
+};
+
+export const abonarFactura = async (data, token) => {
+  const abonarFacturaAddress = apiAddress + "/factura/abonar";
+  try {
+    const response = await axios.put(abonarFacturaAddress, data, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error al abonar la factura");
   }
 };
 

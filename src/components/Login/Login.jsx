@@ -8,15 +8,29 @@ import { setInventario } from "../../features/inventario/inventario";
 import { setCliente } from "../../features/clientes/clientes";
 import { setPrecio } from "../../features/precios/precios";
 import { setProduccion } from "../../features/ordenesproduccion/ordenesproduccion";
-import{setFamilia} from "../../features/familias/familia";
+import { setFamilia } from "../../features/familias/familia";
 import { setBodega } from "../../features/bodega/bodega";
-import{setProducto} from "../../features/productos/producto";
-import{setPersona} from "../../features/persona/persona";
-import{setFacturasHoy} from "../../features/facturasHoy/facturasHoy";
+import { setProducto } from "../../features/productos/producto";
+import { setPersona } from "../../features/persona/persona";
+import { setFacturasHoy } from "../../features/facturasHoy/facturasHoy";
 import { setInfoVentas } from "../../features/analytics/analytics";
 import { setEventos } from "../../features/eventos/eventos";
 
-import { signin, infoInventario, createCookie,infoClientes, infoPrecios,infoFamilia, infoProduccion,infoBodegas,infoProductos, infoPersonas,searchFacturaByDate,searchFacturaByLast3Months,infoEventos } from "../Api/apiAddress";
+import {
+  signin,
+  infoInventario,
+  createCookie,
+  infoClientes,
+  infoPrecios,
+  infoFamilia,
+  infoProduccion,
+  infoBodegas,
+  infoProductos,
+  infoPersonas,
+  searchFacturaByDate,
+  searchFacturaByLast3Months,
+  infoEventos,
+} from "../Api/apiAddress";
 ReactModal.setAppElement(document.getElementById("root"));
 
 export function Login(props) {
@@ -29,7 +43,7 @@ export function Login(props) {
   const data = {
     fechainicio: fechaHoy,
     fechafin: fechaManana,
-  }
+  };
 
   const handlelogin = async (e) => {
     e.preventDefault(); // Cancelar el envío del formulario
@@ -45,8 +59,6 @@ export function Login(props) {
         throw new Error("Credenciales inválidas");
       }
 
-      //conexion a la api para inventario, clientes
-      const responseInventario = await infoInventario(token);
       const responseClientes = await infoClientes(token);
       const responsePrecios = await infoPrecios(token);
       const responseFamilia = await infoFamilia(token);
@@ -54,7 +66,7 @@ export function Login(props) {
       const responseBodegas = await infoBodegas(token);
       const responseProductos = await infoProductos(token);
       const responsePersonas = await infoPersonas(token);
-      const responseFacturasHoy = await searchFacturaByDate(data,token);
+      const responseFacturasHoy = await searchFacturaByDate(data, token);
       const responseEventos = await infoEventos(token);
 
       //setiar la variable global del token e inventario
@@ -68,8 +80,6 @@ export function Login(props) {
         })
       );
 
-      //setiar la variable global del inventario
-      dispatch(setInventario(responseInventario));
       dispatch(setCliente(responseClientes));
       dispatch(setPrecio(responsePrecios));
       dispatch(setFamilia(responseFamilia));
@@ -82,7 +92,6 @@ export function Login(props) {
       if (responseSignin.roles && responseSignin.roles === "admin") {
         const responseInfoVentas = await searchFacturaByLast3Months(token);
         dispatch(setInfoVentas(responseInfoVentas));
-        console.log(responseInfoVentas);
       }
 
 
@@ -116,10 +125,11 @@ export function Login(props) {
             style={{ width: "180px", height: "auto" }}
           />
         </div>
-        <form className="formLogin" onSubmit={handlelogin}>
+        <form className="formLogin" id="login" onSubmit={handlelogin}>
           <div className="input-container">
-            <label className="label">Usuario:</label>
+            <label id="usuario" className="label">Usuario:
             <input
+              id="usuario"
               className={`input ${wrongCredentials ? "input-wrong" : ""}`}
               value={cedula}
               type="text"
@@ -127,8 +137,10 @@ export function Login(props) {
               placeholder="1144***1"
               autoComplete="current-password"
             ></input>
-            <label className="label">Contraseña:</label>
+            </label>
+            <label id="contrasena" className="label">Contraseña:
             <input
+            id="contrasena"
               className={`input ${wrongCredentials ? "input-wrong" : ""}`}
               type={"password"}
               value={password}
@@ -136,6 +148,7 @@ export function Login(props) {
               placeholder="**********"
               autoComplete="current-password"
             ></input>
+            </label>
             {wrongCredentials && (
               <span className="error-message">{"Credenciales no validas"}</span>
             )}
@@ -157,10 +170,10 @@ function fecharHoyMañana() {
   const manana = new Date(hoy);
   manana.setDate(hoy.getDate() + 1);
 
-  const formatoFecha = fecha => {
+  const formatoFecha = (fecha) => {
     const year = fecha.getFullYear();
-    const month = String(fecha.getMonth() + 1).padStart(2, '0');
-    const day = String(fecha.getDate()).padStart(2, '0');
+    const month = String(fecha.getMonth() + 1).padStart(2, "0");
+    const day = String(fecha.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
 
@@ -169,4 +182,3 @@ function fecharHoyMañana() {
 
   return [fechaHoyFormateada, fechaMananaFormateada];
 }
-

@@ -222,7 +222,6 @@ const InvoiceSection = ({
       </View>
 
       <View style={styles.table}>
-        // tabla manual
         {/* Encabezado de la tabla */}
         <View
           style={{

@@ -178,7 +178,6 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
       }
       return item;
     });
-
     const copyProductLine = { ...productLine };
     copyProductLine.estilos = updateStyle;
     copyProductLine.cantidad = updateStyle.reduce((total, item) => total + item.cantidad, 0);
@@ -291,7 +290,7 @@ const DistribucionProducto = ({ isOpen, onClose, data, updateProduct }) => {
   };
 
   return (
-    <div >
+    <div className="distribucion">
       <Dialog open={isOpen} onClose={onClose}>
         <DialogTitle>{"Distribución de productos"}</DialogTitle>
         <DialogContent>
@@ -306,7 +305,7 @@ const DistribucionProducto = ({ isOpen, onClose, data, updateProduct }) => {
                 <label>{item.nombre}</label>
                 <input
                   type="number"
-                  value={item.cantidad}
+                  value={item.cantidad === 0 ? "" : item.cantidad}
                   onChange={(e) => handleQuantityChange(item.nombre, e.target.value)}
                 />
               </div>

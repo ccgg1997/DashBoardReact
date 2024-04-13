@@ -86,14 +86,20 @@ const FacturaInfo = () => {
   const [selectedCliente, setSelectedCliente] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
   const [forceRender, setForceRender] = useState(0);
+  const [creandoFactura, setCreandoFactura] = useState(false);
 
   //objeto factura con los datos de la factura
   const crearFactura = async () => {
+    if (creandoFactura) {
+      setMensaje("Factura en proceso", "error");
+      return;
+    };
     if (!selectedItem) return;
     if (!verificarTotal(producto)) {
       setMensaje("Hay producto/s sin cantidad, verifica por favor", "error");
       return;
     }
+    setCreandoFactura(true);
 
     // Remove products with 0 quantity
     const productosActualizados = estilosMayoresACero();
@@ -121,6 +127,7 @@ const FacturaInfo = () => {
     const resul = await createFactura(facturaDB, token);
     if (resul.error) {
       setMensaje(resul, "error");
+      setCreandoFactura(false);
       return;
     } else {
       //actualizar el listado de facturas del día
@@ -138,6 +145,7 @@ const FacturaInfo = () => {
       setSelectedItem(null);
       setIsOpen(false);
       setForceRender(forceRender + 1);
+      setCreandoFactura(false);
     }
   };
 
@@ -235,11 +243,6 @@ const FacturaInfo = () => {
             {/* Title */}
             <div className="FacturaInfo__title"></div>
             {selectedCliente && producto.length > 0 && (
-              // <PDFDownloadLink document={<FacturaPdf></FacturaPdf>} fileName="FACTURA">
-              //   <button className="boton-flotante" onClick={crearFactura}>
-              //     Crear factura
-              //   </button>
-              // </PDFDownloadLink>
               <button className="boton-flotante" onClick={crearFactura}>
                 Crear factura
               </button>

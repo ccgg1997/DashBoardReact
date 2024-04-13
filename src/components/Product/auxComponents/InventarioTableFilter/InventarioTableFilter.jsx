@@ -9,7 +9,7 @@ import ProduccionCards from './AuxComponents/ProduccionCards/ProduccionCards'
 export const InventarioTableFilter = () => {
   const {familia}= useSelector((state) => state.familia);
   const [selectedOption, setSelectedOption] = useState("");
-  const { inventario } = useSelector((state) => state.inventario);
+  const { inventario } = useSelector((state) => state.inventario); 
   const { nombresKeys, nuevaLista } = functionTableData(
     inventario,
     selectedOption

@@ -4,7 +4,6 @@ import { DataGrid } from "@mui/x-data-grid";
 export default function TableFilter(props) {
   const { nombre, nombreColumnas, datosFilas } = props;
   const numberRows = datosFilas.length === 0 ? 1 : datosFilas.length;
-
   // Agregar una propiedad 'id' solo a los objetos sin 'id'
   const filasConId = datosFilas.map((fila, index) => {
     if (!fila.hasOwnProperty('id')) {
@@ -18,8 +17,10 @@ export default function TableFilter(props) {
 
   const obtenerAnchoColumna = (titulo) => {
     // Calcula el ancho mínimo basado en el tamaño de fuente
-    const minWidth = 15 * titulo.length; // Ajusta el factor de multiplicación según tus necesidades
-
+    let minWidth = 29 * titulo.length; // Ajusta el factor de multiplicación según tus necesidades
+    if (titulo === "Nombre" || titulo === "Negocio") {
+      minWidth = 69 * titulo.length;
+    }
     return {
       minWidth,
       align: "center", // Centra el contenido de la columna
@@ -31,6 +32,7 @@ export default function TableFilter(props) {
   // Configuración de las columnas con el ajuste automático del tamaño
   const columnasConAjuste = nombreColumnas.map((columna) => ({
     ...columna,
+
     ...obtenerAnchoColumna(columna.headerName), // Aplica el ajuste automático del tamaño
   }));
 
@@ -41,10 +43,8 @@ export default function TableFilter(props) {
         <DataGrid
           rows={filasConId}
           columns={columnasConAjuste}
-          pagination
+          pagination={true}
           pageSize={10}
-          disablePageSizeSelector
-          hideFooterPagination
         />
       </div>
     </>

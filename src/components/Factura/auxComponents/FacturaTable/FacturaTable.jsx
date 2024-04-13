@@ -1,5 +1,6 @@
 // Importación de las librerías y componentes necesarios
 import * as React from "react";
+import {Tooltip } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -10,7 +11,9 @@ import Paper from "@mui/material/Paper";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import "./FacturaTable.css";
+import Modal from "../../../Basicos/Modal/Modal";
 import Notificacion from "../../../Basicos/Notificacion/Notificacion";
+import TableFilter from "../../../Basicos/TableFilter/TableFilter";
 import {
   Dialog,
   DialogActions,
@@ -18,10 +21,17 @@ import {
   DialogTitle,
 } from "@mui/material";
 
+import { filtroDataProductos } from "./filtroDataProductos";
+
 // Componente principal que representa la tabla de productos
 export default function BasicTable({ onProductosChange, preciosEspeciales, isSelected }) {
   // Estado local para mantener la lista de productos en la tabla
   const [products, setProducts] = useState([]);
+
+  // Cambia el cursor a pointer cuando pasa sobre la celda de info productos
+  const cellStyle = {
+    cursor: "pointer"
+  };
 
   // Estado local para guardar los estilos de la categoría del producto seleccionado
   const [nombreFamilia, setNombreFamilia] = useState("");
@@ -49,6 +59,7 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
   // Obtiene los productos del estado global de Redux
   const productos = useSelector((state) => state.precios);
   const { precio } = productos;
+  const {encabezados, valoresTable} = filtroDataProductos(precio)
 
   // Obtiene los productos del estado global de Redux con la categoría
   const productosCategoria = useSelector((state) => state.producto);
@@ -238,10 +249,10 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
             </TableRow>
           ))}
           {/* Fila para seleccionar un nuevo producto */}
-          <TableRow style={{backgroundColor: 'rgb(250, 246, 246)' }}>
+          <TableRow style={{ backgroundColor: 'rgb(250, 246, 246)' }}>
             <TableCell align="center">
               <select
-                className= "Select"
+                className="Select"
                 onChange={(e) => setSelectedProduct(e.target.value)}
                 value={selectedProduct}
               >
@@ -252,6 +263,22 @@ export default function BasicTable({ onProductosChange, preciosEspeciales, isSel
                   </option>
                 ))}
               </select>
+            </TableCell>
+            <TableCell style={cellStyle}>
+              <Tooltip title="Información de productos" arrow>
+                <div>
+                  <Modal
+                    titulo="Información de Productos"
+                    Componente={() => (
+                      <TableFilter
+                        nombre={"Productos"}
+                        nombreColumnas={encabezados}
+                        datosFilas={valoresTable}
+                      />
+                    )}
+                  />
+                </div>
+              </Tooltip>
             </TableCell>
             <TableCell align="center">
               Nombre: {productLine ? productLine.productoNombre : ""}

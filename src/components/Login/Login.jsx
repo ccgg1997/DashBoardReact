@@ -68,6 +68,7 @@ export function Login(props) {
       const responsePersonas = await infoPersonas(token);
       const responseFacturasHoy = await searchFacturaByDate(data, token);
       const responseEventos = await infoEventos(token);
+      const responseInventario = await infoInventario(token);
 
       //setiar la variable global del token e inventario
       dispatch(
@@ -89,6 +90,8 @@ export function Login(props) {
       dispatch(setPersona(responsePersonas));
       dispatch(setFacturasHoy(responseFacturasHoy));
       dispatch(setEventos(responseEventos));
+      dispatch(setInventario(responseInventario));
+      
       if (responseSignin.roles && responseSignin.roles === "admin") {
         const responseInfoVentas = await searchFacturaByLast3Months(token);
         dispatch(setInfoVentas(responseInfoVentas));

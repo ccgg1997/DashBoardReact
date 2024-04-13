@@ -14,7 +14,7 @@ const parametros = [
     { field: 'negocio', label: 'Negocio', type: 'text' },
     { field: 'duenio', label: 'Dueño', type: 'text'},
     { field: 'direccion', label: 'Direccion', type: 'text'},
-    { field: 'telefono', label: 'Telefono', type: 'number' },
+    { field: 'telefono', label: 'Telefono', type: 'text' },
     { field: 'barrio', label: 'Barrio', type: 'text' },
   ];
 

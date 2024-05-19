@@ -166,7 +166,7 @@ const InvoiceSection = ({
 
   return (
     <View style={styles.section}>
-      <View style={styles.titleContainer}>
+      <View style={styles.titleContainer} fixed>
         <View style={styles.factura_id1}>
           <Image src={logo} style={styles.image} />
           <Text style={styles.title}>{dataStatic && dataStatic.nombre}</Text>
@@ -187,17 +187,19 @@ const InvoiceSection = ({
             </View>
           ))}
       </View>
-      <Text
-        style={{
-          ...styles.text,
-          fontFamily: "Helvetica-Bold",
-          marginTop: 6,
-          marginBottom: 8,
-        }}
-      >
-        {dataStatic && dataStatic.fecha}
-      </Text>
-      <View style={{borderWidth:1, borderRadius:5,paddingVertical: 4, paddingHorizontal: 4 }}>
+      <View fixed>
+        <Text
+          style={{
+            ...styles.text,
+            fontFamily: "Helvetica-Bold",
+            marginTop: 6,
+            marginBottom: 8,
+          }}
+        >
+          {dataStatic && dataStatic.fecha}
+        </Text>
+      </View>
+      <View style={{ borderWidth: 1, borderRadius: 5, paddingVertical: 4, paddingHorizontal: 4 }}>
         {clienteInfo &&
           clienteInfo.map((item, index) => (
             <View

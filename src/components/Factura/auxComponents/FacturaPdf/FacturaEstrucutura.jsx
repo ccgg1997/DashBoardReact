@@ -1,4 +1,3 @@
-// InvoiceSection.js
 import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 import logo from "../FacturaPdf/imagenes/logo.png";
@@ -19,9 +18,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   tableHeaderCell: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: "bold",
-    width: "50%",
+    width: "18%", // Ajuste el ancho para mantener la proporción
     textAlign: "center",
   },
   tableRow: {
@@ -30,15 +29,22 @@ const styles = StyleSheet.create({
     borderBottomColor: "#000",
     padding: 3,
     alignItems: "center",
+    fontSize: 10
   },
   tableCell: {
     fontSize: 10,
-    width: "50%",
+    width: "18%", // Ajuste el ancho para mantener la proporción
     textAlign: "center",
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
+  },
+  tableCellDouble: {
+    fontSize: 9,
+    width: "48%", // Doble ancho para la columna "DESCRIPCIÓN"
+    textAlign: "center",
+    paddingHorizontal: 5,
   },
   page: {
-    flexDirection: "row", // Cambiar de 'column' a 'row'
+    flexDirection: "column", // Cambiar de 'column' a 'row'
     backgroundColor: "#fff",
     fontFamily: "Helvetica",
     padding: 10,
@@ -227,34 +233,34 @@ const InvoiceSection = ({
         {/* Encabezado de la tabla */}
         <View
           style={{
-            ...styles.tableRow,
+            ...styles.tableHeader,
             paddingVertical: 10,
             borderTopWidth: 1,
             borderStyle: "dashed",
           }}
         >
-          <Text style={{ ...styles.tableCell, fontFamily: "Helvetica-Bold" }}>
-            Codigo
+          <Text style={{ ...styles.tableHeaderCell, fontFamily: "Helvetica-Bold" }}>
+            Cant
           </Text>
-          <Text style={{ ...styles.tableCell, fontFamily: "Helvetica-Bold" }}>
-            Nombre
+          <Text style={{ ...styles.tableHeaderCell, fontFamily: "Helvetica-Bold" }}>
+            Cod
           </Text>
-          <Text style={{ ...styles.tableCell, fontFamily: "Helvetica-Bold" }}>
-            Cantidad
+          <Text style={{ ...styles.tableHeaderCell, ...styles.tableCellDouble, fontFamily: "Helvetica-Bold" }}>
+            DESCRIPCIÓN
           </Text>
-          <Text style={{ ...styles.tableCell, fontFamily: "Helvetica-Bold" }}>
+          <Text style={{ ...styles.tableHeaderCell, fontFamily: "Helvetica-Bold" }}>
             Precio
           </Text>
-          <Text style={{ ...styles.tableCell, fontFamily: "Helvetica-Bold" }}>
+          <Text style={{ ...styles.tableHeaderCell, fontFamily: "Helvetica-Bold" }}>
             SubTotal
           </Text>
         </View>
         {items &&
           items.map((item, index) => (
             <View key={index} style={{ ...styles.tableRow }}>
-              <Text style={styles.tableCell}>{item.codigo}</Text>
-              <Text style={styles.tableCell}>{item.name}</Text>
               <Text style={styles.tableCell}>{item.cantidad}</Text>
+              <Text style={styles.tableCell}>{item.codigo}</Text>
+              <Text style={{...styles.tableCell, ...styles.tableCellDouble}}>{item.name}</Text>
               <Text style={styles.tableCell}>{item.price}</Text>
               <Text style={styles.tableCell}>
                 {(item.price * item.cantidad).toLocaleString("es-CO", {

@@ -8,6 +8,8 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     marginBottom: 10,
     marginTop: 10,
+    paddingBottom:5,
+
   },
   tableHeader: {
     flexDirection: "row",
@@ -29,7 +31,9 @@ const styles = StyleSheet.create({
     borderBottomColor: "#000",
     padding: 3,
     alignItems: "center",
-    fontSize: 10
+    fontSize: 10,
+    marginBottom:3,
+
   },
   tableCell: {
     fontSize: 10,
@@ -56,6 +60,7 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     borderRightColor: "#ccc",
     padding: 11,
+    paddingBottom:3,
   },
   titleContainer: {
     flexDirection: "row",
@@ -126,7 +131,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     position: "absolute",
-    bottom: 10,
+    bottom: 2,
     left: 10,
     right: 10,
     borderTopWidth: 1,

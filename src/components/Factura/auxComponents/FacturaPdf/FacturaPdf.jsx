@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
       backgroundColor: "#fff",
       fontFamily: "Helvetica",
       padding: 10,
+      paddingBottom:15,
     }
   });
 

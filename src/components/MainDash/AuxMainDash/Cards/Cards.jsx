@@ -26,12 +26,12 @@ const Cards = () => {
         backGround: "linear-gradient(180deg, #bb67ff 0%, #c484f3 100%)",
         boxShadow: "1px 3px 9px #330066",
       },
-      barValue: Math.floor(fina1.total / 50000000) * -1,
+      barValue: ((fina1.total / (holograma1.total+fina1.total +economica1.total ))*100).toFixed(1),
       value: fina1.total,
       png: UilUsdSquare,
       series: [
         {
-          name: "Sales",
+          name: "Fina",
           data: fina1.cantidades,
         },
       ],
@@ -46,12 +46,12 @@ const Cards = () => {
         backGround: "linear-gradient(180deg, #FF919D 0%, #FC929D 100%)",
         boxShadow: "1px 3px 9px #993366",
       },
-      barValue: 60,
+      barValue: ((holograma1.total / (holograma1.total+fina1.total +economica1.total ))*100).toFixed(1),
       value: holograma1.total,
       png: UilMoneyWithdrawal,
       series: [
         {
-          name: "Revenue",
+          name: "Holograma",
           data: holograma1.cantidades,
         },
       ],
@@ -66,12 +66,12 @@ const Cards = () => {
         backGround: "#FF9900",
         boxShadow: "1px 3px 9px #663300",
       },
-      barValue: 60,
+      barValue: ((economica1.total / (holograma1.total+fina1.total +economica1.total ))*100).toFixed(1),
       value: economica1.total,
       png: UilClipboardAlt,
       series: [
         {
-          name: "Expenses",
+          name: "Economica",
           data: economica1.cantidades,
         },
       ],
